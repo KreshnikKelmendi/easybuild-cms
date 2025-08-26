@@ -13,10 +13,12 @@ interface CloudinaryUploadResult {
   created_at: string;
 }
 
+// Use the proper Cloudinary error type
 interface CloudinaryError {
   message: string;
   http_code?: number;
   name?: string;
+  status?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -70,7 +72,7 @@ export async function POST(request: NextRequest) {
             { fetch_format: 'auto' }
           ]
         },
-        (error: CloudinaryError | null, result: CloudinaryUploadResult) => {
+        (error: CloudinaryError | undefined, result: CloudinaryUploadResult) => {
           if (error) {
             reject(error);
           } else {
