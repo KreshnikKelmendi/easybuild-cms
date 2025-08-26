@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { gsap } from 'gsap';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 interface StepImage {
   image: string;
@@ -42,15 +43,6 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
   // Get current language
   const currentLanguage = i18n.language;
 
-  // Add safety check for service
-  if (!service) {
-    return <div className="text-center py-10">Service not available</div>;
-  }
-
-  const handleToggle = () => {
-    setShowMore(prevState => !prevState);
-  };
-
   useEffect(() => {
     if (hereInView) {
       gsap.from(".animate-here", {
@@ -70,13 +62,24 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
     }
   }, [hereInView, moreContentInView]);
 
+  // Add safety check for service
+  if (!service) {
+    return <div className="text-center py-10">Service not available</div>;
+  }
+
+  const handleToggle = () => {
+    setShowMore(prevState => !prevState);
+  };
+
   return (
     <>
       <div className='w-full flex flex-col lg:flex-row h-full p-2 gap-x-[10px] gap-y-[10px] lg:gap-y-0 overflow-hidden'>
         <div className='lg:w-1/2'>
           <div className='w-full'>
-            <img 
+            <Image 
               src={service.image || '/assets/image1.png'} 
+              width={400}
+              height={628}
               className='w-full lg:h-[628px] object-cover rounded-[15px]' 
               alt={service.title?.[currentLanguage as keyof typeof service.title] || service.title?.en || 
                (currentLanguage === 'de' ? 'Dienstleistung' : 
@@ -137,8 +140,10 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
                 {service.stepImages && service.stepImages.length > 0 ? (
                   service.stepImages.map((item, index) => (
                     <div key={index} className='w-full flex-shrink-0'>
-                      <img 
+                      <Image 
                         src={item.image} 
+                        width={400}
+                        height={447}
                         className='w-full lg:h-[447px] object-cover rounded-[15px]' 
                         alt={item.titleKey || `Step ${index + 1}`} 
                       />

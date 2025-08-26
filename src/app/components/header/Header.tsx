@@ -5,6 +5,7 @@ import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const Header = () => {
   const [nav, setNav] = useState(false);
@@ -108,9 +109,11 @@ const Header = () => {
           </Link>
           <div className="relative group">
             <button className="flex items-center gap-2 cursor-pointer duration-300 hover:text-[#DD4726] uppercase text-sm">
-              <img 
+              <Image 
                 src={`https://flagcdn.com/w20/${i18n.language === 'en' ? 'gb' : i18n.language === 'de' ? 'de' : 'al'}.png`}
                 alt={`${i18n.language} flag`}
+                width={20}
+                height={16}
                 className="w-5 h-4 rounded-sm"
               />
               <span>{i18n.language.toUpperCase()}</span>
@@ -126,7 +129,7 @@ const Header = () => {
                     i18n.language === 'en' ? 'text-[#DD4726] bg-gray-800' : 'text-[#F3F4F4]'
                   }`}
                 >
-                  <img src="https://flagcdn.com/w20/gb.png" alt="English flag" className="w-5 h-4 rounded-sm" />
+                  <Image src="https://flagcdn.com/w20/gb.png" alt="English flag" width={20} height={16} className="w-5 h-4 rounded-sm" />
                   <span>English</span>
                 </button>
                 <button
@@ -135,7 +138,7 @@ const Header = () => {
                     i18n.language === 'de' ? 'text-[#DD4726] bg-gray-800' : 'text-[#F3F4F4]'
                   }`}
                 >
-                  <img src="https://flagcdn.com/w20/de.png" alt="German flag" className="w-5 h-4 rounded-sm" />
+                  <Image src="https://flagcdn.com/w20/de.png" alt="German flag" width={20} height={16} className="w-5 h-4 rounded-sm" />
                   <span>Deutsch</span>
                 </button>
                 <button
@@ -144,7 +147,7 @@ const Header = () => {
                     i18n.language === 'al' ? 'text-[#DD4726] bg-gray-800' : 'text-[#F3F4F4]'
                   }`}
                 >
-                  <img src="https://flagcdn.com/w20/al.png" alt="Albanian flag" className="w-5 h-4 rounded-sm" />
+                  <Image src="https://flagcdn.com/w20/al.png" alt="Albanian flag" width={20} height={16} className="w-5 h-4 rounded-sm" />
                   <span>Shqip</span>
                 </button>
                 

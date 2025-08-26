@@ -72,7 +72,7 @@ const Banner = () => {
   const currentLang = i18n.language as 'en' | 'de' | 'al';
   const fallbackLang = 'en';
 
-  const getLocalizedContent = (field: any, lang: string) => {
+  const getLocalizedContent = (field: { [key: string]: string } | undefined, lang: string) => {
     return field?.[lang] || field?.[fallbackLang] || '';
   };
 

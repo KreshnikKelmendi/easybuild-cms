@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 interface Service {
   _id: string;
@@ -778,7 +779,7 @@ const ServiceManager = () => {
                               } else {
                                 setMessage(data.message || 'Failed to upload image');
                               }
-                            } catch (error) {
+                            } catch {
                               setMessage('Error uploading image');
                             } finally {
                               setIsUploading(false);
@@ -796,9 +797,11 @@ const ServiceManager = () => {
                       {formData.stepImages[index]?.image ? (
                         <div className="space-y-2">
                           <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
-                            <img 
+                            <Image 
                               src={formData.stepImages[index].image} 
                               alt={`Step ${index + 1}`} 
+                              width={96}
+                              height={80}
                               className="w-full h-full object-cover"
                             />
                           </div>
@@ -998,9 +1001,11 @@ const ServiceManager = () => {
                        🖼️ Main Image
                      </h4>
                      <div className="w-full h-32 border border-gray-200 rounded-lg overflow-hidden">
-                       <img 
+                       <Image 
                          src={service.image} 
                          alt="Service"
+                         width={400}
+                         height={128}
                          className="w-full h-full object-cover"
                        />
                      </div>
@@ -1016,9 +1021,11 @@ const ServiceManager = () => {
                          {service.stepImages.map((step, index) => (
                            <div key={index} className="flex items-center gap-3">
                              <div className="w-20 h-16 border border-gray-200 rounded-lg overflow-hidden">
-                               <img 
+                               <Image 
                                  src={step.image} 
                                  alt={`Step ${index + 1}`}
+                                 width={80}
+                                 height={64}
                                  className="w-full h-full object-cover"
                                />
                              </div>

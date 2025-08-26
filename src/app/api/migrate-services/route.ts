@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Service from '@/models/Service';
 
@@ -25,7 +25,11 @@ export async function POST() {
     
     // Update each service with default values
     const updatePromises = servicesToUpdate.map(service => {
-      const updateData: any = {};
+      const updateData: {
+        description?: { en: string; de: string; al: string };
+        description2?: { en: string; de: string; al: string };
+        stepImages?: Array<{ image: string; titleKey: string }>;
+      } = {};
       
       if (!service.description) {
         updateData.description = {

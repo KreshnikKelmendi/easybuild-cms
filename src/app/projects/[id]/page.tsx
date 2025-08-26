@@ -26,7 +26,7 @@ interface Project {
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -110,7 +110,7 @@ const ProjectDetailPage = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-custom1 text-gray-800 mb-4">Project Not Found</h1>
-          <p className="text-gray-600 mb-4">The project you're looking for doesn't exist.</p>
+          <p className="text-gray-600 mb-4">The project you&apos;re looking for doesn&apos;t exist.</p>
           <p className="text-sm text-gray-500 mb-6">Project ID: {id}</p>
           <div className="space-y-2">
             <a 

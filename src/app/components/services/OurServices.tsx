@@ -5,6 +5,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import { gsap } from 'gsap';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 interface Service {
   _id: string;
@@ -27,7 +28,7 @@ const OurServices = () => {
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
   const serviceRefs = useRef<(HTMLDivElement | null)[]>([]);
   const servicesSectionRef = useRef<HTMLDivElement>(null);
-  const { ref: inViewRef, inView } = useInView({
+  const { inView } = useInView({
     triggerOnce: false,
     threshold: 0.3,
   });
@@ -162,7 +163,7 @@ const OurServices = () => {
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={() => handleMouseLeave(index)}
           >
-            <img
+            <Image
               ref={(el) => {
                 imageRefs.current[index] = el;
               }}
@@ -172,6 +173,8 @@ const OurServices = () => {
                 return imageSrc;
               })()}
               alt={getTitleInCurrentLanguage(service)}
+              width={400}
+              height={489}
               className='w-full h-60 lg:h-[489px] object-cover rounded-lg transition-all duration-500 ease-in-out'
             />
             <div className='block'>

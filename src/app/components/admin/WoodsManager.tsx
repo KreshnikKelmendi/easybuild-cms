@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface Wood {
   _id: string;
@@ -90,7 +91,7 @@ const WoodsManager = () => {
           } else {
             setMessage(data.message || 'Failed to upload image');
           }
-        } catch (error) {
+        } catch {
           setMessage('Error uploading image');
         } finally {
           setIsUploading(false);
@@ -169,7 +170,7 @@ const WoodsManager = () => {
         } else {
           setMessage(data.message || 'Failed to delete wood');
         }
-      } catch (error) {
+      } catch {
         setMessage('Error deleting wood');
       }
     }
@@ -197,7 +198,7 @@ const WoodsManager = () => {
       } else {
         setMessage(data.message || 'Failed to update wood');
       }
-    } catch (error) {
+    } catch {
       setMessage('Error updating wood');
     }
   };
@@ -290,9 +291,11 @@ const WoodsManager = () => {
                 {formData.imageUrl ? (
                   <div className="space-y-2">
                     <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
-                      <img 
+                      <Image 
                         src={formData.imageUrl} 
                         alt="Preview" 
+                        width={96}
+                        height={80}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -413,9 +416,11 @@ const WoodsManager = () => {
                   <div className="bg-white rounded-md p-2 border border-gray-100">
                     <p className="text-xs font-medium text-black uppercase mb-1">Image</p>
                     <div className="w-full h-20 border border-gray-200 rounded-md overflow-hidden">
-                      <img 
+                      <Image 
                         src={wood.imageUrl} 
                         alt="Wood"
+                        width={400}
+                        height={80}
                         className="w-full h-full object-cover"
                       />
                     </div>

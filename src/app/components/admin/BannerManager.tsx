@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
+
+type LanguageCode = 'en' | 'de' | 'al';
 
 interface BannerData {
   title: {
@@ -18,8 +21,8 @@ interface BannerData {
 }
 
 const BannerManager = () => {
-  const { t } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<'en' | 'de' | 'al'>('en');
+  const { t: _ } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
   const [formData, setFormData] = useState<BannerData>({
     title: { en: '', de: '', al: '' },
     subtitle: { en: '', de: '', al: '' },
@@ -27,7 +30,7 @@ const BannerManager = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [currentBanner, setCurrentBanner] = useState<any>(null);
+  const [currentBanner, setCurrentBanner] = useState<BannerData | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
@@ -179,7 +182,7 @@ const BannerManager = () => {
     }
   };
 
-  const languages = [
+  const languages: Array<{ code: LanguageCode; name: string; flag: string }> = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
     { code: 'al', name: 'Shqip', flag: '🇦🇱' }
@@ -212,7 +215,7 @@ const BannerManager = () => {
             <button
               key={lang.code}
               type="button"
-              onClick={() => setCurrentLanguage(lang.code as 'en' | 'de' | 'al')}
+              onClick={() => setCurrentLanguage(lang.code)}
               className={`px-4 py-2 font-medium border-b-2 ${
                 currentLanguage === lang.code
                   ? 'border-black text-black'
@@ -298,13 +301,12 @@ const BannerManager = () => {
                   </button>
                 </div>
                 <div className="relative w-32 h-24 border border-gray-300 rounded overflow-hidden">
-                  <img 
+                  <Image 
                     src={formData.image} 
                     alt="Preview" 
+                    width={128}
+                    height={96}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = '/assets/image1.png'; // Fallback
-                    }}
                   />
                 </div>
                 <p className="text-xs text-gray-600 mt-1">File: {formData.image}</p>
@@ -370,13 +372,12 @@ const BannerManager = () => {
             </div>
             {currentBanner.image && (
               <div className="w-32 h-24 border border-gray-300 rounded overflow-hidden">
-                <img 
+                <Image 
                   src={currentBanner.image} 
                   alt="Banner background"
+                  width={128}
+                  height={96}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = '/assets/image1.png';
-                  }}
                 />
               </div>
             )}

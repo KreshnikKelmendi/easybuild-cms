@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 interface Project {
   _id: string
@@ -122,21 +123,19 @@ const ProjectsOnHomePage = () => {
               {projects.length <= 4 ? (
                 // Static grid for 4 or fewer projects
                 <div className="grid grid-cols-4 gap-4">
-                  {projects.map((project, index) => (
+                  {projects.map((project) => (
                     <div 
                       key={project._id} 
                       className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() => handleProjectClick(project._id)}
                     >
                       {project.mainImage ? (
-                        <img 
+                        <Image 
                           src={project.mainImage} 
                           alt={getCurrentLanguageText(project.title)} 
+                          width={400}
+                          height={613}
                           className="object-cover object-center w-full h-[613px] rounded-[15px]" 
-                          onError={(e) => {
-                            console.error('Image failed to load:', project.mainImage);
-                            e.currentTarget.style.display = 'none';
-                          }}
                         />
                       ) : (
                         <div className="w-full h-[613px] rounded-[15px] bg-gray-200 flex items-center justify-center">
@@ -167,21 +166,19 @@ const ProjectsOnHomePage = () => {
                     {Array.from({ length: Math.ceil(projects.length / 4) }).map((_, slideIndex) => (
                       <div key={slideIndex} className="flex-shrink-0 w-full">
                         <div className="grid grid-cols-4 gap-4">
-                          {getProjectsForSlide(slideIndex).map((project, index) => (
+                          {getProjectsForSlide(slideIndex).map((project) => (
                             <div 
                               key={project._id} 
                               className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
                               onClick={() => handleProjectClick(project._id)}
                             >
                               {project.mainImage ? (
-                                <img 
+                                <Image 
                                   src={project.mainImage} 
                                   alt={getCurrentLanguageText(project.title)} 
+                                  width={400}
+                                  height={400}
                                   className="object-cover object-center w-full h-[65vh] rounded-[15px]" 
-                                  onError={(e) => {
-                                    console.error('Image failed to load:', project.mainImage);
-                                    e.currentTarget.style.display = 'none';
-                                  }}
                                 />
                               ) : (
                                 <div className="w-full h-[613px] rounded-[15px] bg-gray-200 flex items-center justify-center">
@@ -214,21 +211,19 @@ const ProjectsOnHomePage = () => {
               {projects.length <= 2 ? (
                 // Static grid for 2 or fewer projects
                 <div className="grid grid-cols-2 gap-6">
-                  {projects.map((project, index) => (
+                  {projects.map((project) => (
                     <div 
                       key={project._id} 
                       className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() => handleProjectClick(project._id)}
                     >
                       {project.mainImage ? (
-                        <img 
+                        <Image 
                           src={project.mainImage} 
                           alt={getCurrentLanguageText(project.title)} 
+                          width={400}
+                          height={384}
                           className="object-cover object-center w-full h-96" 
-                          onError={(e) => {
-                            console.error('Image failed to load:', project.mainImage);
-                            e.currentTarget.style.display = 'none';
-                          }}
                         />
                       ) : (
                         <div className="w-full h-96 bg-gray-200 flex items-center justify-center">
@@ -259,21 +254,19 @@ const ProjectsOnHomePage = () => {
                     {Array.from({ length: Math.ceil(projects.length / 2) }).map((_, slideIndex) => (
                       <div key={slideIndex} className="flex-shrink-0 w-full">
                         <div className="grid grid-cols-2 gap-6">
-                          {projects.slice(slideIndex * 2, slideIndex * 2 + 2).map((project, index) => (
+                          {projects.slice(slideIndex * 2, slideIndex * 2 + 2).map((project) => (
                             <div 
                               key={project._id} 
                               className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
                               onClick={() => handleProjectClick(project._id)}
                             >
                               {project.mainImage ? (
-                                <img 
+                                <Image 
                                   src={project.mainImage} 
                                   alt={getCurrentLanguageText(project.title)} 
+                                  width={400}
+                                  height={384}
                                   className="object-cover object-center w-full h-96" 
-                                  onError={(e) => {
-                                    console.error('Image failed to load:', project.mainImage);
-                                    e.currentTarget.style.display = 'none';
-                                  }}
                                 />
                               ) : (
                                 <div className="w-full h-96 bg-gray-200 flex items-center justify-center">
@@ -306,21 +299,19 @@ const ProjectsOnHomePage = () => {
               {projects.length <= 1 ? (
                 // Static display for 1 project
                 <div className="space-y-6">
-                  {projects.map((project, index) => (
+                  {projects.map((project) => (
                     <div 
                       key={project._id} 
                       className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() => handleProjectClick(project._id)}
                     >
                       {project.mainImage ? (
-                        <img 
+                        <Image 
                           src={project.mainImage} 
                           alt={getCurrentLanguageText(project.title)} 
+                          width={400}
+                          height={384}
                           className="object-cover object-center w-full h-96 rounded-[15px]" 
-                          onError={(e) => {
-                            console.error('Image failed to load:', project.mainImage);
-                            e.currentTarget.style.display = 'none';
-                          }}
                         />
                       ) : (
                         <div className="w-full h-96 rounded-[15px] bg-gray-200 flex items-center justify-center">
@@ -337,29 +328,27 @@ const ProjectsOnHomePage = () => {
                           <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6">{getCurrentLanguageText(project.title)}</p>
                           <p className="text-[20px] mt-[3px]">{limitTo75Words(getCurrentLanguageText(project.description))}</p>
                         </div>
-                        {/* Additional Images Grid */}
-                        {project.additionalImages && project.additionalImages.length > 0 && (
-                          <div className="absolute top-4 right-4">
-                            <div className="grid grid-cols-2 gap-2">
-                              {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
-                                <div
-                                  key={imgIndex}
-                                  className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
-                                >
-                                  <img
-                                    src={image}
-                                    alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                      console.error('Additional image failed to load:', image);
-                                      e.currentTarget.style.display = 'none';
-                                    }}
-                                  />
+                                                      {/* Additional Images Grid */}
+                              {project.additionalImages && project.additionalImages.length > 0 && (
+                                <div className="absolute top-4 right-4">
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
+                                      <div
+                                        key={imgIndex}
+                                        className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
+                                      >
+                                        <Image
+                                          src={image}
+                                          alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
+                                          width={48}
+                                          height={48}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                              )}
                       </div>
                     </div>
                   ))}
@@ -379,14 +368,12 @@ const ProjectsOnHomePage = () => {
                             onClick={() => handleProjectClick(project._id)}
                           >
                             {project.mainImage ? (
-                              <img 
+                              <Image 
                                 src={project.mainImage} 
                                 alt={getCurrentLanguageText(project.title)} 
+                                width={400}
+                                height={384}
                                 className="object-cover object-center w-full h-96 rounded-[15px]" 
-                                onError={(e) => {
-                                  console.error('Image failed to load:', project.mainImage);
-                                  e.currentTarget.style.display = 'none';
-                                }}
                               />
                             ) : (
                               <div className="w-full h-96 rounded-[15px] bg-gray-200 flex items-center justify-center">
@@ -412,14 +399,12 @@ const ProjectsOnHomePage = () => {
                                         key={imgIndex}
                                         className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
                                       >
-                                        <img
+                                        <Image
                                           src={image}
                                           alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
+                                          width={48}
+                                          height={48}
                                           className="w-full h-full object-cover"
-                                          onError={(e) => {
-                                            console.error('Additional image failed to load:', image);
-                                            e.currentTarget.style.display = 'none';
-                                          }}
                                         />
                                       </div>
                                     ))}

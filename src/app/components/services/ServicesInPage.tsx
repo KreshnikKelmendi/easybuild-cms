@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { useInView } from 'react-intersection-observer';
 import SplitType from 'split-type';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 const ServicesInPage = () => {
   const { t } = useTranslation();
@@ -73,9 +74,11 @@ const ServicesInPage = () => {
         </div>
 
         <div className='lg:w-1/2 2xl:mr-[130px]'>
-          <img
+          <Image
             src="/assets/service-page-1.png"
             alt='Services'
+            width={400}
+            height={424}
             className='w-full h-[424px] object-contain service-image'
           />
         </div>

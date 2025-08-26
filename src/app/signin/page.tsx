@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
+
 import { useRouter } from 'next/navigation';
 
 const SignIn = () => {
@@ -10,7 +10,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { t } = useTranslation();
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
