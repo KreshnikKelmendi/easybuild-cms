@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import cloudinary from '@/lib/cloudinary';
 
-// Define proper types for Cloudinary response and error
+// Define proper types for Cloudinary response
 interface CloudinaryUploadResult {
   public_id: string;
   secure_url: string;
@@ -11,14 +11,6 @@ interface CloudinaryUploadResult {
   resource_type: string;
   bytes: number;
   created_at: string;
-}
-
-// Use the proper Cloudinary error type
-interface CloudinaryError {
-  message: string;
-  http_code?: number;
-  name?: string;
-  status?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -72,11 +64,11 @@ export async function POST(request: NextRequest) {
             { fetch_format: 'auto' }
           ]
         },
-        (error: any, result: any) => {
+        (error: unknown, result: unknown) => {
           if (error) {
             reject(error);
-          } else if (result && result.public_id) {
-            resolve(result);
+          } else if (result && typeof result === 'object' && result !== null && 'public_id' in result) {
+            resolve(result as CloudinaryUploadResult);
           } else {
             reject(new Error('Upload failed - no result from Cloudinary'));
           }
