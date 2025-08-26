@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import SplitType from 'split-type';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 const BannerAbout = () => {
   const { t } = useTranslation();
@@ -55,10 +56,12 @@ const BannerAbout = () => {
     <div className='w-full relative h-[100vh] lg:h-[665px] flex flex-col lg:flex-row items-center bg-uberuns'>
       {/* Image Section - Left Side with Text Overlay */}
       <div className='lg:w-1/2 w-full h-[665px] relative '>
-        <img
+        <Image
           className='w-full h-full object-cover banner-image'
           src="/assets/aboutBannerImage.png"
           alt="About Us Banner"
+          width={800}
+          height={665}
         />
         {/* Text Overlay */}
         <div className='absolute inset-0 bg-[#191716] flex items-center justify-center'>

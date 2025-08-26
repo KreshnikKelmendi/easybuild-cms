@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import Count from '../main/Count';
 
 import { useTranslation } from 'react-i18next';

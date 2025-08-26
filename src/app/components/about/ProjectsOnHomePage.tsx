@@ -23,7 +23,7 @@ interface Project {
 }
 
 const ProjectsOnHomePage = () => {
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([])
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'de' | 'al'>('en')

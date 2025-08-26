@@ -31,9 +31,7 @@ const Projects = () => {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLargeDevice, setIsLargeDevice] = useState(false);
   
   const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
   const projectsSectionRef = useRef<HTMLDivElement>(null);
@@ -46,10 +44,9 @@ const Projects = () => {
 
   useEffect(() => {
     fetchProjects();
-    checkDeviceSize();
     
     const handleResize = () => {
-      checkDeviceSize();
+      // Handle resize if needed in the future
     };
 
     window.addEventListener('resize', handleResize);
@@ -61,10 +58,6 @@ const Projects = () => {
       animateProjects();
     }
   }, [inView, projects]);
-
-  const checkDeviceSize = () => {
-    setIsLargeDevice(window.innerWidth >= 1024);
-  };
 
   const fetchProjects = async () => {
     try {
@@ -161,8 +154,6 @@ const Projects = () => {
                  projectRefs.current[index] = el;
                }}
                className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 transform hover:-translate-y-4 cursor-pointer overflow-hidden border border-white/30 relative hover:bg-white/90"
-               onMouseEnter={() => setHoveredIndex(index)}
-               onMouseLeave={() => setHoveredIndex(null)}
                onClick={() => handleProjectClick(project)}
              >
                {/* Project Image */}
@@ -296,7 +287,7 @@ const Projects = () => {
                </svg>
              </div>
              <h3 className="text-5xl font-custom1 text-gray-700 mb-6">No Projects Available Yet</h3>
-             <p className="text-gray-500 text-xl max-w-2xl mx-auto leading-relaxed">We're working on amazing projects! Check back soon to see our latest work and achievements.</p>
+             <p className="text-gray-500 text-xl max-w-2xl mx-auto leading-relaxed">We&apos;re working on amazing projects! Check back soon to see our latest work and achievements.</p>
              <div className="w-20 h-2 bg-gradient-to-r from-[#DD4624] via-[#DD4624]/80 to-[#DD4624] mx-auto mt-8 rounded-full shadow-lg"></div>
            </div>
          )}

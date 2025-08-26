@@ -3,13 +3,24 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok, FaWhatsapp, FaTelegram } from 'react-icons/fa';
+import { IconType } from 'react-icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+// Define the social media interface
+interface SocialMedia {
+  _id: string;
+  platform: string;
+  icon: string;
+  url: string;
+  isActive: boolean;
+  order: number;
+}
 
 const Footer = () => {
   const { t } = useTranslation();
   const pathname = usePathname();
-  const [socialMedia, setSocialMedia] = useState([]);
+  const [socialMedia, setSocialMedia] = useState<SocialMedia[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +42,7 @@ const Footer = () => {
   };
 
   const getIconComponent = (iconName: string) => {
-    const iconMap: { [key: string]: any } = {
+    const iconMap: { [key: string]: IconType } = {
       'FaFacebookF': FaFacebookF,
       'FaInstagram': FaInstagram,
       'FaTwitter': FaTwitter,
@@ -131,7 +142,7 @@ const Footer = () => {
                   <div className='animate-pulse bg-gray-600 w-[64px] h-[64px] rounded-full'></div>
                 </>
               ) : socialMedia.length > 0 ? (
-                socialMedia.map((social: any) => (
+                socialMedia.map((social: SocialMedia) => (
                   <a 
                     key={social._id} 
                     href={social.url} 

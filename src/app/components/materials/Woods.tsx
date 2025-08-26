@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 interface Wood {
   _id: string;
@@ -80,9 +81,11 @@ const Woods = () => {
         <div className='grid lg:gap-10 gap-6 grid-cols-3 lg:grid-cols-7 w-full lg:px-16 2xl:px-36 justify-center items-center mt-6 lg:mt-16'>
           {woods.map((wood) => (
             <div key={wood._id} className='flex flex-col justify-center items-center'>
-              <img 
+              <Image 
                 src={wood.imageUrl} 
                 alt={wood.title[currentLanguage]} 
+                width={190}
+                height={188}
                 className='w-28 h-auto lg:w-40 lg:h-auto 2xl:w-[190px] 2xl:h-[188px] object-cover rounded-full' 
               />
               <p className='mt-4 text-center font-custom font-normal text-[24px] w-[140px] lg:w-[150px] 2xl:w-[160px] whitespace-nowrap overflow-hidden text-ellipsis'>

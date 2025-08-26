@@ -3,6 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
+import Image from 'next/image'
 
 
 const AboutUsOnHomePage = () => {
@@ -19,9 +20,11 @@ const AboutUsOnHomePage = () => {
       <div className='bg-[#DD4624] h-[100vh] lg:h-[120ch] rounded-[15px] relative'>
           <div className='flex flex-col lg:flex-row px-5 lg:px-[60px] py-16 2xl:px-[120px] lg:py-36'>
               <div className='w-full lg:w-1/2'>
-              <img 
+              <Image 
                 src="/assets/image1.png" 
                 alt='About us image' 
+                width={600}
+                height={400}
                 className='w-full h-full object-cover rounded-[15px]' 
               />
               </div>

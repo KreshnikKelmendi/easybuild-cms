@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface Project {
   _id: string
@@ -51,8 +52,8 @@ const ProjectManager = () => {
       if (data.success) {
         setProjects(data.data)
       }
-    } catch (error) {
-      console.error('Error fetching projects:', error)
+    } catch {
+      console.error('Error fetching projects')
     }
   }
 
@@ -101,7 +102,7 @@ const ProjectManager = () => {
             } else {
               setMessage(data.message || 'Failed to upload image')
             }
-          } catch (error) {
+          } catch {
             setMessage('Error uploading image')
           } finally {
             setIsUploading(false)
@@ -141,7 +142,7 @@ const ProjectManager = () => {
               }))
               setMessage(`${uploadedImages.length} additional image(s) uploaded successfully!`)
             }
-          } catch (error) {
+          } catch {
             setMessage('Error uploading additional images')
           } finally {
             setIsUploading(false)
@@ -206,7 +207,7 @@ const ProjectManager = () => {
       } else {
         setMessage(data.message || 'Failed to create project')
       }
-    } catch (error) {
+    } catch {
       setMessage('An error occurred while creating the project')
     } finally {
       setIsLoading(false)
@@ -228,7 +229,7 @@ const ProjectManager = () => {
         } else {
           setMessage(data.message || 'Failed to delete project')
         }
-      } catch (error) {
+      } catch {
         setMessage('Error deleting project')
       }
     }
@@ -340,9 +341,11 @@ const ProjectManager = () => {
                 {formData.mainImage ? (
                   <div className="space-y-2">
                     <div className="w-32 h-24 mx-auto border border-gray-300 rounded-lg overflow-hidden">
-                      <img 
+                      <Image 
                         src={formData.mainImage} 
                         alt="Main Preview" 
+                        width={128}
+                        height={96}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -408,9 +411,11 @@ const ProjectManager = () => {
                   {formData.additionalImages.map((image, index) => (
                     <div key={index} className="relative">
                       <div className="w-full h-20 border border-gray-200 rounded-md overflow-hidden">
-                        <img 
+                        <Image 
                           src={image} 
                           alt={`Additional ${index + 1}`}
+                          width={80}
+                          height={80}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -472,7 +477,7 @@ const ProjectManager = () => {
                   } else {
                     setMessage(data.message)
                   }
-                } catch (error) {
+                } catch {
                   setMessage('Error seeding projects')
                 }
               }}
@@ -531,9 +536,11 @@ const ProjectManager = () => {
                   <div className="bg-white rounded-md p-2 border border-gray-100">
                     <p className="text-xs font-medium text-black uppercase mb-1">Main Image</p>
                     <div className="w-full h-20 border border-gray-200 rounded-md overflow-hidden">
-                      <img 
+                      <Image 
                         src={project.mainImage} 
                         alt="Project"
+                        width={80}
+                        height={80}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -545,9 +552,11 @@ const ProjectManager = () => {
                       <div className="grid grid-cols-2 gap-1">
                         {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
                           <div key={imgIndex} className="w-full h-16 border border-gray-200 rounded-md overflow-hidden">
-                            <img 
+                            <Image 
                               src={image} 
                               alt={`Additional ${imgIndex + 1}`}
+                              width={64}
+                              height={64}
                               className="w-full h-full object-cover"
                             />
                           </div>

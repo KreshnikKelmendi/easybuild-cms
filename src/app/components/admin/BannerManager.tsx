@@ -21,7 +21,7 @@ interface BannerData {
 }
 
 const BannerManager = () => {
-  const { t: _ } = useTranslation();
+  const { t } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
   const [formData, setFormData] = useState<BannerData>({
     title: { en: '', de: '', al: '' },
@@ -31,8 +31,6 @@ const BannerManager = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [currentBanner, setCurrentBanner] = useState<BannerData | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
@@ -42,9 +40,7 @@ const BannerManager = () => {
   useEffect(() => {
     // Update image preview when language changes
     if (formData.image) {
-      setImagePreview(formData.image);
-    } else {
-      setImagePreview('');
+      // Image preview is handled directly in the UI using formData.image
     }
   }, [formData.image]);
 
@@ -68,14 +64,9 @@ const BannerManager = () => {
           },
           image: data.data.image || '',
         });
-        
-        // Set image preview if there's an existing image
-        if (data.data.image) {
-          setImagePreview(data.data.image);
-        }
       }
-    } catch (error) {
-      console.error('Error fetching current banner:', error);
+    } catch (_error) {
+      console.error('Error fetching current banner:', _error);
     }
   };
 
@@ -105,7 +96,6 @@ const BannerManager = () => {
     if (file) {
       // Check if it's an image file
       if (file.type.startsWith('image/')) {
-        setSelectedFile(file);
         setIsUploading(true);
         
         try {
@@ -127,15 +117,12 @@ const BannerManager = () => {
               ...prev,
               image: data.data.path
             }));
-            setImagePreview(data.data.path);
             setMessage('Image uploaded successfully!');
           } else {
             setMessage(data.message || 'Failed to upload image');
-            setSelectedFile(null);
           }
-        } catch (error) {
+        } catch (_error) {
           setMessage('Error uploading image');
-          setSelectedFile(null);
         } finally {
           setIsUploading(false);
         }
@@ -169,13 +156,10 @@ const BannerManager = () => {
       if (data.success) {
         setMessage('Banner saved successfully!');
         fetchCurrentBanner();
-        // Clear the file selection after successful save
-        setSelectedFile(null);
-        // Don't clear imagePreview since we're storing file paths now
       } else {
         setMessage(data.message || 'Failed to save banner');
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage('An error occurred while saving the banner');
     } finally {
       setIsLoading(false);
@@ -293,7 +277,6 @@ const BannerManager = () => {
                         ...prev,
                         image: ''
                       }));
-                      setSelectedFile(null);
                     }}
                     className="text-xs text-red-600 hover:text-red-800 underline"
                   >
@@ -328,7 +311,7 @@ const BannerManager = () => {
                   } else {
                     setMessage(data.message || 'Failed to create sample banner');
                   }
-                } catch (error) {
+                } catch (_error) {
                   setMessage('Error creating sample banner');
                 }
               }}

@@ -3,10 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok, FaWhatsapp, FaTelegram } from 'react-icons/fa';
+import { IconType } from 'react-icons';
+
+// Define the social media interface
+interface SocialMedia {
+  _id: string;
+  platform: string;
+  icon: string;
+  url: string;
+  isActive: boolean;
+  order: number;
+}
 
 const Contact = () => {
   const { t } = useTranslation();
-  const [socialMedia, setSocialMedia] = useState([]);
+  const [socialMedia, setSocialMedia] = useState<SocialMedia[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +39,7 @@ const Contact = () => {
   };
 
   const getIconComponent = (iconName: string) => {
-    const iconMap: { [key: string]: any } = {
+    const iconMap: { [key: string]: IconType } = {
       'FaFacebookF': FaFacebookF,
       'FaInstagram': FaInstagram,
       'FaTwitter': FaTwitter,
@@ -62,7 +73,7 @@ const Contact = () => {
             </li>
           ) : socialMedia.length > 0 ? (
             <li className='flex gap-10 py-4'>
-              {socialMedia.map((social: any) => (
+              {socialMedia.map((social: SocialMedia) => (
                 <a 
                   key={social._id} 
                   href={social.url} 

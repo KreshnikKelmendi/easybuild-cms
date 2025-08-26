@@ -143,7 +143,7 @@ const ServiceManager = () => {
           } else {
             setMessage(data.message || 'Failed to upload image');
           }
-        } catch (error) {
+        } catch {
           setMessage('Error uploading image');
         } finally {
           setIsUploading(false);
@@ -607,9 +607,11 @@ const ServiceManager = () => {
                 {formData.image ? (
                   <div className="space-y-2">
                     <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
-                      <img 
+                      <Image 
                         src={formData.image} 
                         alt="Preview" 
+                        width={96}
+                        height={80}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -663,9 +665,11 @@ const ServiceManager = () => {
                 {formData.hoverImage ? (
                   <div className="space-y-2">
                     <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
-                      <img 
+                      <Image 
                         src={formData.hoverImage} 
                         alt="Hover Preview" 
+                        width={96}
+                        height={80}
                         className="w-full h-full object-cover"
                       />
                     </div>
