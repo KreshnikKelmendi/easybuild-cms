@@ -10,13 +10,40 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    // Allow local image optimization
+    unoptimized: false,
   },
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
     MONGODB_DB_NAME: process.env.MONGODB_DB_NAME || 'easybuild',
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   },
   experimental: {
     serverComponentsExternalPackages: ['mongoose'],
+  },
+  // Handle file uploads better in production
+  async headers() {
+    return [
+      {
+        source: '/api/upload-image',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'POST, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type',
+          },
+        ],
+      },
+    ];
   },
 };
 

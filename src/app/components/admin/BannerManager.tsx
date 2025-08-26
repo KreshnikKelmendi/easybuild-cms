@@ -103,11 +103,15 @@ const BannerManager = () => {
           const formData = new FormData();
           formData.append('file', file);
           
-          // Upload file to server
-          const response = await fetch('/api/upload-image', {
+          // Upload file to Cloudinary
+          const response = await fetch('/api/upload-image-cloudinary', {
             method: 'POST',
             body: formData,
           });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
           
           const data = await response.json();
           
@@ -118,11 +122,26 @@ const BannerManager = () => {
               image: data.data.path
             }));
             setMessage('Image uploaded successfully!');
+            console.log('Upload details:', data.data);
           } else {
             setMessage(data.message || 'Failed to upload image');
+            console.error('Upload failed:', data);
           }
-        } catch {
-          setMessage('Error uploading image');
+        } catch (error) {
+          console.error('Upload error:', error);
+          if (error instanceof Error) {
+                         if (error.message.includes('500')) {
+               setMessage('Server error: Cloudinary upload issue. Please check your API keys.');
+             } else if (error.message.includes('413')) {
+               setMessage('File too large. Please select a smaller image.');
+             } else if (error.message.includes('Invalid credentials')) {
+               setMessage('Cloudinary credentials error. Please check your API configuration.');
+             } else {
+               setMessage(`Upload error: ${error.message}`);
+             }
+          } else {
+            setMessage('Network error: Please check your connection and try again.');
+          }
         } finally {
           setIsUploading(false);
         }

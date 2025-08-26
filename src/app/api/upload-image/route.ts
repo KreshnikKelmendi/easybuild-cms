@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, access } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
@@ -23,26 +23,116 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate file size (limit to 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { success: false, message: 'File size must be less than 10MB' },
+        { status: 400 }
+      );
+    }
+
     // Create unique filename
     const timestamp = Date.now();
     const originalName = file.name;
-    const extension = originalName.split('.').pop();
+    const extension = originalName.split('.').pop()?.toLowerCase() || 'jpg';
     const filename = `banner-${timestamp}.${extension}`;
     
-    // Ensure assets directory exists
-    const assetsDir = join(process.cwd(), 'public', 'assets');
-    if (!existsSync(assetsDir)) {
-      await mkdir(assetsDir, { recursive: true });
+    // Try multiple upload locations for production compatibility
+    let uploadSuccess = false;
+    let filePath = '';
+    let publicPath = '';
+
+    // First try: public/assets directory
+    try {
+      const assetsDir = join(process.cwd(), 'public', 'assets');
+      
+      // Check if directory exists and is writable
+      if (!existsSync(assetsDir)) {
+        try {
+          await mkdir(assetsDir, { recursive: true });
+        } catch (mkdirError) {
+          console.warn('Could not create public/assets directory:', mkdirError);
+          throw new Error('Directory creation failed');
+        }
+      }
+
+      // Test write permissions
+      try {
+        await access(assetsDir, 2); // Check write permission
+      } catch (accessError) {
+        console.warn('No write permission to public/assets directory:', accessError);
+        throw new Error('No write permission');
+      }
+
+      filePath = join(assetsDir, filename);
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      await writeFile(filePath, buffer);
+      
+      uploadSuccess = true;
+      publicPath = `/assets/${filename}`;
+      
+    } catch (firstError) {
+      console.warn('First upload attempt failed:', firstError);
+      
+      // Second try: public/uploads directory
+      try {
+        const uploadsDir = join(process.cwd(), 'public', 'uploads');
+        
+        if (!existsSync(uploadsDir)) {
+          try {
+            await mkdir(uploadsDir, { recursive: true });
+          } catch (mkdirError) {
+            console.warn('Could not create public/uploads directory:', mkdirError);
+            throw new Error('Uploads directory creation failed');
+          }
+        }
+
+        filePath = join(uploadsDir, filename);
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        await writeFile(filePath, buffer);
+        
+        uploadSuccess = true;
+        publicPath = `/uploads/${filename}`;
+        
+      } catch (secondError) {
+        console.warn('Second upload attempt failed:', secondError);
+        
+        // Third try: temp directory
+        try {
+          const tempDir = join(process.cwd(), 'tmp');
+          
+          if (!existsSync(tempDir)) {
+            try {
+              await mkdir(tempDir, { recursive: true });
+            } catch (mkdirError) {
+              console.warn('Could not create tmp directory:', mkdirError);
+              throw new Error('Temp directory creation failed');
+            }
+          }
+
+          filePath = join(tempDir, filename);
+          const bytes = await file.arrayBuffer();
+          const buffer = Buffer.from(bytes);
+          await writeFile(filePath, buffer);
+          
+          uploadSuccess = true;
+          publicPath = `/tmp/${filename}`;
+          
+        } catch (thirdError) {
+          console.error('All upload attempts failed:', thirdError);
+          throw new Error('All upload locations are inaccessible');
+        }
+      }
     }
 
-    // Save file to public/assets folder
-    const filePath = join(assetsDir, filename);
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
+    if (!uploadSuccess) {
+      throw new Error('Failed to upload file to any location');
+    }
 
-    // Return the public URL path
-    const publicPath = `/assets/${filename}`;
+    console.log(`Image uploaded successfully to: ${filePath}`);
 
     return NextResponse.json({
       success: true,
@@ -51,17 +141,34 @@ export async function POST(request: NextRequest) {
         filename,
         path: publicPath,
         size: file.size,
-        type: file.type
+        type: file.type,
+        uploadLocation: filePath
       }
     });
 
   } catch (error) {
     console.error('Error uploading image:', error);
+    
+    // Provide more specific error messages
+    let errorMessage = 'Failed to upload image';
+    if (error instanceof Error) {
+      if (error.message.includes('permission')) {
+        errorMessage = 'Server file system permission error';
+      } else if (error.message.includes('directory')) {
+        errorMessage = 'Server directory creation failed';
+      } else if (error.message.includes('inaccessible')) {
+        errorMessage = 'All upload locations are inaccessible';
+      } else {
+        errorMessage = error.message;
+      }
+    }
+
     return NextResponse.json(
       { 
         success: false, 
-        message: 'Failed to upload image',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        message: errorMessage,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
       },
       { status: 500 }
     );
