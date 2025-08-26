@@ -1,6 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import cloudinary from '@/lib/cloudinary';
 
+// Define proper types for Cloudinary response and error
+interface CloudinaryUploadResult {
+  public_id: string;
+  secure_url: string;
+  width: number;
+  height: number;
+  format: string;
+  resource_type: string;
+  bytes: number;
+  created_at: string;
+}
+
+interface CloudinaryError {
+  message: string;
+  http_code?: number;
+  name?: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -41,7 +59,7 @@ export async function POST(request: NextRequest) {
     const filename = `banner-${timestamp}.${extension}`;
 
     // Upload to Cloudinary
-    const result = await new Promise((resolve, reject) => {
+    const result = await new Promise<CloudinaryUploadResult>((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
           resource_type: 'image',
@@ -52,7 +70,7 @@ export async function POST(request: NextRequest) {
             { fetch_format: 'auto' }
           ]
         },
-        (error: any, result: any) => {
+        (error: CloudinaryError | null, result: CloudinaryUploadResult) => {
           if (error) {
             reject(error);
           } else {
@@ -66,7 +84,7 @@ export async function POST(request: NextRequest) {
       throw new Error('Upload failed - invalid result from Cloudinary');
     }
 
-    const cloudinaryResult = result as any;
+    const cloudinaryResult = result as CloudinaryUploadResult;
 
     console.log('Image uploaded to Cloudinary successfully:', {
       filename,

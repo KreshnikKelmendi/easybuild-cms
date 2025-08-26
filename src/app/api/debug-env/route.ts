@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { access, mkdir, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const cwd = process.cwd();
     const env = process.env.NODE_ENV || 'unknown';
