@@ -5,14 +5,15 @@ import mongoose from 'mongoose';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log('Fetching project with ID:', params.id);
+    const { id } = await params;
+    console.log('Fetching project with ID:', id);
     
     // Validate ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
-      console.log('Invalid ObjectId format:', params.id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log('Invalid ObjectId format:', id);
       return NextResponse.json(
         { success: false, message: 'Invalid project ID format' },
         { status: 400 }
@@ -21,11 +22,11 @@ export async function GET(
     
     await connectDB();
     
-    const project = await Project.findById(params.id);
+    const project = await Project.findById(id);
     console.log('Found project:', project ? 'Yes' : 'No');
     
     if (!project) {
-      console.log('Project not found for ID:', params.id);
+      console.log('Project not found for ID:', id);
       return NextResponse.json(
         { success: false, message: 'Project not found' },
         { status: 404 }

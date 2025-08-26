@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import Image from 'next/image';
 
 type LanguageCode = 'en' | 'de' | 'al';
@@ -21,7 +21,7 @@ interface BannerData {
 }
 
 const BannerManager = () => {
-  const { t } = useTranslation();
+  // Translation hook removed as it's not being used
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
   const [formData, setFormData] = useState<BannerData>({
     title: { en: '', de: '', al: '' },
@@ -121,7 +121,7 @@ const BannerManager = () => {
           } else {
             setMessage(data.message || 'Failed to upload image');
           }
-        } catch (_error) {
+        } catch {
           setMessage('Error uploading image');
         } finally {
           setIsUploading(false);
@@ -159,7 +159,7 @@ const BannerManager = () => {
       } else {
         setMessage(data.message || 'Failed to save banner');
       }
-    } catch (_error) {
+    } catch {
       setMessage('An error occurred while saving the banner');
     } finally {
       setIsLoading(false);
@@ -311,7 +311,7 @@ const BannerManager = () => {
                   } else {
                     setMessage(data.message || 'Failed to create sample banner');
                   }
-                } catch (_error) {
+                } catch {
                   setMessage('Error creating sample banner');
                 }
               }}
