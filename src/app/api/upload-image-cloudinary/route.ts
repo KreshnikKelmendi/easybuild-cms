@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
             { fetch_format: 'auto' }
           ]
         },
-        (error, result) => {
+        (error: any, result: any) => {
           if (error) {
             reject(error);
           } else {

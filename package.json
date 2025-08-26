@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "cloudinary": "^2.7.0",
     "gsap": "^3.13.0",
     "i18next": "^25.3.6",
     "mongoose": "^8.17.2",
