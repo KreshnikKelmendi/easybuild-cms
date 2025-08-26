@@ -75,7 +75,7 @@ const WoodsManager = () => {
           const formData = new FormData();
           formData.append('file', file);
           
-          const response = await fetch('/api/upload-image', {
+          const response = await fetch('/api/upload-image-cloudinary', {
             method: 'POST',
             body: formData,
           });

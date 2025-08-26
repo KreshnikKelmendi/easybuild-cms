@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
     // Allow local image optimization
     unoptimized: false,
@@ -28,6 +34,23 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/upload-image',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'POST, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type',
+          },
+        ],
+      },
+      {
+        source: '/api/upload-image-cloudinary',
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
