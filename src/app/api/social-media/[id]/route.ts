@@ -5,14 +5,15 @@ import SocialMedia from '@/models/SocialMedia';
 // PUT update social media
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
     const body = await request.json();
     
     const socialMedia = await SocialMedia.findByIdAndUpdate(
-      params.id,
+      id,
       body,
       { new: true, runValidators: true }
     );
@@ -37,12 +38,13 @@ export async function PUT(
 // DELETE social media
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
     
-    const socialMedia = await SocialMedia.findByIdAndDelete(params.id);
+    const socialMedia = await SocialMedia.findByIdAndDelete(id);
     
     if (!socialMedia) {
       return NextResponse.json(
