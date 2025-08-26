@@ -72,11 +72,13 @@ export async function POST(request: NextRequest) {
             { fetch_format: 'auto' }
           ]
         },
-        (error: CloudinaryError | undefined, result: CloudinaryUploadResult) => {
+        (error: any, result: any) => {
           if (error) {
             reject(error);
-          } else {
+          } else if (result && result.public_id) {
             resolve(result);
+          } else {
+            reject(new Error('Upload failed - no result from Cloudinary'));
           }
         }
       ).end(buffer);
