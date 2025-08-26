@@ -144,9 +144,9 @@ const Projects = () => {
 
 
                {/* Projects Section */}
-        <div className="px-6 lg:px-8 py-24">
+        <div className="px-4 lg:px-[50px] py-16">
          {/* Projects Grid */}
-         <div ref={projectsSectionRef} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10 mb-16">
+         <div ref={projectsSectionRef} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
            {currentProjects.map((project, index) => (
              <div
                key={project._id}
@@ -180,28 +180,22 @@ const Projects = () => {
                    Project
                  </div>
                  
-                 {/* Date badge */}
-                 <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm text-gray-700 px-3 py-2 rounded-xl text-xs font-semibold shadow-lg">
-                   {new Date(project.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                 </div>
+              
                </div>
 
                              {/* Project Content */}
-               <div className="p-8">
-                 <h3 className="text-3xl font-custom1 text-gray-800 mb-6 group-hover:text-[#DD4624] transition-colors duration-500 leading-tight">
+               <div className="p-6">
+                 <h3 className="text-2xl font-custom1 text-gray-800 mb-4 group-hover:text-[#DD4624] transition-colors duration-500 leading-tight">
                    {getTitleInCurrentLanguage(project)}
                  </h3>
-                 <p className="text-gray-600 text-lg leading-relaxed mb-8 line-clamp-3">
-                   {getDescriptionInCurrentLanguage(project)}
-                 </p>
                  
                  {/* Additional Images Preview */}
                  {project.additionalImages.length > 0 && (
-                   <div className="mb-8">
-                     <p className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wider">Gallery Preview</p>
-                     <div className="flex gap-4">
+                   <div className="mb-6">
+                     <p className="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">Gallery Preview</p>
+                     <div className="flex gap-3">
                        {project.additionalImages.slice(0, 3).map((image, imgIndex) => (
-                         <div key={imgIndex} className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg group-hover:border-[#DD4624]/30 transition-all duration-500 transform group-hover:scale-110">
+                         <div key={imgIndex} className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg group-hover:border-[#DD4624]/30 transition-all duration-500 transform group-hover:scale-110">
                            <Image
                              src={image}
                              alt={`Additional ${imgIndex + 1}`}
@@ -211,7 +205,7 @@ const Projects = () => {
                          </div>
                        ))}
                        {project.additionalImages.length > 3 && (
-                         <div className="w-20 h-20 bg-gradient-to-br from-[#DD4624]/20 to-[#DD4624]/40 rounded-2xl flex items-center justify-center text-lg font-bold text-[#DD4624] border-2 border-[#DD4624]/30 shadow-lg transform group-hover:scale-110 transition-all duration-500">
+                         <div className="w-16 h-16 bg-gradient-to-br from-[#DD4624]/20 to-[#DD4624]/40 rounded-2xl flex items-center justify-center text-sm font-bold text-[#DD4624] border-2 border-[#DD4624]/30 shadow-lg transform group-hover:scale-110 transition-all duration-500">
                            +{project.additionalImages.length - 3}
                          </div>
                        )}
@@ -220,10 +214,10 @@ const Projects = () => {
                  )}
 
                  {/* Project Footer */}
-                 <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+                 <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                    <div className="flex items-center gap-3 text-gray-600">
                      <div className="w-3 h-3 bg-[#DD4624] rounded-full animate-pulse"></div>
-                     <span className="text-base font-semibold">
+                     <span className="text-sm font-semibold">
                        {new Date(project.createdAt).toLocaleDateString('en-US', {
                          year: 'numeric',
                          month: 'long',
@@ -231,9 +225,9 @@ const Projects = () => {
                        })}
                      </span>
                    </div>
-                   <div className="flex items-center gap-3 text-[#DD4624] group-hover:gap-4 transition-all duration-500 bg-gradient-to-r from-[#DD4624]/10 to-[#DD4624]/20 px-6 py-3 rounded-2xl group-hover:from-[#DD4624]/20 group-hover:to-[#DD4624]/30 shadow-lg">
-                     <span className="text-base font-bold">{t('viewProject')}</span>
-                     <FaArrowRight className="text-lg transform group-hover:translate-x-2 transition-transform duration-500" />
+                   <div className="flex items-center gap-3 text-[#DD4624] group-hover:gap-4 transition-all duration-500 bg-gradient-to-r from-[#DD4624]/10 to-[#DD4624]/20 px-4 py-2 rounded-2xl group-hover:from-[#DD4624]/20 group-hover:to-[#DD4624]/30 shadow-lg">
+                     <span className="text-sm font-bold">{t('viewProject')}</span>
+                     <FaArrowRight className="text-base transform group-hover:translate-x-2 transition-transform duration-500" />
                    </div>
                  </div>
                </div>
@@ -243,7 +237,7 @@ const Projects = () => {
 
                  {/* Pagination */}
          {totalPages > 1 && (
-           <div className="flex justify-center items-center gap-6 mt-20">
+           <div className="flex justify-center items-center gap-6 mt-16">
              <button
                onClick={() => handlePageChange(currentPage - 1)}
                disabled={currentPage === 1}
@@ -280,7 +274,7 @@ const Projects = () => {
 
                           {/* No Projects Message */}
          {projects.length === 0 && (
-           <div className="text-center py-32">
+           <div className="text-center py-24">
              <div className="w-40 h-40 mx-auto bg-gradient-to-br from-[#DD4624]/20 to-[#DD4624]/5 rounded-full flex items-center justify-center mb-10 shadow-2xl">
                <svg className="w-20 h-20 text-[#DD4624]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />

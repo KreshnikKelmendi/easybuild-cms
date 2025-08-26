@@ -17,7 +17,7 @@ const AboutUsOnHomePage = () => {
 
   return (
     <>
-      <div className='bg-[#DD4624] h-[100vh] lg:h-[120ch] rounded-[15px] relative'>
+      <div className='bg-[#DD4624] h-fit lg:h-[120ch] rounded-[15px] relative'>
           <div className='flex flex-col lg:flex-row px-5 lg:px-[60px] py-16 2xl:px-[120px] lg:py-36'>
               <div className='w-full lg:w-1/2'>
               <Image 

@@ -203,7 +203,7 @@ const Header = () => {
       {/* Mobile Navigation Menu */}
       <ul className={
         nav
-          ? 'fixed lg:hidden font-custom1 text-5xl left-0 top-0 w-full h-full bg-[#191716] mt-3 z-50'
+          ? 'fixed lg:hidden font-custom1 text-2xl left-0 top-0 w-full h-full bg-[#191716] mt-3 z-50'
           : ' w-[100%] fixed top-0 bottom-0 left-[-100%]'
         }>
         {/* Mobile Logo and Close Icon */}
@@ -253,7 +253,10 @@ const Header = () => {
           <div className='mt-16'>
             <div className="flex items-center justify-center gap-4">
               <button
-                onClick={() => changeLanguage('en')}
+                onClick={() => {
+                  changeLanguage('en');
+                  handleNav();
+                }}
                 className={`px-3 py-2 rounded-md transition-colors ${
                   i18n.language === 'en' 
                     ? 'text-[#DD4726] bg-gray-800' 
@@ -263,7 +266,10 @@ const Header = () => {
                 EN
               </button>
               <button
-                onClick={() => changeLanguage('de')}
+                onClick={() => {
+                  changeLanguage('de');
+                  handleNav();
+                }}
                 className={`px-3 py-2 rounded-md transition-colors ${
                   i18n.language === 'de' 
                     ? 'text-[#DD4726] bg-gray-800' 
@@ -273,7 +279,10 @@ const Header = () => {
                 DE
               </button>
               <button
-                onClick={() => changeLanguage('al')}
+                onClick={() => {
+                  changeLanguage('al');
+                  handleNav();
+                }}
                 className={`px-3 py-2 rounded-md transition-colors ${
                   i18n.language === 'al' 
                     ? 'text-[#DD4726] bg-gray-800' 

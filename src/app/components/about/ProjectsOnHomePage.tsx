@@ -150,7 +150,6 @@ const ProjectsOnHomePage = () => {
                       <div className="absolute w-full h-full p-6">
                         <div className="flex flex-col h-full justify-end text-center pb-6 lg:text-[24px] font-custom font-normal text-white">
                           <p className="text-xl lg:text-[24px] font-custom font-normal leading-5 lg:leading-6">{getCurrentLanguageText(project.title)}</p>
-                          <p className="text-[20px] mt-[3px]">{limitTo75Words(getCurrentLanguageText(project.description))}</p>
                         </div>
                       </div>
                     </div>
@@ -193,7 +192,6 @@ const ProjectsOnHomePage = () => {
                               <div className="absolute w-full h-full p-6">
                                 <div className="flex flex-col h-full justify-end text-center pb-6 lg:text-[24px] font-custom font-normal text-white">
                                   <p className="text-xl lg:text-[24px] font-custom font-normal leading-5 lg:leading-6">{getCurrentLanguageText(project.title)}</p>
-                                  <p className="text-[20px] mt-[3px]">{limitTo75Words(getCurrentLanguageText(project.description))}</p>
                                 </div>
                               </div>
                             </div>
@@ -237,9 +235,6 @@ const ProjectsOnHomePage = () => {
                       )}
                       <div className="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
                         <h2 className="lg:text-xl leading-4 text-base lg:leading-5 text-white">{getCurrentLanguageText(project.title)}</h2>
-                        <div className="flex h-full items-end pb-6">
-                          <h3 className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6 text-white">{limitTo75Words(getCurrentLanguageText(project.description))}</h3>
-                        </div>
                       </div>
                     </div>
                   ))}
@@ -280,9 +275,6 @@ const ProjectsOnHomePage = () => {
                               )}
                               <div className="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
                                 <h2 className="lg:text-xl leading-4 text-base lg:leading-5 text-white">{getCurrentLanguageText(project.title)}</h2>
-                                <div className="flex h-full items-end pb-6">
-                                  <h3 className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6 text-white">{limitTo75Words(getCurrentLanguageText(project.description))}</h3>
-                                </div>
                               </div>
                             </div>
                           ))}
@@ -326,7 +318,6 @@ const ProjectsOnHomePage = () => {
                       <div className="absolute w-full h-full p-6">
                         <div className="flex flex-col h-full justify-end text-center pb-6 text-white">
                           <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6">{getCurrentLanguageText(project.title)}</p>
-                          <p className="text-[20px] mt-[3px]">{limitTo75Words(getCurrentLanguageText(project.description))}</p>
                         </div>
                                                       {/* Additional Images Grid */}
                               {project.additionalImages && project.additionalImages.length > 0 && (
@@ -388,7 +379,6 @@ const ProjectsOnHomePage = () => {
                             <div className="absolute w-full h-full p-6">
                               <div className="flex flex-col h-full justify-end text-center pb-6 text-white">
                                 <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6">{getCurrentLanguageText(project.title)}</p>
-                                <p className="text-[20px] mt-[3px]">{limitTo75Words(getCurrentLanguageText(project.description))}</p>
                               </div>
                               {/* Additional Images Grid */}
                               {project.additionalImages && project.additionalImages.length > 0 && (

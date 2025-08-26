@@ -44,12 +44,12 @@ const Woods = () => {
 
   if (isLoading) {
     return (
-      <div className='mt-6 lg:mt-20 flex flex-col items-center lg:text-left mx-auto px-5 lg:px-0'>
+      <div className='mt-6 lg:mt-20 flex flex-col items-center text-left lg:text-left mx-auto px-5 lg:px-0'>
         <div className='flex flex-col mb-10'>
-          <p className='font-custom text-[#191716] text-justify lg:text-center tracking-tighter lg:tracking-normal text-[32px] lg:text-[48px] font-semibold '>
+          <p className='font-custom text-[#191716] text-left lg:text-center lg:tracking-normal text-[32px] lg:text-[48px] font-semibold '>
             {t('materials_that_we_use')}
           </p>
-          <p className='lg:w-[548px] w-full text-justify lg:text-center tracking-tighter lg:tracking-normal font-custom lg:text-[20px] leading-[23.5px] mt-2'>
+          <p className='lg:w-[548px] w-full text-left lg:text-center lg:tracking-normal font-custom lg:text-[20px] leading-[23.5px] mt-2'>
             {t('second_materials_that_we_use')}
           </p>
         </div>
@@ -63,7 +63,7 @@ const Woods = () => {
   return (
     <div className='mt-6 lg:mt-20 flex flex-col items-center lg:text-left mx-auto px-5 lg:px-0'>
       <div className='flex flex-col mb-10'>
-        <p className='font-custom text-[#191716] text-justify lg:text-center tracking-tighter lg:tracking-normal text-[32px] lg:text-[48px] font-semibold '>
+        <p className='font-custom text-[#191716] text-left lg:text-center tracking-tighter lg:tracking-normal text-[32px] lg:text-[48px] font-semibold '>
           {t('materials_that_we_use')}
         </p>
         <p className='lg:w-[548px] w-full text-justify lg:text-center tracking-tighter lg:tracking-normal font-custom lg:text-[20px] leading-[23.5px] mt-2'>

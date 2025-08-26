@@ -74,7 +74,7 @@ const ProjectsBanner = () => {
         </div>
 
         <div className='lg:w-1/2 2xl:mr-[50px] py-12'>
-          <div className='relative w-full h-[449px] service-image'>
+          <div className='relative w-full lg:h-[449px] service-image'>
             <Image
               src="/assets/image1.png"
               alt="Projects Banner"
