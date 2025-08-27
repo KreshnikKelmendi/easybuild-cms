@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir, existsSync } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
-import { existsSync as fsExistsSync } from 'fs';
+import { existsSync, readFileSync, unlinkSync, rmdirSync } from 'fs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     // Create temp directory for chunks
     const tempDir = join(process.cwd(), 'tmp', 'chunks', fileName);
-    if (!fsExistsSync(tempDir)) {
+    if (!existsSync(tempDir)) {
       await mkdir(tempDir, { recursive: true });
     }
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       const finalPath = join(process.cwd(), 'public', 'uploads', fileName);
       const finalDir = join(process.cwd(), 'public', 'uploads');
       
-      if (!fsExistsSync(finalDir)) {
+      if (!existsSync(finalDir)) {
         await mkdir(finalDir, { recursive: true });
       }
 
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       const chunks: Buffer[] = [];
       for (let i = 0; i < totalChunks; i++) {
         const chunkPath = join(tempDir, `chunk-${i}`);
-        const chunkBuffer = await import('fs').then(fs => fs.readFileSync(chunkPath));
+        const chunkBuffer = readFileSync(chunkPath);
         chunks.push(chunkBuffer);
       }
       
@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
       // Clean up chunks
       for (let i = 0; i < totalChunks; i++) {
         const chunkPath = join(tempDir, `chunk-${i}`);
-        await import('fs').then(fs => fs.unlinkSync(chunkPath));
+        unlinkSync(chunkPath);
       }
-      await import('fs').then(fs => fs.rmdirSync(tempDir));
+      rmdirSync(tempDir);
 
       return NextResponse.json({
         success: true,
