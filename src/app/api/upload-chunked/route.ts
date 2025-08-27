@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     
     if (!chunk || !fileName) {
       return NextResponse.json(
-        { success: false, message: 'Missing chunk or fileName' },
+        { success: false, message: 'Missing chunks or fileName' },
         { status: 400 }
       );
     }
