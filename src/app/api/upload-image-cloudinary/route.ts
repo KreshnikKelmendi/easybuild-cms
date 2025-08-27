@@ -33,8 +33,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (configurable limit)
-    const maxSize = parseInt(process.env.MAX_FILE_SIZE || '104857600'); // Default 100MB
+    // Check if file is too large for Vercel (4.5MB limit)
+    const vercelLimit = 4.5 * 1024 * 1024; // 4.5MB
+    if (file.size > vercelLimit) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: 'File too large for Cloudinary upload. Use chunked upload instead.',
+          error: 'FILE_TOO_LARGE_FOR_VERCEL',
+          maxSize: '4.5MB',
+          recommendedMethod: 'chunked_upload',
+          chunkSize: '4MB'
+        },
+        { status: 413 }
+      );
+    }
+
+    // Validate file size (configurable limit for smaller files)
+    const maxSize = parseInt(process.env.MAX_FILE_SIZE || '4194304'); // Default 4MB for Vercel
     if (file.size > maxSize) {
       const maxSizeMB = Math.round(maxSize / (1024 * 1024));
       return NextResponse.json(

@@ -16,10 +16,11 @@ NODE_ENV=production
 # Go to Google Account > Security > 2-Step Verification > App passwords
 GMAIL_APP_PASSWORD=your_gmail_app_password_here
 
-# File Upload Configuration
-# Maximum file size in bytes (default: 100MB)
-MAX_FILE_SIZE=104857600
-# Maximum chunk size in bytes (default: 20MB)
-MAX_CHUNK_SIZE=20971520
-# Maximum total file size for chunked uploads (default: 200MB)
-MAX_TOTAL_FILE_SIZE=209715200
+# File Upload Configuration for Vercel
+# Vercel has a hard limit of 4.5MB per request
+# Maximum file size in bytes (default: 4MB for Vercel compatibility)
+MAX_FILE_SIZE=4194304
+# Maximum chunk size in bytes (default: 4MB for Vercel compatibility)
+MAX_CHUNK_SIZE=4194304
+# Maximum total file size for chunked uploads (default: 100MB)
+MAX_TOTAL_FILE_SIZE=104857600

@@ -19,19 +19,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size per chunk (configurable limit)
-    const maxChunkSize = parseInt(process.env.MAX_CHUNK_SIZE || '20971520'); // Default 20MB
+    // Validate file size per chunk (Vercel limit: 4.5MB, so we use 4MB to be safe)
+    const maxChunkSize = parseInt(process.env.MAX_CHUNK_SIZE || '4194304'); // Default 4MB for Vercel
     if (chunk.size > maxChunkSize) {
       const maxChunkSizeMB = Math.round(maxChunkSize / (1024 * 1024));
       return NextResponse.json(
-        { success: false, message: `Chunk size must be less than ${maxChunkSizeMB}MB` },
+        { success: false, message: `Chunk size must be less than ${maxChunkSizeMB}MB for Vercel compatibility` },
         { status: 400 }
       );
     }
 
     // Validate total file size (configurable limit)
     const totalFileSize = parseInt(formData.get('totalFileSize') as string) || 0;
-    const maxTotalSize = parseInt(process.env.MAX_TOTAL_FILE_SIZE || '209715200'); // Default 200MB
+    const maxTotalSize = parseInt(process.env.MAX_TOTAL_FILE_SIZE || '104857600'); // Default 100MB
     if (totalFileSize > maxTotalSize) {
       const maxTotalSizeMB = Math.round(maxTotalSize / (1024 * 1024));
       return NextResponse.json(
@@ -81,11 +81,13 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'File uploaded successfully',
+        message: 'File uploaded successfully via chunks',
         data: {
           fileName,
           path: `/uploads/${fileName}`,
-          size: finalBuffer.length
+          size: finalBuffer.length,
+          chunks: totalChunks,
+          method: 'chunked'
         }
       });
     }
@@ -94,7 +96,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `Chunk ${chunkIndex + 1}/${totalChunks} uploaded`,
       chunkIndex,
-      totalChunks
+      totalChunks,
+      progress: Math.round(((chunkIndex + 1) / totalChunks) * 100)
     });
 
   } catch (error) {
