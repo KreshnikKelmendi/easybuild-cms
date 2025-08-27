@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
+import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
 
 interface Service {
   _id: string;
@@ -124,27 +125,53 @@ const ServiceManager = () => {
         setIsUploading(true);
         
         try {
-          const formData = new FormData();
-          formData.append('file', file);
+          let uploadResult: any;
           
-          const response = await fetch('/api/upload-image-cloudinary', {
-            method: 'POST',
-            body: formData,
-          });
-          
-          const data = await response.json();
-          
-          if (data.success) {
-            setFormData(prev => ({
-              ...prev,
-              [type === 'main' ? 'image' : 'hoverImage']: data.data.path
-            }));
-            setMessage(`${type === 'main' ? 'Main' : 'Hover'} image uploaded successfully!`);
+          // Check if file needs chunking (larger than 4MB)
+          if (ChunkedUploader.needsChunking(file)) {
+            // Use chunked upload for large files
+            uploadResult = await uploadFileInChunks(file, {
+              onProgress: (progress) => {
+                console.log(`Upload progress: ${progress}%`);
+              },
+              onChunkComplete: (chunkIndex, totalChunks) => {
+                console.log(`Chunk ${chunkIndex + 1}/${totalChunks} completed`);
+              }
+            });
+            
+            if (uploadResult.success && uploadResult.data) {
+              setFormData(prev => ({
+                ...prev,
+                [type === 'main' ? 'image' : 'hoverImage']: uploadResult.data.path
+              }));
+              setMessage(`${type === 'main' ? 'Main' : 'Hover'} image uploaded successfully via chunked upload! (${Math.round(file.size / (1024 * 1024))}MB)`);
+            } else {
+              throw new Error(uploadResult.message || 'Chunked upload failed');
+            }
           } else {
-            setMessage(data.message || 'Failed to upload image');
+            // Use direct Cloudinary upload for smaller files
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const response = await fetch('/api/upload-image-cloudinary', {
+              method: 'POST',
+              body: formData,
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+              setFormData(prev => ({
+                ...prev,
+                [type === 'main' ? 'image' : 'hoverImage']: data.data.path
+              }));
+              setMessage(`${type === 'main' ? 'Main' : 'Hover'} image uploaded successfully!`);
+            } else {
+              throw new Error(data.message || 'Failed to upload image');
+            }
           }
-        } catch {
-          setMessage('Error uploading image');
+        } catch (error) {
+          setMessage(error instanceof Error ? error.message : 'Error uploading image');
         } finally {
           setIsUploading(false);
         }
@@ -628,7 +655,7 @@ const ServiceManager = () => {
                       <p className="text-sm text-black font-zonapro">
                         {isUploading ? 'Uploading...' : 'Click to upload image'}
                       </p>
-                      <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 10MB</p>
+                                                <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 200MB</p>
                     </div>
                   </div>
                 )}
@@ -686,7 +713,7 @@ const ServiceManager = () => {
                         <p className="text-sm text-black font-zonapro">
                           {isUploading ? 'Uploading...' : 'Click to upload hover image'}
                         </p>
-                        <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 10MB (Optional)</p>
+                                                  <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 200MB (Optional)</p>
                       </div>
                     </div>
                   )}
@@ -759,32 +786,60 @@ const ServiceManager = () => {
                             setIsUploading(true);
                             
                             try {
-                              const uploadFormData = new FormData();
-                              uploadFormData.append('file', file);
+                              let uploadResult: any;
                               
-                              const response = await fetch('/api/upload-image-cloudinary', {
-                                method: 'POST',
-                                body: uploadFormData,
-                              });
-                              
-                              const data = await response.json();
-                              
-                              if (data.success) {
-                                const newStepImages = [...formData.stepImages];
-                                if (!newStepImages[index]) {
-                                  newStepImages[index] = { image: '', titleKey: '' };
+                              // Check if file needs chunking (larger than 4MB)
+                              if (ChunkedUploader.needsChunking(file)) {
+                                // Use chunked upload for large files
+                                uploadResult = await uploadFileInChunks(file, {
+                                  onProgress: (progress) => {
+                                    console.log(`Upload progress for step ${index + 1}: ${progress}%`);
+                                  }
+                                });
+                                
+                                if (uploadResult.success && uploadResult.data) {
+                                  const newStepImages = [...formData.stepImages];
+                                  if (!newStepImages[index]) {
+                                    newStepImages[index] = { image: '', titleKey: '' };
+                                  }
+                                  newStepImages[index].image = uploadResult.data.path;
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    stepImages: newStepImages
+                                  }));
+                                  setMessage(`Step ${index + 1} image uploaded successfully via chunked upload! (${Math.round(file.size / (1024 * 1024))}MB)`);
+                                } else {
+                                  throw new Error(uploadResult.message || 'Chunked upload failed');
                                 }
-                                newStepImages[index].image = data.data.path;
-                                setFormData(prev => ({
-                                  ...prev,
-                                  stepImages: newStepImages
-                                }));
-                                setMessage(`Step ${index + 1} image uploaded successfully!`);
                               } else {
-                                setMessage(data.message || 'Failed to upload image');
+                                // Use direct Cloudinary upload for smaller files
+                                const uploadFormData = new FormData();
+                                uploadFormData.append('file', file);
+                                
+                                const response = await fetch('/api/upload-image-cloudinary', {
+                                  method: 'POST',
+                                  body: uploadFormData,
+                                });
+                                
+                                const data = await response.json();
+                                
+                                if (data.success) {
+                                  const newStepImages = [...formData.stepImages];
+                                  if (!newStepImages[index]) {
+                                    newStepImages[index] = { image: '', titleKey: '' };
+                                  }
+                                  newStepImages[index].image = data.data.path;
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    stepImages: newStepImages
+                                  }));
+                                  setMessage(`Step ${index + 1} image uploaded successfully!`);
+                                } else {
+                                  throw new Error(data.message || 'Failed to upload image');
+                                }
                               }
-                            } catch {
-                              setMessage('Error uploading image');
+                            } catch (error) {
+                              setMessage(error instanceof Error ? error.message : 'Error uploading image');
                             } finally {
                               setIsUploading(false);
                             }
@@ -822,7 +877,7 @@ const ServiceManager = () => {
                                                          <p className="text-sm text-black font-zonapro">
                                {isUploading ? 'Uploading...' : 'Click to upload step image'}
                              </p>
-                             <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 10MB</p>
+                             <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 200MB</p>
                           </div>
                         </div>
                       )}

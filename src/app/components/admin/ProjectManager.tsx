@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload'
 
 interface Project {
   _id: string
@@ -82,28 +83,54 @@ const ProjectManager = () => {
         if (file && file.type.startsWith('image/')) {
           setIsUploading(true)
           
-          try {
-            const formData = new FormData()
-            formData.append('file', file)
-            
-            const response = await fetch('/api/upload-image-cloudinary', {
-              method: 'POST',
-              body: formData,
-            })
-            
-            const data = await response.json()
-            
-            if (data.success) {
-              setFormData(prev => ({
-                ...prev,
-                mainImage: data.data.path
-              }))
-              setMessage('Main image uploaded successfully!')
-            } else {
-              setMessage(data.message || 'Failed to upload image')
+                      try {
+              let uploadResult: any;
+              
+              // Check if file needs chunking (larger than 4MB)
+              if (ChunkedUploader.needsChunking(file)) {
+                // Use chunked upload for large files
+                uploadResult = await uploadFileInChunks(file, {
+                  onProgress: (progress) => {
+                    console.log(`Upload progress: ${progress}%`);
+                  },
+                  onChunkComplete: (chunkIndex, totalChunks) => {
+                    console.log(`Chunk ${chunkIndex + 1}/${totalChunks} completed`);
+                  }
+                });
+                
+                if (uploadResult.success && uploadResult.data) {
+                  setFormData(prev => ({
+                    ...prev,
+                    mainImage: uploadResult.data!.path
+                  }))
+                  setMessage(`Main image uploaded successfully via chunked upload! (${Math.round(file.size / (1024 * 1024))}MB)`)
+                } else {
+                  throw new Error(uploadResult.message || 'Chunked upload failed')
+                }
+              } else {
+              // Use direct Cloudinary upload for smaller files
+              const formData = new FormData()
+              formData.append('file', file)
+              
+              const response = await fetch('/api/upload-image-cloudinary', {
+                method: 'POST',
+                body: formData,
+              })
+              
+              const data = await response.json()
+              
+              if (data.success) {
+                setFormData(prev => ({
+                  ...prev,
+                  mainImage: data.data.path
+                }))
+                setMessage('Main image uploaded successfully!')
+              } else {
+                throw new Error(data.message || 'Failed to upload image')
+              }
             }
-          } catch {
-            setMessage('Error uploading image')
+          } catch (error) {
+            setMessage(error instanceof Error ? error.message : 'Error uploading image')
           } finally {
             setIsUploading(false)
           }
@@ -120,18 +147,39 @@ const ProjectManager = () => {
             const uploadedImages: string[] = []
             
             for (const file of imageFiles) {
-              const formData = new FormData()
-              formData.append('file', file)
+              let uploadResult: any;
               
-              const response = await fetch('/api/upload-image-cloudinary', {
-                method: 'POST',
-                body: formData,
-              })
-              
-              const data = await response.json()
-              
-              if (data.success) {
-                uploadedImages.push(data.data.path)
+              // Check if file needs chunking
+              if (ChunkedUploader.needsChunking(file)) {
+                // Use chunked upload for large files
+                uploadResult = await uploadFileInChunks(file, {
+                  onProgress: (progress) => {
+                    console.log(`Upload progress for ${file.name}: ${progress}%`);
+                  }
+                });
+                
+                if (uploadResult.success && uploadResult.data) {
+                  uploadedImages.push(uploadResult.data.path)
+                } else {
+                  throw new Error(`Failed to upload ${file.name}: ${uploadResult.message}`)
+                }
+              } else {
+                // Use direct Cloudinary upload for smaller files
+                const formData = new FormData()
+                formData.append('file', file)
+                
+                const response = await fetch('/api/upload-image-cloudinary', {
+                  method: 'POST',
+                  body: formData,
+                })
+                
+                const data = await response.json()
+                
+                if (data.success) {
+                  uploadedImages.push(data.data.path)
+                } else {
+                  throw new Error(`Failed to upload ${file.name}: ${data.message}`)
+                }
               }
             }
             
@@ -142,8 +190,8 @@ const ProjectManager = () => {
               }))
               setMessage(`${uploadedImages.length} additional image(s) uploaded successfully!`)
             }
-          } catch {
-            setMessage('Error uploading additional images')
+          } catch (error) {
+            setMessage(error instanceof Error ? error.message : 'Error uploading additional images')
           } finally {
             setIsUploading(false)
           }
@@ -362,7 +410,7 @@ const ProjectManager = () => {
                       <p className="text-sm text-black">
                         {isUploading ? 'Uploading...' : 'Click to upload main image'}
                       </p>
-                      <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                                                <p className="text-xs text-gray-500">PNG, JPG up to 200MB</p>
                     </div>
                   </div>
                 )}
@@ -397,7 +445,7 @@ const ProjectManager = () => {
                     <p className="text-sm text-black">
                       {isUploading ? 'Uploading...' : 'Click to upload additional images'}
                     </p>
-                    <p className="text-xs text-gray-500">PNG, JPG up to 10MB (Multiple files allowed)</p>
+                                              <p className="text-xs text-gray-500">PNG, JPG up to 200MB (Multiple files allowed)</p>
                   </div>
                 </div>
               </label>

@@ -128,7 +128,7 @@ const ProjectsOnHomePage = () => {
                           alt={getCurrentLanguageText(project.title)} 
                           width={400}
                           height={613}
-                          className="object-cover object-center w-full h-[613px] rounded-[15px]" 
+                          className="object-cover object-center w-full h-[100vh] lg:h-[60vh] rounded-[15px]" 
                         />
                       ) : (
                         <div className="w-full h-[613px] rounded-[15px] bg-gray-200 flex items-center justify-center">
@@ -214,7 +214,7 @@ const ProjectsOnHomePage = () => {
                           alt={getCurrentLanguageText(project.title)} 
                           width={400}
                           height={384}
-                          className="object-cover object-center w-full h-96" 
+                          className="object-cover object-center w-full" 
                         />
                       ) : (
                         <div className="w-full h-96 bg-gray-200 flex items-center justify-center">

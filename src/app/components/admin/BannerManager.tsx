@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 
 import Image from 'next/image';
+import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -108,8 +109,8 @@ const BannerManager = () => {
       setIsUploading(true);
       setMessage('');
 
-      // Check file size - if larger than 4MB, use chunked upload
-      if (file.size > 4 * 1024 * 1024) {
+      // Check if file needs chunking (larger than 4MB)
+      if (ChunkedUploader.needsChunking(file)) {
         await handleChunkedUpload(file);
       } else {
         await handleRegularUpload(file);
@@ -121,47 +122,24 @@ const BannerManager = () => {
     try {
       setMessage('Large file detected. Using chunked upload...');
       
-      const chunkSize = 3 * 1024 * 1024; // 3MB chunks (under Vercel's 4.5MB limit)
-      const totalChunks = Math.ceil(file.size / chunkSize);
+      const uploadResult = await uploadFileInChunks(file, {
+        onProgress: (progress) => {
+          setMessage(`Uploading... ${progress}% complete`);
+        },
+        onChunkComplete: (chunkIndex, totalChunks) => {
+          console.log(`Chunk ${chunkIndex + 1}/${totalChunks} completed`);
+        }
+      });
       
-      for (let i = 0; i < totalChunks; i++) {
-        const start = i * chunkSize;
-        const end = Math.min(start + chunkSize, file.size);
-        const chunk = file.slice(start, end);
-        
-        const formData = new FormData();
-        formData.append('chunk', chunk);
-        formData.append('chunkIndex', i.toString());
-        formData.append('totalChunks', totalChunks.toString());
-        formData.append('fileName', file.name);
-        formData.append('fileType', file.type);
-        
-        const response = await fetch('/api/upload-chunked', {
-          method: 'POST',
-          body: formData,
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Chunk upload failed: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          if (i === totalChunks - 1) {
-            // Last chunk - file is complete
-            setFormData(prev => ({
-              ...prev,
-              image: data.data.path
-            }));
-            setMessage('Large image uploaded successfully using chunked upload!');
-            console.log('Chunked upload complete:', data.data);
-          } else {
-            setMessage(`Uploading chunk ${i + 1}/${totalChunks}...`);
-          }
-        } else {
-          throw new Error(data.message || 'Chunk upload failed');
-        }
+      if (uploadResult.success && uploadResult.data) {
+        setFormData(prev => ({
+          ...prev,
+          image: uploadResult.data!.path
+        }));
+        setMessage(`Large image uploaded successfully via chunked upload! (${Math.round(file.size / (1024 * 1024))}MB)`);
+        console.log('Chunked upload complete:', uploadResult.data);
+      } else {
+        throw new Error(uploadResult.message || 'Chunked upload failed');
       }
     } catch (error) {
       console.error('Chunked upload error:', error);

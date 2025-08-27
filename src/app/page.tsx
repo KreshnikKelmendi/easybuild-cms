@@ -1,5 +1,4 @@
 import Banner from "./components/main/Banner";
-import Count from "./components/main/Count";
 import OurServices from "./components/services/OurServices";
 import AboutUsOnHomePage from "./components/about/AboutUsOnHomePage";
 import Woods from "./components/materials/Woods";
@@ -10,7 +9,6 @@ export default function Home() {
   return (
     <>
       <Banner />
-      <Count />
       <OurServices />
       <AboutUsOnHomePage />
       <div className='mt-[-180px] lg:mt-[-50vh] 2xl:mt-[-40vh] z-50'>

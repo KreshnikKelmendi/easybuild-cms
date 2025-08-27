@@ -175,7 +175,7 @@ const OurServices = () => {
               alt={getTitleInCurrentLanguage(service)}
               width={400}
               height={489}
-              className='w-full h-60 lg:h-[489px] object-cover rounded-lg transition-all duration-500 ease-in-out'
+              className='w-full h-60 lg:h-[55vh] object-cover rounded-lg transition-all duration-500 ease-in-out'
             />
             <div className='block'>
               <p className='text-[20px] 2xl:text-[25px] font-custom font-semibold mt-6 lg:mt-9 flex items-center justify-start text-black hover:text-[#DD4624] hover:scale-110 hover:duration-500 font-zonapro'>
