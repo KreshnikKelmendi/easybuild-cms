@@ -64,7 +64,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
 
   // Add safety check for service
   if (!service) {
-    return <div className="text-center py-10">Service not available</div>;
+    return <div className="text-center py-10 font-zonapro">Service not available</div>;
   }
 
   const handleToggle = () => {
@@ -90,26 +90,26 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
         </div>
         <div className='lg:w-1/2 bg-[#DD4624] lg:h-[628px] rounded-[15px] flex flex-col w-full justify-center items-center overflow-hidden'>
           <div className='text-[#F3F4F4] 2xl:w-[628px] py-6 lg:py-0 px-5 lg:px-16 2xl:px-0 animate-here' ref={hereRef}>
-            <p className='text-[32px] lg:text-[64px] font-custom1 lg:leading-[75.2px]'>
+            <p className='text-[32px] lg:text-[64px] font-custom1 lg:leading-[75.2px] font-zonapro'>
               {service.title?.[currentLanguage as keyof typeof service.title] || service.title?.en || 
                (currentLanguage === 'de' ? 'Dienstleistungstitel' : 
                 currentLanguage === 'al' ? 'Titulli i Shërbimit' : 
                 'Service Title')}
             </p>
-            <p className='font-custom font-normal text-[18px] leading-[21.15px] pt-6'>
+            <p className='font-custom font-normal text-[18px] leading-[21.15px] pt-6 font-zonapro'>
               {service.description?.[currentLanguage as keyof typeof service.description] || service.description?.en || 
                (currentLanguage === 'de' ? 'Beschreibung nicht verfügbar' : 
                 currentLanguage === 'al' ? 'Përshkrimi nuk është i disponueshëm' : 
                 'Description not available')}
             </p>
-            <p className='font-custom font-normal text-[18px] leading-[21.15px] pt-4'>
+            <p className='font-custom font-normal text-[18px] leading-[21.15px] pt-4 font-zonapro'>
               {service.description2?.[currentLanguage as keyof typeof service.description2] || service.description2?.en || 
                (currentLanguage === 'de' ? 'Zusätzliche Beschreibung nicht verfügbar' : 
                 currentLanguage === 'al' ? 'Përshkrimi shtesë nuk është i disponueshëm' : 
                 'Additional description not available')}
             </p>
             <button
-              className='w-full lg:w-[200px] bg-[#191716] py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500 mt-6'
+              className='w-full lg:w-[200px] bg-[#191716] py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500 mt-6 font-zonapro'
               onClick={handleToggle}
             >
               {showMore ? 
@@ -127,12 +127,12 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
         {showMore && (
           <>
             <div ref={moreContentRef} className='animate-more mt-4 px-2 lg:px-[40px] 2xl:px-[80px]'>
-              <p className='font-custom font-normal text-[18px] leading-[21.15px] text-[#DD4624] uppercase'>
+              <p className='font-custom font-normal text-[18px] leading-[21.15px] text-[#DD4624] uppercase font-zonapro'>
                 {t('how_we_build')}
               </p>
               <div className='flex flex-col lg:flex-row justify-start items-start lg:items-center'>
-                <p className='text-[32px] lg:text-[64px] font-custom font-semibold'>{t('step_by_step')}</p>
-                <p className='w-full lg:w-[501px] h-[92px] font-custom text-[18px] leading-[22.7px] text-[#191716] mt-4 lg:ml-20'>
+                <p className='text-[32px] lg:text-[64px] font-custom font-semibold font-zonapro'>{t('step_by_step')}</p>
+                <p className='w-full lg:w-[501px] h-[92px] font-custom text-[18px] leading-[22.7px] text-[#191716] mt-4 lg:ml-20 font-zonapro'>
                   {t('step_by_step_desc')}
                 </p>
               </div>
@@ -147,12 +147,12 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
                         className='w-full lg:h-[447px] object-cover rounded-[15px]' 
                         alt={item.titleKey || `Step ${index + 1}`} 
                       />
-                      <p className='text-[20px] font-custom1 mt-1'>{item.titleKey || `Step ${index + 1}`}</p>
+                      <p className='text-[20px] font-custom1 mt-1 font-zonapro'>{item.titleKey || `Step ${index + 1}`}</p>
                     </div>
                   ))
                 ) : (
                   <div className='col-span-full text-center py-10'>
-                    <p className='text-gray-500'>
+                    <p className='text-gray-500 font-zonapro'>
                       {currentLanguage === 'de' ? 'Schritt-für-Schritt-Prozessbilder nicht verfügbar' : 
                        currentLanguage === 'al' ? 'Imazhet e procesit hap pas hapi nuk janë të disponueshme' : 
                        'Step-by-step process images not available'}
@@ -163,7 +163,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
             </div>
             <div className='w-full flex justify-center mt-4'>
                              <button
-                 className='w-full lg:w-[200px] bg-[#191716] text-white py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500'
+                 className='w-full lg:w-[200px] bg-[#191716] text-white py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500 font-zonapro'
                  onClick={handleToggle}
                >
                  {currentLanguage === 'de' ? 'Weniger anzeigen' : 

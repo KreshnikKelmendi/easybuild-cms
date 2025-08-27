@@ -145,9 +145,9 @@ const OurServices = () => {
 
   return (
     <div className='bg-[#F3F4F4] px-5 lg:px-[60px] 2xl:px-[120px] py-12 lg:py-24 h-auto relative'>
-      <p className='text-[#DD4624] font-custom font-normal text-left'>{t('services')}</p>
-      <p className='text-[32px] lg:text-[64px] font-custom1 text-black text-left'>{t('our_services')}</p>
-      <p className='max-w-full lg:max-w-[451px] leading-[22.7px] text-[18px] text-[#191716] font-custom font-normal mt-4 mx-auto lg:mx-0 text-left'>
+      <p className='text-[#DD4624] font-custom font-normal text-left font-zonapro'>{t('services')}</p>
+      <p className='text-[32px] lg:text-[64px] font-custom1 text-black text-left font-zonapro'>{t('our_services')}</p>
+      <p className='max-w-full lg:max-w-[451px] leading-[22.7px] text-[18px] text-[#191716] font-custom font-normal mt-4 mx-auto lg:mx-0 text-left font-zonapro'>
         {t('serviceDescription')}
       </p>
       
@@ -178,7 +178,7 @@ const OurServices = () => {
               className='w-full h-60 lg:h-[489px] object-cover rounded-lg transition-all duration-500 ease-in-out'
             />
             <div className='block'>
-              <p className='text-[20px] 2xl:text-[25px] font-custom font-semibold mt-6 lg:mt-9 flex items-center justify-start text-black hover:text-[#DD4624] hover:scale-110 hover:duration-500'>
+              <p className='text-[20px] 2xl:text-[25px] font-custom font-semibold mt-6 lg:mt-9 flex items-center justify-start text-black hover:text-[#DD4624] hover:scale-110 hover:duration-500 font-zonapro'>
                 {getTitleInCurrentLanguage(service)} <FaArrowRight className='ml-4 bg-[#DD4624] rounded-full text-white p-[5px]' />
               </p>
             </div>
@@ -193,7 +193,7 @@ const OurServices = () => {
           {currentPage > 1 && (
             <button
               onClick={() => handlePageChange(currentPage - 1)}
-              className='px-4 py-2 text-[#DD4624] hover:text-[#B83A1E] transition-colors duration-300 font-custom'
+              className='px-4 py-2 text-[#DD4624] hover:text-[#B83A1E] transition-colors duration-300 font-custom font-zonapro'
             >
               ← Previous
             </button>
@@ -204,7 +204,7 @@ const OurServices = () => {
             <button
               key={page}
               onClick={() => handlePageChange(page)}
-              className={`w-10 h-10 rounded-full transition-all duration-300 font-custom ${
+              className={`w-10 h-10 rounded-full transition-all duration-300 font-custom font-zonapro ${
                 currentPage === page
                   ? 'bg-[#DD4624] text-white scale-110'
                   : 'bg-white text-[#191716] hover:bg-[#DD4624] hover:text-white hover:scale-105'
@@ -218,7 +218,7 @@ const OurServices = () => {
           {currentPage < totalPages && (
             <button
               onClick={() => handlePageChange(currentPage + 1)}
-              className='px-4 py-2 text-[#DD4624] hover:text-[#B83A1E] transition-colors duration-300 font-custom'
+              className='px-4 py-2 text-[#DD4624] hover:text-[#B83A1E] transition-colors duration-300 font-custom font-zonapro'
             >
               Next →
             </button>
@@ -228,8 +228,8 @@ const OurServices = () => {
 
       {/* Mobile pagination indicator - show current page info */}
       {!isLargeDevice && totalPages > 1 && (
-        <div className='flex justify-center items-center mt-8 text-[#191716] font-custom'>
-          <span>
+        <div className='flex justify-center items-center mt-8 text-[#191716] font-custom font-zonapro'>
+          <span className="font-zonapro">
             Page {currentPage} of {totalPages}
           </span>
         </div>

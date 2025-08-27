@@ -341,13 +341,13 @@ const ServiceManager = () => {
     <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-slate-50 to-white rounded-2xl shadow-xl">
       
              {/* Header with Instructions */}
-       <div className="text-center mb-8">
-         <h1 className="text-3xl font-bold text-gray-800 mb-4">
-           {i18n.language === 'de' ? '🛠️ Dienstleistungsverwaltung' : 
-            i18n.language === 'al' ? '🛠️ Menaxhimi i Shërbimeve' : 
-            '🛠️ Service Management'}
-         </h1>
-         <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
+               <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4 font-zonapro">
+            {i18n.language === 'de' ? '🛠️ Dienstleistungsverwaltung' : 
+             i18n.language === 'al' ? '🛠️ Menaxhimi i Shërbimeve' : 
+             '🛠️ Service Management'}
+          </h1>
+          <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed font-zonapro">
            {i18n.language === 'de' ? 
              'Erstellen und verwalten Sie hier Ihre Dienstleistungen. Jede Dienstleistung wird auf Ihrer Dienstleistungsseite mit mehrsprachiger Unterstützung (Englisch, Deutsch, Albanisch), Bildern und schrittweisen Prozessdetails angezeigt.' :
             i18n.language === 'al' ? 
@@ -369,19 +369,19 @@ const ServiceManager = () => {
       )}
 
       {/* Service Creation Form */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-100">
-                 <div className="text-center mb-6">
-           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-             {isEditing ? 
-               (i18n.language === 'de' ? '✏️ Dienstleistung bearbeiten' : 
-                i18n.language === 'al' ? '✏️ Redakto Shërbimin' : 
-                '✏️ Edit Service') : 
-               (i18n.language === 'de' ? '✨ Neue Dienstleistung erstellen' : 
-                i18n.language === 'al' ? '✨ Krijo Shërbim të Ri' : 
-                '✨ Create New Service')
-             }
-           </h2>
-           <p className="text-gray-600">
+              <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-100">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2 font-zonapro">
+              {isEditing ? 
+                (i18n.language === 'de' ? '✏️ Dienstleistung bearbeiten' : 
+                 i18n.language === 'al' ? '✏️ Redakto Shërbimin' : 
+                 '✏️ Edit Service') :
+                (i18n.language === 'de' ? '✨ Neue Dienstleistung erstellen' : 
+                 i18n.language === 'al' ? '✨ Krijo Shërbim të Ri' : 
+                 '✨ Create New Service')
+              }
+            </h2>
+            <p className="text-gray-600 font-zonapro">
              {isEditing 
                ? (i18n.language === 'de' ? 
                    'Ändern Sie die Dienstleistungsdetails unten. Verwenden Sie die Sprachregisterkarten, um Inhalte in verschiedenen Sprachen zu bearbeiten.' :
@@ -412,24 +412,24 @@ const ServiceManager = () => {
                      {/* Language Tabs */}
            <div className="bg-gray-50 rounded-lg p-4 mb-6">
              <div className="text-center mb-3">
-               <p className="text-sm font-medium text-gray-700 mb-2">
+               <p className="text-sm font-medium text-gray-700 mb-2 font-zonapro">
                  {i18n.language === 'de' ? '🌍 Sprache zum Bearbeiten auswählen' : 
                   i18n.language === 'al' ? '🌍 Zgjidh Gjuhën për të Redaktuar' : 
                   '🌍 Select Language to Edit'}
                </p>
-               <p className="text-xs text-gray-500">
+               <p className="text-xs text-gray-500 font-zonapro">
                  {i18n.language === 'de' ? 'Klicken Sie auf eine Sprachregisterkarte, um Inhalte in dieser Sprache hinzuzufügen' : 
                   i18n.language === 'al' ? 'Klikoni në një skedë gjuhë për të shtuar përmbajtje në atë gjuhë' : 
                   'Click on a language tab to add content in that language'}
                </p>
                <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-                 <p className="text-xs text-blue-700">
+                 <p className="text-xs text-blue-700 font-zonapro">
                    <strong>
                      {i18n.language === 'de' ? 'Header-Sprache:' : 
                       i18n.language === 'al' ? 'Gjuha e Header-it:' : 
                       'Header Language:'}
                    </strong> {languages.find(l => l.code === i18n.language)?.flag} {languages.find(l => l.code === i18n.language)?.name} 
-                   <span className="ml-2 text-gray-500">
+                   <span className="ml-2 text-gray-500 font-zonapro">
                      {i18n.language === 'de' ? '(Synchronisiert sich automatisch mit Header)' : 
                       i18n.language === 'al' ? '(Sinkronizohet automatikisht me Header)' : 
                       '(Auto-syncs with Header)'}
@@ -439,13 +439,13 @@ const ServiceManager = () => {
                    <button
                      type="button"
                      onClick={() => setCurrentLanguage(i18n.language as 'en' | 'de' | 'al')}
-                     className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors duration-200"
+                     className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors duration-200 font-zonapro"
                    >
                      🔄 {i18n.language === 'de' ? 'Mit Header synchronisieren' : 
                           i18n.language === 'al' ? 'Sinkronizo me Header' : 
                           'Sync with Header'}
                    </button>
-                   <span className="text-xs text-gray-600">
+                   <span className="text-xs text-gray-600 font-zonapro">
                      {i18n.language === 'de' ? 'Klicken Sie, um die Header-Sprache zu übereinstimmen' : 
                       i18n.language === 'al' ? 'Klikoni për të përputhur me gjuhën e Header-it' : 
                       'Click to match Header language'}
@@ -460,7 +460,7 @@ const ServiceManager = () => {
                      key={lang.code}
                      type="button"
                      onClick={() => setCurrentLanguage(lang.code as 'en' | 'de' | 'al')}
-                     className={`px-6 py-3 rounded-md font-medium text-sm transition-all duration-200 ${
+                     className={`px-6 py-3 rounded-md font-medium text-sm transition-all duration-200 font-zonapro ${
                        currentLanguage === lang.code
                          ? 'bg-blue-500 text-white shadow-md'
                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
@@ -468,7 +468,7 @@ const ServiceManager = () => {
                    >
                      {lang.flag} {lang.name}
                      {i18n.language === lang.code && (
-                       <span className="ml-1 text-xs">✓</span>
+                       <span className="ml-1 text-xs font-zonapro">✓</span>
                      )}
                    </button>
                  ))}
@@ -478,12 +478,12 @@ const ServiceManager = () => {
 
                      {/* Title Input */}
            <div className="space-y-2">
-             <label className="block text-sm font-semibold text-gray-700">
+             <label className="block text-sm font-semibold text-gray-700 font-zonapro">
                📝 {i18n.language === 'de' ? 'Dienstleistungstitel' : 
                     i18n.language === 'al' ? 'Titulli i Shërbimit' : 
                     'Service Title'} ({languages.find(l => l.code === currentLanguage)?.name})
              </label>
-             <p className="text-xs text-gray-500 mb-2">
+             <p className="text-xs text-gray-500 mb-2 font-zonapro">
                {i18n.language === 'de' ? 
                  'Geben Sie einen klaren, beschreibenden Titel für Ihren Service ein (z.B. "Individueller Hausbau", "Küchenrenovierung")' :
                 i18n.language === 'al' ? 
@@ -496,7 +496,7 @@ const ServiceManager = () => {
                name={`title.${currentLanguage}`}
                value={formData.title?.[currentLanguage] || ''}
                onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400 font-zonapro"
               placeholder={`Enter service title in ${languages.find(l => l.code === currentLanguage)?.name}`}
               required
             />
@@ -504,12 +504,12 @@ const ServiceManager = () => {
 
                      {/* Description Input */}
            <div className="space-y-2">
-             <label className="block text-sm font-semibold text-gray-700">
+             <label className="block text-sm font-semibold text-gray-700 font-zonapro">
                📄 {i18n.language === 'de' ? 'Hauptbeschreibung' : 
                     i18n.language === 'al' ? 'Përshkrimi Kryesor' : 
                     'Main Description'} ({languages.find(l => l.code === currentLanguage)?.name})
              </label>
-             <p className="text-xs text-gray-500 mb-2">
+             <p className="text-xs text-gray-500 mb-2 font-zonapro">
                {i18n.language === 'de' ? 
                  'Geben Sie eine kurze Übersicht über das, was dieser Service umfasst und seine Hauptvorteile' :
                 i18n.language === 'al' ? 
@@ -533,7 +533,7 @@ const ServiceManager = () => {
                   }));
                 }
               }}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400 font-zonapro"
               placeholder={`Describe your service in ${languages.find(l => l.code === currentLanguage)?.name}...`}
               rows={4}
               required
@@ -542,12 +542,12 @@ const ServiceManager = () => {
 
                      {/* Description 2 Input */}
            <div className="space-y-2">
-             <label className="block text-sm font-semibold text-gray-700">
+             <label className="block text-sm font-semibold text-gray-700 font-zonapro">
                📋 {i18n.language === 'de' ? 'Zusätzliche Details' : 
                     i18n.language === 'al' ? 'Detaje Shtesë' : 
                     'Additional Details'} ({languages.find(l => l.code === currentLanguage)?.name})
              </label>
-             <p className="text-xs text-gray-500 mb-2">
+             <p className="text-xs text-gray-500 mb-2 font-zonapro">
                {i18n.language === 'de' ? 
                  'Fügen Sie spezifischere Informationen über Materialien, Zeitplan oder besondere Funktionen hinzu' :
                 i18n.language === 'al' ? 
@@ -571,7 +571,7 @@ const ServiceManager = () => {
                   }));
                 }
               }}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400 font-zonapro"
               placeholder={`Add more details in ${languages.find(l => l.code === currentLanguage)?.name}...`}
               rows={4}
               required
@@ -580,12 +580,12 @@ const ServiceManager = () => {
 
                      {/* Image Upload */}
            <div className="space-y-2">
-             <label className="block text-sm font-semibold text-gray-700">
+             <label className="block text-sm font-semibold text-gray-700 font-zonapro">
                🖼️ {i18n.language === 'de' ? 'Hauptdienstleistungsbild' : 
                     i18n.language === 'al' ? 'Imazhi Kryesor i Shërbimit' : 
                     'Main Service Image'}
              </label>
-             <p className="text-xs text-gray-500 mb-3">
+             <p className="text-xs text-gray-500 mb-3 font-zonapro">
                {i18n.language === 'de' ? 
                  'Laden Sie ein hochwertiges Bild hoch, das Ihren Service repräsentiert. Dies wird das primäre angezeigte Bild sein.' :
                 i18n.language === 'al' ? 
@@ -615,7 +615,7 @@ const ServiceManager = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-xs text-black">Click to change image</p>
+                    <p className="text-xs text-black font-zonapro">Click to change image</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -625,10 +625,10 @@ const ServiceManager = () => {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-black">
+                      <p className="text-sm text-black font-zonapro">
                         {isUploading ? 'Uploading...' : 'Click to upload image'}
                       </p>
-                      <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                      <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 10MB</p>
                     </div>
                   </div>
                 )}
@@ -638,12 +638,12 @@ const ServiceManager = () => {
 
                      {/* Hover Image Upload */}
            <div className="space-y-2">
-             <label className="block text-sm font-semibold text-gray-700">
+             <label className="block text-sm font-semibold text-gray-700 font-zonapro">
                🖱️ {i18n.language === 'de' ? 'Hover-Bild (Optional)' : 
                     i18n.language === 'al' ? 'Imazhi i Hover-it (Opsional)' : 
                     'Hover Image (Optional)'}
              </label>
-             <p className="text-xs text-gray-500 mb-3">
+             <p className="text-xs text-gray-500 mb-3 font-zonapro">
                {i18n.language === 'de' ? 
                  'Optional: Laden Sie ein Bild hoch, das angezeigt wird, wenn Benutzer über das Hauptbild hovern. Kann ein anderer Winkel oder eine Detailansicht sein.' :
                 i18n.language === 'al' ? 
@@ -673,7 +673,7 @@ const ServiceManager = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-xs text-black">Click to change hover image</p>
+                    <p className="text-xs text-black font-zonapro">Click to change hover image</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -683,10 +683,10 @@ const ServiceManager = () => {
                           </svg>
                         </div>
                       <div>
-                        <p className="text-sm text-black">
+                        <p className="text-sm text-black font-zonapro">
                           {isUploading ? 'Uploading...' : 'Click to upload hover image'}
                         </p>
-                        <p className="text-xs text-gray-500">PNG, JPG up to 10MB (Optional)</p>
+                        <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 10MB (Optional)</p>
                       </div>
                     </div>
                   )}
@@ -697,12 +697,12 @@ const ServiceManager = () => {
                          {/* Step Images Section */}
              <div className="space-y-4">
                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                 <label className="block text-sm font-semibold text-blue-800 mb-2">
+                 <label className="block text-sm font-semibold text-blue-800 mb-2 font-zonapro">
                    🔄 {i18n.language === 'de' ? 'Schritt-für-Schritt-Prozessbilder (Erforderlich - 3 Bilder)' : 
                         i18n.language === 'al' ? 'Imazhet e Procesit Hap pas Hapi (E Kërkuar - 3 imazhe)' : 
                         'Step-by-Step Process Images (Required - 3 images)'}
                  </label>
-                 <p className="text-xs text-blue-700 mb-3">
+                 <p className="text-xs text-blue-700 mb-3 font-zonapro">
                    {i18n.language === 'de' ? 
                      'Laden Sie 3 Bilder hoch, die den schrittweisen Prozess Ihres Services zeigen. Diese werden im Abschnitt "Wie wir bauen" angezeigt.' :
                     i18n.language === 'al' ? 
@@ -710,7 +710,7 @@ const ServiceManager = () => {
                      'Upload 3 images that show the step-by-step process of your service. These will be displayed in the "How We Build" section.'
                    }
                  </p>
-                 <div className="text-xs text-blue-600">
+                 <div className="text-xs text-blue-600 font-zonapro">
                    <p>• <strong>{i18n.language === 'de' ? 'Schritt 1:' : i18n.language === 'al' ? 'Hapi 1:' : 'Step 1:'}</strong> {i18n.language === 'de' ? 'Normalerweise Planung, Beratung oder erste Einrichtung' : i18n.language === 'al' ? 'Zakonisht planifikimi, konsultimi ose konfigurimi fillestar' : 'Usually planning, consultation, or initial setup'}</p>
                    <p>• <strong>{i18n.language === 'de' ? 'Schritt 2:' : i18n.language === 'al' ? 'Hapi 2:' : 'Step 2:'}</strong> {i18n.language === 'de' ? 'Normalerweise Bau, Umsetzung oder Hauptarbeit' : i18n.language === 'al' ? 'Zakonisht ndërtimi, implementimi ose puna kryesore' : 'Usually construction, implementation, or main work'}</p>
                    <p>• <strong>{i18n.language === 'de' ? 'Schritt 3:' : i18n.language === 'al' ? 'Hapi 3:' : 'Step 3:'}</strong> {i18n.language === 'de' ? 'Normalerweise Fertigstellung, letzte Handgriffe oder Ergebnis' : i18n.language === 'al' ? 'Zakonisht përfundimi, prekjet përfundimtare ose rezultati' : 'Usually completion, final touches, or result'}</p>
@@ -720,11 +720,11 @@ const ServiceManager = () => {
                               {[0, 1, 2].map((index) => (
                   <div key={index} className="border border-gray-200 rounded-lg p-4 bg-white">
                     <div className="flex items-center gap-3 mb-4">
-                                               <span className="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
+                                               <span className="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full font-zonapro">
                            {i18n.language === 'de' ? 'Schritt' : i18n.language === 'al' ? 'Hapi' : 'Step'} {index + 1}
                          </span>
                          <div className="flex-1">
-                           <label className="block text-xs font-medium text-gray-600 mb-1">
+                           <label className="block text-xs font-medium text-gray-600 mb-1 font-zonapro">
                              {i18n.language === 'de' ? 'Schritt-Titel' : i18n.language === 'al' ? 'Titulli i Hapit' : 'Step Title'}
                            </label>
                         <input
@@ -742,7 +742,7 @@ const ServiceManager = () => {
                               stepImages: newStepImages
                             }));
                           }}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-400"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-400 font-zonapro"
                           required
                         />
                       </div>
@@ -809,7 +809,7 @@ const ServiceManager = () => {
                               className="w-full h-full object-cover"
                             />
                           </div>
-                          <p className="text-xs text-black">Click to change image</p>
+                                                     <p className="text-xs text-black font-zonapro">Click to change image</p>
                         </div>
                       ) : (
                         <div className="space-y-2">
@@ -819,10 +819,10 @@ const ServiceManager = () => {
                             </svg>
                           </div>
                           <div>
-                            <p className="text-sm text-black">
-                              {isUploading ? 'Uploading...' : 'Click to upload step image'}
-                            </p>
-                            <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                                                         <p className="text-sm text-black font-zonapro">
+                               {isUploading ? 'Uploading...' : 'Click to upload step image'}
+                             </p>
+                             <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 10MB</p>
                           </div>
                         </div>
                       )}
@@ -837,7 +837,7 @@ const ServiceManager = () => {
                                         <button
                type="submit"
                disabled={isLoading || isUploading}
-               className="flex-1 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+               className="flex-1 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 font-zonapro"
              >
                {isLoading 
                  ? (isEditing ? 
@@ -859,7 +859,7 @@ const ServiceManager = () => {
              <button
                type="button"
                onClick={resetForm}
-               className="px-8 py-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-semibold transition-colors duration-200"
+               className="px-8 py-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-semibold transition-colors duration-200 font-zonapro"
              >
                {isEditing ? 
                  (i18n.language === 'de' ? '❌ Bearbeitung abbrechen' : 
@@ -878,12 +878,12 @@ const ServiceManager = () => {
       <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
                  <div className="flex items-center justify-between mb-6">
            <div>
-             <h3 className="text-2xl font-bold text-gray-800 mb-2">
+             <h3 className="text-2xl font-bold text-gray-800 mb-2 font-zonapro">
                📋 {i18n.language === 'de' ? 'Aktuelle Dienstleistungen' : 
                     i18n.language === 'al' ? 'Shërbimet Aktuale' : 
                     'Current Services'} ({services.length})
              </h3>
-             <p className="text-gray-600">
+             <p className="text-gray-600 font-zonapro">
                {i18n.language === 'de' ? 
                  'Verwalten Sie Ihre bestehenden Dienstleistungen. Klicken Sie auf die Löschen-Schaltfläche, um eine Dienstleistung zu entfernen (sie wird von der öffentlichen Seite ausgeblendet).' :
                 i18n.language === 'al' ? 
@@ -895,7 +895,7 @@ const ServiceManager = () => {
                      <div className="flex gap-2">
              <button
                onClick={() => fetchServices()}
-               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm transition-colors duration-200 font-medium"
+               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm transition-colors duration-200 font-medium font-zonapro"
              >
                🔄 {i18n.language === 'de' ? 'Liste aktualisieren' : 
                     i18n.language === 'al' ? 'Rifresko Listën' : 
@@ -913,7 +913,7 @@ const ServiceManager = () => {
                    setMessage('Debug failed');
                  }
                }}
-               className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 text-sm transition-colors duration-200 font-medium"
+               className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 text-sm transition-colors duration-200 font-medium font-zonapro"
              >
                🔍 {i18n.language === 'de' ? 'Dienstleistungen debuggen' : 
                     i18n.language === 'al' ? 'Debug Shërbimet' : 
@@ -929,19 +929,19 @@ const ServiceManager = () => {
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                </svg>
              </div>
-             <h4 className="text-lg font-semibold text-gray-700 mb-2">
+             <h4 className="text-lg font-semibold text-gray-700 mb-2 font-zonapro">
                {i18n.language === 'de' ? 'Noch keine Dienstleistungen erstellt' : 
                 i18n.language === 'al' ? 'Asnjë Shërbim i Krijuar Ende' : 
                 'No Services Created Yet'}
              </h4>
-             <p className="text-gray-600 mb-4">
+             <p className="text-gray-600 mb-4 font-zonapro">
                {i18n.language === 'de' ? 
                  'Beginnen Sie mit dem Aufbau Ihres Dienstleistungsportfolios, indem Sie Ihren ersten Service oben erstellen.' :
                 i18n.language === 'al' ? 
                  'Filloni të ndërtoni portofolin tuaj të shërbimeve duke krijuar shërbimin tuaj të parë më sipër.' :
                  'Start building your service portfolio by creating your first service above.'}
              </p>
-             <div className="text-sm text-gray-500">
+             <div className="text-sm text-gray-500 font-zonapro">
                <p>💡 <strong>{i18n.language === 'de' ? 'Tipp:' : i18n.language === 'al' ? 'Këshillë:' : 'Tip:'}</strong> {i18n.language === 'de' ? 'Erstellen Sie mindestens einen Service, um zu sehen, wie er auf Ihrer öffentlichen Dienstleistungsseite erscheint.' : i18n.language === 'al' ? 'Krijoni të paktën një shërbim për të parë se si do të shfaqet në faqen tuaj publike të shërbimeve.' : 'Create at least one service to see how it will appear on your public services page.'}</p>
              </div>
            </div>
@@ -951,17 +951,17 @@ const ServiceManager = () => {
                  <div key={service._id} className="bg-white rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
                    <div className="flex items-center justify-between mb-4">
                      <div className="flex items-center gap-3">
-                       <span className="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                       <span className="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full font-zonapro">
                          #{index + 1}
                        </span>
-                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded font-zonapro">
                          {new Date(service.createdAt).toLocaleDateString()}
                        </span>
                      </div>
                                            <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(service)}
-                          className="text-blue-500 hover:text-blue-700 transition-colors duration-200 p-2 hover:bg-blue-50 rounded-full"
+                          className="text-blue-500 hover:text-blue-700 transition-colors duration-200 p-2 hover:bg-blue-50 rounded-full font-zonapro"
                           title="Edit service"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -970,7 +970,7 @@ const ServiceManager = () => {
                         </button>
                         <button
                           onClick={() => handleDelete(service._id)}
-                          className="text-red-500 hover:text-red-700 transition-colors duration-200 p-2 hover:bg-red-50 rounded-full"
+                          className="text-red-500 hover:text-red-700 transition-colors duration-200 p-2 hover:bg-red-50 rounded-full font-zonapro"
                           title="Delete service"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -983,16 +983,16 @@ const ServiceManager = () => {
                                  <div className="space-y-4">
                    {/* Service Titles */}
                    <div className="bg-gray-50 rounded-lg p-4">
-                     <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                     <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2 font-zonapro">
                        🌍 Service Titles
                      </h4>
                      <div className="grid gap-3">
                        {languages.map((lang) => (
                          <div key={lang.code} className="flex items-center gap-3">
-                           <span className="text-lg">{lang.flag}</span>
+                           <span className="text-lg font-zonapro">{lang.flag}</span>
                            <div className="flex-1">
-                             <span className="text-xs font-medium text-gray-500 uppercase block">{lang.code}</span>
-                             <p className="text-sm font-medium text-gray-800">{service.title[lang.code as keyof typeof service.title]}</p>
+                             <span className="text-xs font-medium text-gray-500 uppercase block font-zonapro">{lang.code}</span>
+                             <p className="text-sm font-medium text-gray-800 font-zonapro">{service.title[lang.code as keyof typeof service.title]}</p>
                            </div>
                          </div>
                        ))}
@@ -1001,7 +1001,7 @@ const ServiceManager = () => {
                    
                    {/* Main Image */}
                    <div className="bg-gray-50 rounded-lg p-4">
-                     <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                     <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2 font-zonapro">
                        🖼️ Main Image
                      </h4>
                      <div className="w-full h-32 border border-gray-200 rounded-lg overflow-hidden">
@@ -1018,24 +1018,43 @@ const ServiceManager = () => {
                    {/* Step Images */}
                    {service.stepImages && service.stepImages.length > 0 && (
                      <div className="bg-gray-50 rounded-lg p-4">
-                       <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                         🔄 Process Steps
+                       <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2 font-zonapro">
+                         🔄 {i18n.language === 'de' ? 'Schritt-für-Schritt-Prozess' : 
+                              i18n.language === 'al' ? 'Procesi Hap pas Hapi' : 
+                              'Step-by-Step Process'}
                        </h4>
-                       <div className="space-y-3">
+                       <div className="grid gap-3">
                          {service.stepImages.map((step, index) => (
-                           <div key={index} className="flex items-center gap-3">
-                             <div className="w-20 h-16 border border-gray-200 rounded-lg overflow-hidden">
-                               <Image 
-                                 src={step.image} 
-                                 alt={`Step ${index + 1}`}
-                                 width={80}
-                                 height={64}
-                                 className="w-full h-full object-cover"
-                               />
+                           <div key={index} className="flex items-center gap-3 p-2 bg-white rounded border">
+                             <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                               <span className="text-lg font-bold text-gray-600 font-zonapro">{index + 1}</span>
                              </div>
-                             <div>
-                               <span className="text-xs font-medium text-gray-500 block">Step {index + 1}</span>
-                               <span className="text-sm font-medium text-gray-800">{step.titleKey}</span>
+                             <div className="flex-1">
+                               <span className="text-xs font-medium text-gray-500 block font-zonapro">
+                                 {i18n.language === 'de' ? 'Schritt' : 
+                                  i18n.language === 'al' ? 'Hapi' : 
+                                  'Step'} {index + 1}
+                               </span>
+                               <span className="text-sm font-medium text-gray-800 font-zonapro">{step.titleKey}</span>
+                             </div>
+                             <div className="w-16 h-16 bg-gray-200 rounded overflow-hidden">
+                               {step.image ? (
+                                 <Image 
+                                   src={step.image} 
+                                   alt={`Step ${index + 1}`}
+                                   width={64}
+                                   height={64}
+                                   className="w-full h-full object-cover"
+                                 />
+                               ) : (
+                                 <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                                   <span className="text-xs text-gray-500 font-zonapro">
+                                     {i18n.language === 'de' ? 'Kein Bild' : 
+                                      i18n.language === 'al' ? 'Pa Imazh' : 
+                                      'No Image'}
+                                   </span>
+                                 </div>
+                               )}
                              </div>
                            </div>
                          ))}

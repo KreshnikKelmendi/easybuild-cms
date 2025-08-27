@@ -62,7 +62,7 @@ const resources = {
       'firstBanner': 'Ihre Träume in die Realität umsetzen',
       'secondBanner': 'Wir sind spezialisiert auf die Schaffung außergewöhnlicher Bauprojekte, die den Test der Zeit bestehen. Unser Expertenteam bringt Innovation und Qualität in jeden Bau.',
       'firstButton': 'Projekte anzeigen',
-      'secondButton': 'Kontakt aufnehmen',
+      'secondButton': 'Kontakt',
       'firstCount': 'Abgeschlossene Projekte',
       'secondCount': 'Zufriedene Kunden',
       'thirdCount': 'Jahre Erfahrung',

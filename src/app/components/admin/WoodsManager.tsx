@@ -231,7 +231,7 @@ const WoodsManager = () => {
 
       {/* Single Wood Creation Form */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100">
-        <h2 className="text-xl font-semibold text-black mb-4 text-center">
+        <h2 className="text-xl font-semibold text-black mb-4 text-center font-zonapro">
           🌳 Create New Wood Material
         </h2>
 
@@ -244,7 +244,7 @@ const WoodsManager = () => {
                   key={lang.code}
                   type="button"
                   onClick={() => setCurrentLanguage(lang.code as 'en' | 'de' | 'al')}
-                  className={`px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 ${
+                  className={`px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 font-zonapro ${
                     currentLanguage === lang.code
                       ? 'bg-white text-black shadow-sm'
                       : 'text-black hover:text-gray-700'
@@ -258,7 +258,7 @@ const WoodsManager = () => {
 
           {/* Title Input */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-black">
+            <label className="block text-sm font-semibold text-black font-zonapro">
               Wood Title ({languages.find(l => l.code === currentLanguage)?.name})
             </label>
             <input
@@ -266,7 +266,7 @@ const WoodsManager = () => {
               name={`title.${currentLanguage}`}
               value={formData.title[currentLanguage]}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-black placeholder-gray-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-black placeholder-gray-500 font-zonapro"
               placeholder={`Enter title in ${languages.find(l => l.code === currentLanguage)?.name}`}
               required
             />
@@ -274,7 +274,7 @@ const WoodsManager = () => {
 
           {/* Image Upload */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-black">
+            <label className="block text-sm font-semibold text-black font-zonapro">
               Wood Image
             </label>
             
@@ -299,7 +299,7 @@ const WoodsManager = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-xs text-black">Click to change image</p>
+                    <p className="text-xs text-black font-zonapro">Click to change image</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -309,10 +309,10 @@ const WoodsManager = () => {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-black">
+                      <p className="text-sm text-black font-zonapro">
                         {isUploading ? 'Uploading...' : 'Click to upload image'}
                       </p>
-                      <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                      <p className="text-xs text-gray-500 font-zonapro">PNG, JPG up to 10MB</p>
                     </div>
                   </div>
                 )}
@@ -325,7 +325,7 @@ const WoodsManager = () => {
             <button
               type="submit"
               disabled={isLoading || isUploading}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 font-zonapro"
             >
               {isLoading ? 'Creating...' : '🌳 Create Wood Material'}
             </button>

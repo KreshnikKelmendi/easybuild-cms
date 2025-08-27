@@ -67,13 +67,13 @@ const BannerAbout = () => {
         <div className='absolute inset-0 bg-[#191716] flex items-center justify-center'>
           <div ref={ref} className='text-white px-4 lg:px-8'>
             <p
-              className='font-custom1 text-[32px] lg:text-[85px] mb-4 capitalize'
+              className='font-custom1 text-[32px] lg:text-[85px] mb-4 capitalize font-zonapro'
               ref={headingRef}
             >
               {t('aboutUs')}
             </p>
             <p
-              className='lg:w-[500px] text-[16px] lg:text-[18px] font-custom font-medium leading-[21.15px] mx-auto'
+              className='lg:w-[500px] text-[16px] lg:text-[18px] font-custom font-medium leading-[21.15px] mx-auto font-zonapro'
               ref={textRef}
             >
               {t('secondBannerAbout')}

@@ -99,7 +99,7 @@ const ProjectDetailPage = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#DD4624] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading project...</p>
+          <p className="text-gray-600 font-zonapro">Loading project...</p>
         </div>
       </div>
     );
@@ -109,20 +109,20 @@ const ProjectDetailPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl font-custom1 text-gray-800 mb-4">Project Not Found</h1>
-          <p className="text-gray-600 mb-4">The project you&apos;re looking for doesn&apos;t exist.</p>
-          <p className="text-sm text-gray-500 mb-6">Project ID: {id}</p>
+          <h1 className="text-3xl font-custom1 text-gray-800 mb-4 font-zonapro">Project Not Found</h1>
+          <p className="text-gray-600 mb-4 font-zonapro">The project you&apos;re looking for doesn&apos;t exist.</p>
+          <p className="text-sm text-gray-500 mb-6 font-zonapro">Project ID: {id}</p>
           <div className="space-y-2">
             <a 
               href="/api/debug-projects" 
               target="_blank" 
-              className="block text-[#DD4624] hover:underline"
+              className="block text-[#DD4624] hover:underline font-zonapro"
             >
               Debug Database
             </a>
             <a 
               href="/api/seed-projects" 
-              className="block text-[#DD4624] hover:underline"
+              className="block text-[#DD4624] hover:underline font-zonapro"
             >
               Seed Sample Projects
             </a>
@@ -158,8 +158,8 @@ const ProjectDetailPage = () => {
               {/* Gallery Header */}
               <div className="p-8 lg:p-12 border-b border-gray-200/30">
                 <div className="text-center">
-                  <h3 className="text-3xl lg:text-4xl font-custom1 text-white mb-4">Project Gallery</h3>
-                  <p className="text-gray-200 text-lg">Explore the visual journey of this project</p>
+                  <h3 className="text-3xl lg:text-4xl font-custom1 text-white mb-4 font-zonapro">Project Gallery</h3>
+                  <p className="text-gray-200 text-lg font-zonapro">Explore the visual journey of this project</p>
                 </div>
               </div>
              
@@ -185,7 +185,7 @@ const ProjectDetailPage = () => {
                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
                          
                          {/* Image Number Badge */}
-                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-sm font-bold shadow-lg font-zonapro">
                            {index + 1}
                          </div>
                          
@@ -195,14 +195,14 @@ const ProjectDetailPage = () => {
                              <svg className="w-8 h-8 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                              </svg>
-                             <p className="text-white font-semibold text-sm">Click to view full screen</p>
+                             <p className="text-white font-semibold text-sm font-zonapro">Click to view full screen</p>
                            </div>
                          </div>
                        </div>
                        
                        {/* Image Description */}
                        <div className="mt-4 text-center">
-                         <p className="text-gray-200 font-medium">Project View {index + 1}</p>
+                         <p className="text-gray-200 font-medium font-zonapro">Project View {index + 1}</p>
                        </div>
                      </div>
                    ))}
@@ -211,7 +211,7 @@ const ProjectDetailPage = () => {
                  {/* Additional Images (if more than 3) */}
                  {project.additionalImages.length > 3 && (
                    <div className="mt-12">
-                     <h4 className="text-2xl font-custom1 text-white mb-6 text-center">Additional Views</h4>
+                     <h4 className="text-2xl font-custom1 text-white mb-6 text-center font-zonapro">Additional Views</h4>
                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                        {project.additionalImages.slice(3).map((image, index) => (
                          <div key={index + 3} className="group relative">
@@ -231,7 +231,7 @@ const ProjectDetailPage = () => {
                              
                              {/* Image Number */}
                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                               <span className="text-white font-bold text-lg">{index + 4}</span>
+                               <span className="text-white font-bold text-lg font-zonapro">{index + 4}</span>
                              </div>
                            </div>
                          </div>
@@ -250,8 +250,8 @@ const ProjectDetailPage = () => {
                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                    </svg>
                  </div>
-                 <h4 className="text-xl font-custom1 text-gray-200 mb-2">No Gallery Images</h4>
-                 <p className="text-gray-300">Additional project images will be added soon.</p>
+                 <h4 className="text-xl font-custom1 text-gray-200 mb-2 font-zonapro">No Gallery Images</h4>
+                 <p className="text-gray-300 font-zonapro">Additional project images will be added soon.</p>
                </div>
              )}
            </div>
@@ -315,7 +315,7 @@ const ProjectDetailPage = () => {
              )}
 
              {/* Image Counter */}
-             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm">
+             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-zonapro">
                {project.additionalImages.indexOf(selectedImage) + 1} of {project.additionalImages.length}
              </div>
            </div>

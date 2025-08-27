@@ -10,3 +10,8 @@ MONGODB_DB_NAME=easybuild
 
 # Next.js Configuration
 NODE_ENV=production
+
+# Gmail Configuration for Contact Form
+# You need to create an App Password in your Gmail account
+# Go to Google Account > Security > 2-Step Verification > App passwords
+GMAIL_APP_PASSWORD=your_gmail_app_password_here

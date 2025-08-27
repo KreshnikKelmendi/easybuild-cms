@@ -61,13 +61,13 @@ const ServicesInPage = () => {
         <div className='lg:w-1/2 text-white'>
           <p
             ref={titleRef}
-            className='text-[32px] lg:text-[85px] font-custom1'
+            className='text-[32px] lg:text-[85px] font-custom1 font-zonapro'
           >
             {t('services_banner_title')}
           </p>
           <p
             ref={textRef}
-            className='lg:text-[18px] 2xl:w-[651px] leading-[21.15px] font-custom mt-4'
+            className='lg:text-[18px] 2xl:w-[651px] leading-[21.15px] font-custom mt-4 font-zonapro'
           >
             {t('services_banner_description')}
           </p>

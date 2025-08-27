@@ -176,7 +176,7 @@ const Projects = () => {
                  </div>
                  
                  {/* Project category badge */}
-                 <div className="absolute top-6 left-6 bg-gradient-to-r from-[#DD4624] to-[#DD4624]/80 text-white px-4 py-2 rounded-2xl text-sm font-bold shadow-xl transform -rotate-12 group-hover:rotate-0 transition-all duration-500">
+                 <div className="absolute top-6 left-6 bg-gradient-to-r from-[#DD4624] to-[#DD4624]/80 text-white px-4 py-2 rounded-2xl text-sm font-bold shadow-xl transform -rotate-12 group-hover:rotate-0 transition-all duration-500 font-zonapro">
                    Project
                  </div>
                  
@@ -185,14 +185,14 @@ const Projects = () => {
 
                              {/* Project Content */}
                <div className="p-6">
-                 <h3 className="text-2xl font-custom1 text-gray-800 mb-4 group-hover:text-[#DD4624] transition-colors duration-500 leading-tight">
+                 <h3 className="text-2xl font-custom1 text-gray-800 mb-4 group-hover:text-[#DD4624] transition-colors duration-500 leading-tight font-zonapro">
                    {getTitleInCurrentLanguage(project)}
                  </h3>
                  
                  {/* Additional Images Preview */}
                  {project.additionalImages.length > 0 && (
                    <div className="mb-6">
-                     <p className="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">Gallery Preview</p>
+                     <p className="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider font-zonapro">Gallery Preview</p>
                      <div className="flex gap-3">
                        {project.additionalImages.slice(0, 3).map((image, imgIndex) => (
                          <div key={imgIndex} className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg group-hover:border-[#DD4624]/30 transition-all duration-500 transform group-hover:scale-110">
@@ -205,7 +205,7 @@ const Projects = () => {
                          </div>
                        ))}
                        {project.additionalImages.length > 3 && (
-                         <div className="w-16 h-16 bg-gradient-to-br from-[#DD4624]/20 to-[#DD4624]/40 rounded-2xl flex items-center justify-center text-sm font-bold text-[#DD4624] border-2 border-[#DD4624]/30 shadow-lg transform group-hover:scale-110 transition-all duration-500">
+                         <div className="w-16 h-16 bg-gradient-to-br from-[#DD4624]/20 to-[#DD4624]/40 rounded-2xl flex items-center justify-center text-sm font-bold text-[#DD4624] border-2 border-[#DD4624]/30 shadow-lg transform group-hover:scale-110 transition-all duration-500 font-zonapro">
                            +{project.additionalImages.length - 3}
                          </div>
                        )}
@@ -217,7 +217,7 @@ const Projects = () => {
                  <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                    <div className="flex items-center gap-3 text-gray-600">
                      <div className="w-3 h-3 bg-[#DD4624] rounded-full animate-pulse"></div>
-                     <span className="text-sm font-semibold">
+                     <span className="text-sm font-semibold font-zonapro">
                        {new Date(project.createdAt).toLocaleDateString('en-US', {
                          year: 'numeric',
                          month: 'long',
@@ -226,7 +226,7 @@ const Projects = () => {
                      </span>
                    </div>
                    <div className="flex items-center gap-3 text-[#DD4624] group-hover:gap-4 transition-all duration-500 bg-gradient-to-r from-[#DD4624]/10 to-[#DD4624]/20 px-4 py-2 rounded-2xl group-hover:from-[#DD4624]/20 group-hover:to-[#DD4624]/30 shadow-lg">
-                     <span className="text-sm font-bold">{t('viewProject')}</span>
+                     <span className="text-sm font-bold font-zonapro">{t('viewProject')}</span>
                      <FaArrowRight className="text-base transform group-hover:translate-x-2 transition-transform duration-500" />
                    </div>
                  </div>
@@ -241,7 +241,7 @@ const Projects = () => {
              <button
                onClick={() => handlePageChange(currentPage - 1)}
                disabled={currentPage === 1}
-               className="px-8 py-4 rounded-2xl bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 border-2 border-white/30 hover:border-[#DD4624]/40 hover:shadow-2xl font-bold text-lg shadow-xl"
+               className="px-8 py-4 rounded-2xl bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 border-2 border-white/30 hover:border-[#DD4624]/40 hover:shadow-2xl font-bold text-lg shadow-xl font-zonapro"
              >
                ← Previous
              </button>
@@ -251,7 +251,7 @@ const Projects = () => {
                  <button
                    key={page}
                    onClick={() => handlePageChange(page)}
-                   className={`w-14 h-14 rounded-2xl transition-all duration-500 font-bold text-lg ${
+                   className={`w-14 h-14 rounded-2xl transition-all duration-500 font-bold text-lg font-zonapro ${
                      currentPage === page
                        ? 'bg-gradient-to-r from-[#DD4624] to-[#DD4624]/80 text-white shadow-2xl scale-110'
                        : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white border-2 border-white/30 hover:border-[#DD4624]/40 hover:shadow-xl'
@@ -265,7 +265,7 @@ const Projects = () => {
              <button
                onClick={() => handlePageChange(currentPage + 1)}
                disabled={currentPage === totalPages}
-               className="px-8 py-4 rounded-2xl bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 border-2 border-white/30 hover:border-[#DD4624]/40 hover:shadow-2xl font-bold text-lg shadow-xl"
+               className="px-8 py-4 rounded-2xl bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 border-2 border-white/30 hover:border-[#DD4624]/40 hover:shadow-2xl font-bold text-lg shadow-xl font-zonapro"
              >
                Next →
              </button>
@@ -280,8 +280,8 @@ const Projects = () => {
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                </svg>
              </div>
-             <h3 className="text-5xl font-custom1 text-gray-700 mb-6">No Projects Available Yet</h3>
-             <p className="text-gray-500 text-xl max-w-2xl mx-auto leading-relaxed">We&apos;re working on amazing projects! Check back soon to see our latest work and achievements.</p>
+             <h3 className="text-5xl font-custom1 text-gray-700 mb-6 font-zonapro">No Projects Available Yet</h3>
+             <p className="text-gray-500 text-xl max-w-2xl mx-auto leading-relaxed font-zonapro">We&apos;re working on amazing projects! Check back soon to see our latest work and achievements.</p>
              <div className="w-20 h-2 bg-gradient-to-r from-[#DD4624] via-[#DD4624]/80 to-[#DD4624] mx-auto mt-8 rounded-full shadow-lg"></div>
            </div>
          )}

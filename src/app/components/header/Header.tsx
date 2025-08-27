@@ -66,14 +66,14 @@ const Header = () => {
       {/* Logo and navigation for large devices */}
       <div className='hidden lg:flex justify-center items-center space-x-2 relative'>
         {/* Left-side navigation links */}
-        <ul className='flex items-center lg:space-x-[70px] 2xl:space-x-[160px] text-[18px] uppercase font-custom font-light'>
-          <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
+        <ul className='flex items-center lg:space-x-[70px] 2xl:space-x-[160px] text-[18px] uppercase font-custom font-light font-zonapro'>
+          <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624] font-zonapro'>
             {t('Home')}
           </Link>
-          <Link href="/about" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
+          <Link href="/about" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624] font-zonapro'>
             {t('About')}
           </Link>
-          <Link href="/services" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
+          <Link href="/services" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624] font-zonapro'>
             {t('Services')}
           </Link>
           <Link href="/" onClick={scrollToTop}>
@@ -101,14 +101,14 @@ const Header = () => {
             </svg>
           </Link>
 
-          <Link href="/projects" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
+          <Link href="/projects" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624] font-zonapro'>
             {t('Projects')}
           </Link>
-          <Link href="/contact" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
+          <Link href="/contact" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624] font-zonapro'>
             {t('Contact')}
           </Link>
           <div className="relative group">
-            <button className="flex items-center gap-2 cursor-pointer duration-300 hover:text-[#DD4726] uppercase text-sm">
+            <button className="flex items-center gap-2 cursor-pointer duration-300 hover:text-[#DD4726] uppercase text-sm font-zonapro">
               <Image 
                 src={`https://flagcdn.com/w20/${i18n.language === 'en' ? 'gb' : i18n.language === 'de' ? 'de' : 'al'}.png`}
                 alt={`${i18n.language} flag`}
@@ -116,7 +116,7 @@ const Header = () => {
                 height={16}
                 className="w-5 h-4 rounded-sm"
               />
-              <span>{i18n.language.toUpperCase()}</span>
+              <span className="font-zonapro">{i18n.language.toUpperCase()}</span>
               <svg className="w-3 h-3 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -125,41 +125,41 @@ const Header = () => {
               <div className="py-2">
                 <button
                   onClick={() => changeLanguage('en')}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-800 transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-800 transition-colors font-zonapro ${
                     i18n.language === 'en' ? 'text-[#DD4726] bg-gray-800' : 'text-[#F3F4F4]'
                   }`}
                 >
                   <Image src="https://flagcdn.com/w20/gb.png" alt="English flag" width={20} height={16} className="w-5 h-4 rounded-sm" />
-                  <span>English</span>
+                  <span className="font-zonapro">English</span>
                 </button>
                 <button
                   onClick={() => changeLanguage('de')}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-800 transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-800 transition-colors font-zonapro ${
                     i18n.language === 'de' ? 'text-[#DD4726] bg-gray-800' : 'text-[#F3F4F4]'
                   }`}
                 >
                   <Image src="https://flagcdn.com/w20/de.png" alt="German flag" width={20} height={16} className="w-5 h-4 rounded-sm" />
-                  <span>Deutsch</span>
+                  <span className="font-zonapro">Deutsch</span>
                 </button>
                 <button
                   onClick={() => changeLanguage('al')}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-800 transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-800 transition-colors font-zonapro ${
                     i18n.language === 'al' ? 'text-[#DD4726] bg-gray-800' : 'text-[#F3F4F4]'
                   }`}
                 >
                   <Image src="https://flagcdn.com/w20/al.png" alt="Albanian flag" width={20} height={16} className="w-5 h-4 rounded-sm" />
-                  <span>Shqip</span>
+                  <span className="font-zonapro">Shqip</span>
                 </button>
                 
                 {/* Divider */}
                 <div className="border-t border-gray-700 my-2"></div>
                 
                 {/* Profile Option */}
-                <Link href="/signin" className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#F3F4F4] hover:bg-gray-800 hover:text-[#DD4726] transition-colors">
+                <Link href="/signin" className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#F3F4F4] hover:bg-gray-800 hover:text-[#DD4726] transition-colors font-zonapro">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                  <span>Profile</span>
+                  <span className="font-zonapro">Profile</span>
                 </Link>
               </div>
             </div>
@@ -235,19 +235,19 @@ const Header = () => {
         
         {/* Mobile Navigation Items */}
         <div className='flex flex-col h-screen justify-center items-center mt-[-65px] text-[#F3F4F4] uppercase'>
-          <Link onClick={handleNav} href="/" className='p-4 text-center hover:text-black cursor-pointer border-gray-600'>
+          <Link onClick={handleNav} href="/" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
             {t('Home')}
           </Link>
-          <Link onClick={handleNav} href="/about" className='p-4 text-center hover:text-black cursor-pointer border-gray-600'>
+          <Link onClick={handleNav} href="/about" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
             {t('About')}
           </Link>
-          <Link onClick={handleNav} href="/services" className='p-4 text-center hover:text-black cursor-pointer border-gray-600'>
+          <Link onClick={handleNav} href="/services" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
             {t('Services')}
           </Link>
-          <Link onClick={handleNav} href="/projects" className='p-4 text-center hover:text-black cursor-pointer border-gray-600'>
+          <Link onClick={handleNav} href="/projects" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
             {t('Projects')}
           </Link>
-          <Link onClick={handleNav} href="/contact" className='p-4 text-center hover:text-black cursor-pointer border-gray-600'>
+          <Link onClick={handleNav} href="/contact" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
             {t('Contact')}
           </Link>
           <div className='mt-16'>
@@ -257,7 +257,7 @@ const Header = () => {
                   changeLanguage('en');
                   handleNav();
                 }}
-                className={`px-3 py-2 rounded-md transition-colors ${
+                className={`px-3 py-2 rounded-md transition-colors font-zonapro ${
                   i18n.language === 'en' 
                     ? 'text-[#DD4726] bg-gray-800' 
                     : 'text-[#F3F4F4] hover:text-[#DD4726]'
@@ -270,7 +270,7 @@ const Header = () => {
                   changeLanguage('de');
                   handleNav();
                 }}
-                className={`px-3 py-2 rounded-md transition-colors ${
+                className={`px-3 py-2 rounded-md transition-colors font-zonapro ${
                   i18n.language === 'de' 
                     ? 'text-[#DD4726] bg-gray-800' 
                     : 'text-[#F3F4F4] hover:text-[#DD4726]'
@@ -283,7 +283,7 @@ const Header = () => {
                   changeLanguage('al');
                   handleNav();
                 }}
-                className={`px-3 py-2 rounded-md transition-colors ${
+                className={`px-3 py-2 rounded-md transition-colors font-zonapro ${
                   i18n.language === 'al' 
                     ? 'text-[#DD4726] bg-gray-800' 
                     : 'text-[#F3F4F4] hover:text-[#DD4726]'

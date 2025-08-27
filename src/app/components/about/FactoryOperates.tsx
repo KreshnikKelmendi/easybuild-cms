@@ -30,7 +30,7 @@ const FactoryOperates = () => {
 
   return (
     <div className='px-5 lg:px-[60px] 2xl:px-[120px] z-40 lg:mt-[-550px] 2xl:mt-[-550px] relative pt-16'>
-      <p className='font-custom1 text-[#191716] text-[32px] lg:text-[48px] lg:leading-[56.4px] font-semibold'>
+      <p className='font-custom1 text-[#191716] text-[32px] lg:text-[48px] lg:leading-[56.4px] font-semibold font-zonapro'>
         {t('our_factory_operates')} <br />
         {t('three_core_elements')}
       </p>
@@ -46,8 +46,8 @@ const FactoryOperates = () => {
                 className='w-full h-[331px] object-cover rounded-t-[15px] rounded-b-[15px]' 
               />
               <div className='text-white font-custom px-8 pt-12 h-[331px]'>
-                <p className='text-[26px] font-custom1 font-semibold text-[#DD4624]'>{t(service.titleKey)}</p>
-                <p className={`text-[16px] mt-2 text-[#F3F4F4] ${index === 1 ? 'pt-6 lg:pt-2' : 'pt-6 lg:pt-12'}`}>
+                <p className='text-[26px] font-custom1 font-semibold text-[#DD4624] font-zonapro'>{t(service.titleKey)}</p>
+                <p className={`text-[16px] mt-2 text-[#F3F4F4] font-zonapro ${index === 1 ? 'pt-6 lg:pt-2' : 'pt-6 lg:pt-12'}`}>
                   {t(service.descriptionKey)}
                 </p>
               </div>

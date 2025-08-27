@@ -10,10 +10,10 @@ const StepByStep = () => {
     <div className='w-full lg:px-[50px] 2xl:px-[110px] mt-16 lg:mt-32 px-5'>
         <div className='w-full flex flex-col lg:flex-row lg:justify-between'>
             <div className='flex flex-col justify-center'>
-                <p className='text-[#DD4624] text-[18px]'>{t('services')}</p>
-                <p className='text-[32px] lg:text-[64px] font-custom1'>{t('step_by_step')}</p>
+                <p className='text-[#DD4624] text-[18px] font-zonapro'>{t('services')}</p>
+                <p className='text-[32px] lg:text-[64px] font-custom1 font-zonapro'>{t('step_by_step')}</p>
                 <div className='lg:w-[601px] w-full text-[16px] lg:text-[18px] font-custom lg:text-left tracking-tight lg:tracking-normal leading-[22.7px] font-normal text-[#191716]'>
-                    <p>{t('step_by_step_description')}</p>
+                    <p className="font-zonapro">{t('step_by_step_description')}</p>
                     {/* <p className='mt-6'>From residential homes to commercial buildings and large-scale facilities, our projects showcase the versatility and efficiency of lightweight construction.</p> */}
                 </div>
             </div>

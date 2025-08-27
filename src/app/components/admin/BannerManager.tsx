@@ -195,13 +195,13 @@ const BannerManager = () => {
     <div className="max-w-6xl mx-auto p-4 bg-white">
       {/* Simple Header */}
       <div className="text-center mb-6">
-        <h1 className="text-2xl font-bold text-black mb-1">Banner Manager</h1>
-        <p className="text-black">Create and edit your banner content</p>
+        <h1 className="text-2xl font-bold text-black mb-1 font-zonapro">Banner Manager</h1>
+        <p className="text-black font-zonapro">Create and edit your banner content</p>
       </div>
 
       {/* Message */}
       {message && (
-        <div className={`mb-4 p-3 rounded text-center ${
+        <div className={`mb-4 p-3 rounded text-center font-zonapro ${
           message.includes('successfully') 
             ? 'bg-green-100 text-black border border-green-300' 
             : 'bg-red-100 text-black border border-red-300'
@@ -219,7 +219,7 @@ const BannerManager = () => {
               key={lang.code}
               type="button"
               onClick={() => setCurrentLanguage(lang.code)}
-              className={`px-4 py-2 font-medium border-b-2 ${
+              className={`px-4 py-2 font-medium border-b-2 font-zonapro ${
                 currentLanguage === lang.code
                   ? 'border-black text-black'
                   : 'border-transparent text-gray-600 hover:text-black'
@@ -234,7 +234,7 @@ const BannerManager = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-black mb-1">
+            <label className="block text-sm font-medium text-black mb-1 font-zonapro">
               Title ({languages.find(l => l.code === currentLanguage)?.name})
             </label>
             <input
@@ -242,7 +242,7 @@ const BannerManager = () => {
               name={`title.${currentLanguage}`}
               value={formData.title[currentLanguage]}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:border-black text-black"
+              className="w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:border-black text-black font-zonapro"
               placeholder="Enter banner title"
               required
             />
@@ -250,7 +250,7 @@ const BannerManager = () => {
 
           {/* Subtitle */}
           <div>
-            <label className="block text-sm font-medium text-black mb-1">
+            <label className="block text-sm font-medium text-black mb-1 font-zonapro">
               Description ({languages.find(l => l.code === currentLanguage)?.name})
             </label>
             <textarea
@@ -258,7 +258,7 @@ const BannerManager = () => {
               value={formData.subtitle[currentLanguage]}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:border-black text-black resize-none"
+              className="w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:border-black text-black resize-none font-zonapro"
               placeholder="Enter banner description"
               required
             />
@@ -266,7 +266,7 @@ const BannerManager = () => {
 
           {/* Image */}
           <div>
-            <label className="block text-sm font-medium text-black mb-1">
+            <label className="block text-sm font-medium text-black mb-1 font-zonapro">
               Background Image
             </label>
             
@@ -277,9 +277,9 @@ const BannerManager = () => {
                 accept="image/*"
                 onChange={handleFileChange}
                 disabled={isUploading}
-                className="w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:border-black text-black disabled:opacity-50"
+                className="w-full px-3 py-2 border border-gray-400 rounded focus:outline-none focus:border-black text-black disabled:opacity-50 font-zonapro"
               />
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-gray-600 mt-1 font-zonapro">
                 {isUploading ? 'Uploading...' : 'Select an image file (PNG, JPG, WebP, etc.)'}
               </p>
             </div>
@@ -288,7 +288,7 @@ const BannerManager = () => {
             {formData.image && (
               <div className="mb-3">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-medium text-black">Image Preview:</p>
+                  <p className="text-sm font-medium text-black font-zonapro">Image Preview:</p>
                   <button
                     type="button"
                     onClick={() => {
@@ -297,7 +297,7 @@ const BannerManager = () => {
                         image: ''
                       }));
                     }}
-                    className="text-xs text-red-600 hover:text-red-800 underline"
+                    className="text-xs text-red-600 hover:text-red-800 underline font-zonapro"
                   >
                     Remove Image
                   </button>
@@ -311,7 +311,7 @@ const BannerManager = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-xs text-gray-600 mt-1">File: {formData.image}</p>
+                <p className="text-xs text-gray-600 mt-1 font-zonapro">File: {formData.image}</p>
               </div>
             )}
           </div>
@@ -334,7 +334,7 @@ const BannerManager = () => {
                   setMessage('Error creating sample banner');
                 }
               }}
-              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 font-zonapro"
             >
               Create Sample
             </button>
@@ -342,7 +342,7 @@ const BannerManager = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50"
+              className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50 font-zonapro"
             >
               {isLoading ? 'Saving...' : 'Save Banner'}
             </button>
@@ -353,14 +353,14 @@ const BannerManager = () => {
       {/* Current Banner */}
       {currentBanner && (
         <div className="border border-gray-300 p-4">
-          <h3 className="text-lg font-medium text-black mb-3">Current Banner</h3>
+          <h3 className="text-lg font-medium text-black mb-3 font-zonapro">Current Banner</h3>
           <div className="grid md:grid-cols-3 gap-3">
             {languages.map((lang) => (
               <div key={lang.code} className="p-3 bg-gray-100 rounded border border-gray-200">
-                <div className="font-medium text-black mb-2">{lang.flag} {lang.name}</div>
+                <div className="font-medium text-black mb-2 font-zonapro">{lang.flag} {lang.name}</div>
                 <div className="text-sm text-black">
-                  <div className="mb-1"><strong>Title:</strong> {currentBanner.title?.[lang.code] || 'Not set'}</div>
-                  <div><strong>Description:</strong> {currentBanner.subtitle?.[lang.code] || 'Not set'}</div>
+                  <div className="mb-1 font-zonapro"><strong>Title:</strong> {currentBanner.title?.[lang.code] || 'Not set'}</div>
+                  <div className="font-zonapro"><strong>Description:</strong> {currentBanner.subtitle?.[lang.code] || 'Not set'}</div>
                 </div>
               </div>
             ))}
@@ -368,8 +368,8 @@ const BannerManager = () => {
           
           {/* Image Preview */}
           <div className="mt-4 p-3 bg-gray-100 rounded border border-gray-200">
-            <div className="font-medium text-black mb-2">🖼️ Background Image (Used for all languages)</div>
-            <div className="text-sm text-black mb-2">
+            <div className="font-medium text-black mb-2 font-zonapro">🖼️ Background Image (Used for all languages)</div>
+            <div className="text-sm text-black mb-2 font-zonapro">
               <strong>Image:</strong> {currentBanner.image || 'Not set'}
             </div>
             {currentBanner.image && (

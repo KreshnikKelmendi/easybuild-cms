@@ -50,8 +50,8 @@ const Dashboard = () => {
             <div className="w-20 h-20 border-4 border-gray-700 rounded-full"></div>
             <div className="absolute top-0 left-0 w-20 h-20 border-4 border-[#DD4726] border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <h2 className="text-3xl font-bold text-[#F3F4F4] mt-8 mb-4">Loading Admin Panel</h2>
-          <p className="text-gray-400 text-lg">Please wait while we prepare your dashboard...</p>
+          <h2 className="text-3xl font-bold text-[#F3F4F4] mt-8 mb-4 font-zonapro">Loading Admin Panel</h2>
+          <p className="text-gray-400 text-lg font-zonapro">Please wait while we prepare your dashboard...</p>
         </div>
       </div>
     );
@@ -88,18 +88,18 @@ const Dashboard = () => {
             </svg>
           </div>
           <div className="mt-4 text-center">
-            <h2 className="text-lg font-semibold text-[#F3F4F4]">Admin Panel</h2>
-            <p className="text-sm text-gray-400">Welcome, {username}</p>
+            <h2 className="text-lg font-semibold text-[#F3F4F4] font-zonapro">Admin Panel</h2>
+            <p className="text-sm text-gray-400 font-zonapro">Welcome, {username}</p>
           </div>
         </div>
 
         {/* Navigation Menu */}
         <nav className="p-4 space-y-2">
           <div className="mb-4">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Navigation</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2 font-zonapro">Navigation</h3>
                           <Link 
                 href="/" 
-                className="flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer"
+                className="flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro"
               >
               <div className="p-2 bg-gray-700/50 rounded-lg group-hover:bg-[#DD4726]/20 transition-colors duration-300">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,10 +111,10 @@ const Dashboard = () => {
           </div>
 
           <div className="mb-4">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Content Management</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2 font-zonapro">Content Management</h3>
             <button 
               onClick={() => setActiveTab('banner')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
                 activeTab === 'banner' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
               }`}
             >
@@ -129,7 +129,7 @@ const Dashboard = () => {
             </button>
             <button 
               onClick={() => setActiveTab('services')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
                 activeTab === 'services' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
               }`}
             >
@@ -144,7 +144,7 @@ const Dashboard = () => {
             </button>
             <button 
               onClick={() => setActiveTab('projects')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
                 activeTab === 'projects' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
               }`}
             >
@@ -152,14 +152,14 @@ const Dashboard = () => {
                 activeTab === 'projects' ? 'bg-[#DD4726]/20' : 'bg-gray-700/50 group-hover:bg-[#DD4726]/20'
               }`}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
               Projects
             </button>
             <button 
               onClick={() => setActiveTab('woods')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
                 activeTab === 'woods' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
               }`}
             >
@@ -167,14 +167,14 @@ const Dashboard = () => {
                 activeTab === 'woods' ? 'bg-[#DD4726]/20' : 'bg-gray-700/50 group-hover:bg-[#DD4726]/20'
               }`}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h4a1 1 0 011 1v2m-6 0h6m-6 0a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V6a2 2 0 00-2-2m-6 0V2a1 1 0 011-1h4a1 1 0 011 1v2" />
                 </svg>
               </div>
               Woods
             </button>
             <button 
               onClick={() => setActiveTab('social-media')}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
                 activeTab === 'social-media' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
               }`}
             >
@@ -194,7 +194,7 @@ const Dashboard = () => {
         <div className="p-4 mt-auto">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-red-900/20 hover:text-red-400 rounded-xl transition-all duration-300 border border-gray-700 hover:border-red-700 text-sm font-medium group cursor-pointer"
+            className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-red-900/20 hover:text-red-400 rounded-xl transition-all duration-300 border border-gray-700 hover:border-red-700 text-sm font-medium group cursor-pointer font-zonapro"
           >
             <div className="p-2 bg-gray-700/50 rounded-lg group-hover:bg-red-900/20 transition-colors duration-300">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,8 +211,8 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#F3F4F4] mb-2">Welcome to Admin Panel</h1>
-            <p className="text-gray-400">You have successfully signed in to the EasyBuild administration system.</p>
+            <h1 className="text-3xl font-bold text-[#F3F4F4] mb-2 font-zonapro">Welcome to Admin Panel</h1>
+            <p className="text-gray-400 font-zonapro">You have successfully signed in to the EasyBuild administration system.</p>
           </div>
 
           {/* Tab Content */}
@@ -223,11 +223,11 @@ const Dashboard = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-[#F3F4F4] mb-4">Authentication Successful!</h2>
-              <p className="text-gray-400 mb-6">You are now logged in as an administrator.</p>
+              <h2 className="text-2xl font-bold text-[#F3F4F4] mb-4 font-zonapro">Authentication Successful!</h2>
+              <p className="text-gray-400 mb-6 font-zonapro">You are now logged in as an administrator.</p>
               <Link 
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#DD4726] hover:bg-[#B83A1E] text-white rounded-lg transition-colors duration-300"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#DD4726] hover:bg-[#B83A1E] text-white rounded-lg transition-colors duration-300 font-zonapro"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />

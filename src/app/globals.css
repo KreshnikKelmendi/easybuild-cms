@@ -2,11 +2,13 @@
 
 
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: 'ZonaPro';
+  src: url('../../public/fonts/ZonaPro-Regular.ttf');
+}
+
+.font-zonapro {
+  font-family: 'ZonaPro';
 }
 
 html {

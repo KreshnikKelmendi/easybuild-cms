@@ -99,41 +99,41 @@ const Footer = () => {
         </div>
 
         <div className='lg:ml-16 lg:mt-16'>
-          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4]'>MENU</p>
+          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4] font-zonapro'>MENU</p>
           <ul className='text-[15px] font-custom font-normal'>
             <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
-              <li className='mb-8'><span className='hover:text-gray-400'>{t('Home')}</span></li>
+              <li className='mb-8'><span className='hover:text-gray-400 font-zonapro'>{t('Home')}</span></li>
             </Link>
             <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
-              <li className='mb-8'><span className='hover:text-gray-400'>{t('About')}</span></li>
+              <li className='mb-8'><span className='hover:text-gray-400 font-zonapro'>{t('About')}</span></li>
             </Link>
             <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
-              <li className='mb-8'><span className='hover:text-gray-400'>{t('Services')}</span></li>
+              <li className='mb-8'><span className='hover:text-gray-400 font-zonapro'>{t('Services')}</span></li>
             </Link>
             <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
-              <li className='mb-8'><span className='hover:text-gray-400'>{t('Projects')}</span></li>
+              <li className='mb-8'><span className='hover:text-gray-400 font-zonapro'>{t('Projects')}</span></li>
             </Link>
             <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624]'>
-              <li><span className='hover:text-gray-400'>{t('Contact')}</span></li>
+              <li><span className='hover:text-gray-400 font-zonapro'>{t('Contact')}</span></li>
             </Link>
           </ul>
         </div>
 
         {/* Product Section */}
         <div className='lg:ml-16 lg:mt-16'>
-          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4]'>{t('services')}</p>
+          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4] font-zonapro'>{t('services')}</p>
           <ul className='space-y-8 text-[15px] font-custom font-normal'>
-            <li><span className='hover:text-gray-400'>{t('title_wooden_frame_construction')}</span></li>
-            <li><span className='hover:text-gray-400'>{t('title_cross_laminated_timber')}</span></li>
-            <li><span className='hover:text-gray-400'>{t('title_modular_construction')}</span></li>
+            <li><span className='hover:text-gray-400 font-zonapro'>{t('title_wooden_frame_construction')}</span></li>
+            <li><span className='hover:text-gray-400 font-zonapro'>{t('title_cross_laminated_timber')}</span></li>
+            <li><span className='hover:text-gray-400 font-zonapro'>{t('title_modular_construction')}</span></li>
           </ul>
         </div>
 
         {/* Get in Touch Section */}
         <div className='lg:mt-16'>
-          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4] uppercase'>{t('firstBanner')}</p>
+          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4] uppercase font-zonapro'>{t('firstBanner')}</p>
           <ul className='space-y-8 text-[15px] font-custom font-normal'>
-            <li><span className='hover:text-gray-400'>{t('aboutUsDescription')}</span></li>
+            <li><span className='hover:text-gray-400 font-zonapro'>{t('aboutUsDescription')}</span></li>
             <li className='flex gap-10 py-4'>
               {isLoading ? (
                 <>
@@ -155,7 +155,7 @@ const Footer = () => {
                   </a>
                 ))
               ) : (
-                <div className='text-gray-400 text-sm'>No social media links available</div>
+                <div className='text-gray-400 text-sm font-zonapro'>No social media links available</div>
               )}
             </li>
           </ul>

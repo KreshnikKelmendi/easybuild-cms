@@ -47,23 +47,23 @@ const Count = () => {
     <div className='flex flex-col lg:flex-row lg:gap-x-16 gap-y-16 py-8 lg:py-24 lg:gap-y-0 font-sans lg:px-[70px] 2xl:px-[120px] bg-[#DD4624] rounded-b-[15px] relative'>
       <div ref={ref1} className='flex justify-center lg:justify-start'>
         <p className='flex items-center text-white leading-[28.8px] text-left'>
-          <span className='text-[36px] lg:text-[48px] font-bold text-black' ref={countRef1}>0</span>
-          <span className='text-[36px] lg:text-[48px] font-bold text-black'>+</span>
-          <span className='text-[18px] lg:text-[24px] ml-5 w-1/2'>{t('firstCount')}</span>
+          <span className='text-[36px] lg:text-[48px] font-bold text-black font-zonapro' ref={countRef1}>0</span>
+          <span className='text-[36px] lg:text-[48px] font-bold text-black font-zonapro'>+</span>
+          <span className='text-[18px] lg:text-[24px] ml-5 w-1/2 font-zonapro'>{t('firstCount')}</span>
         </p>
       </div>
       <div ref={ref2} className='flex justify-center lg:justify-start'>
         <p className='flex items-center text-white leading-[28.8px] text-left'>
-          <span className='text-[36px] lg:text-[48px] font-bold text-black' ref={countRef2}>0</span>
-          <span className='text-[36px] lg:text-[48px] font-bold text-black'>+</span>
-          <span className='text-[18px] lg:text-[24px] ml-5 lg:w-1/2'>{t('secondCount')}</span>
+          <span className='text-[36px] lg:text-[48px] font-bold text-black font-zonapro' ref={countRef2}>0</span>
+          <span className='text-[36px] lg:text-[48px] font-bold text-black font-zonapro'>+</span>
+          <span className='text-[18px] lg:text-[24px] ml-5 lg:w-1/2 font-zonapro'>{t('secondCount')}</span>
         </p>
       </div>
       <div ref={ref3} className='flex justify-center lg:justify-start'>
         <p className='flex items-center text-white leading-[28.8px] text-left'>
-          <span className='text-[36px] lg:text-[48px] font-bold text-black' ref={countRef3}>0</span>
-          <span className='text-[36px] lg:text-[48px] font-bold text-black'>+</span>
-          <span className='text-[18px] lg:text-[24px] ml-5 lg:w-1/2'>{t('thirdCount')}</span>
+          <span className='text-[36px] lg:text-[48px] font-bold text-black font-zonapro' ref={countRef3}>0</span>
+          <span className='text-[36px] lg:text-[48px] font-bold text-black font-zonapro'>+</span>
+          <span className='text-[18px] lg:text-[24px] ml-5 lg:w-1/2 font-zonapro'>{t('thirdCount')}</span>
         </p>
       </div>
     </div>
