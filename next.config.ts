@@ -27,6 +27,12 @@ const nextConfig: NextConfig = {
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   },
   serverExternalPackages: ['mongoose'],
+  
+  // Add this for large file uploads in production
+  experimental: {
+    serverComponentsExternalPackages: ['mongoose'],
+  },
+  
   // Handle file uploads better in production
   async headers() {
     return [
