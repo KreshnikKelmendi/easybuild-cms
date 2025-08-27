@@ -1,13 +1,13 @@
 {
   "functions": {
     "src/app/api/upload-image/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "src/app/api/upload-image-cloudinary/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "src/app/api/upload-chunked/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     }
   },
   "headers": [

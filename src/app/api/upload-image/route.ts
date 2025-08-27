@@ -23,11 +23,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (limit to 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    // Validate file size (configurable limit)
+    const maxSize = parseInt(process.env.MAX_FILE_SIZE || '52428800'); // Default 50MB
     if (file.size > maxSize) {
+      const maxSizeMB = Math.round(maxSize / (1024 * 1024));
       return NextResponse.json(
-        { success: false, message: 'File size must be less than 10MB' },
+        { success: false, message: `File size must be less than ${maxSizeMB}MB` },
         { status: 400 }
       );
     }

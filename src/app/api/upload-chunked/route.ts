@@ -19,6 +19,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate file size per chunk (configurable limit)
+    const maxChunkSize = parseInt(process.env.MAX_CHUNK_SIZE || '5242880'); // Default 5MB
+    if (chunk.size > maxChunkSize) {
+      const maxChunkSizeMB = Math.round(maxChunkSize / (1024 * 1024));
+      return NextResponse.json(
+        { success: false, message: `Chunk size must be less than ${maxChunkSizeMB}MB` },
+        { status: 400 }
+      );
+    }
+
+    // Validate total file size (configurable limit)
+    const totalFileSize = parseInt(formData.get('totalFileSize') as string) || 0;
+    const maxTotalSize = parseInt(process.env.MAX_TOTAL_FILE_SIZE || '104857600'); // Default 100MB
+    if (totalFileSize > maxTotalSize) {
+      const maxTotalSizeMB = Math.round(maxTotalSize / (1024 * 1024));
+      return NextResponse.json(
+        { success: false, message: `Total file size must be less than ${maxTotalSizeMB}MB` },
+        { status: 400 }
+      );
+    }
+
     // Create temp directory for chunks
     const tempDir = join(process.cwd(), 'tmp', 'chunks', fileName);
     if (!existsSync(tempDir)) {

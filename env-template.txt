@@ -15,3 +15,11 @@ NODE_ENV=production
 # You need to create an App Password in your Gmail account
 # Go to Google Account > Security > 2-Step Verification > App passwords
 GMAIL_APP_PASSWORD=your_gmail_app_password_here
+
+# File Upload Configuration
+# Maximum file size in bytes (default: 50MB)
+MAX_FILE_SIZE=52428800
+# Maximum chunk size in bytes (default: 5MB)
+MAX_CHUNK_SIZE=5242880
+# Maximum total file size for chunked uploads (default: 100MB)
+MAX_TOTAL_FILE_SIZE=104857600
