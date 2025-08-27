@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file size per chunk (configurable limit)
-    const maxChunkSize = parseInt(process.env.MAX_CHUNK_SIZE || '5242880'); // Default 5MB
+    const maxChunkSize = parseInt(process.env.MAX_CHUNK_SIZE || '8242880'); // Default 5MB
     if (chunk.size > maxChunkSize) {
       const maxChunkSizeMB = Math.round(maxChunkSize / (1024 * 1024));
       return NextResponse.json(
