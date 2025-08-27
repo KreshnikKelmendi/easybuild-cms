@@ -30,9 +30,11 @@ const SignIn = () => {
       // Redirect to dashboard
       router.push('/dashboard');
     } else {
-      setError('Invalid username or password. Use: easybuild / easybuild123');
-      setIsLoading(false);
+      setError('Invalid username or password. Please try again.');
     }
+    
+    // Always reset loading state
+    setIsLoading(false);
   };
 
   return (
@@ -76,7 +78,10 @@ const SignIn = () => {
                 type="text"
                 required
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  if (error) setError(''); // Clear error when user starts typing
+                }}
                 className="w-full px-4 py-3 bg-[#191716] border border-gray-600 rounded-md text-[#F3F4F4] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DD4726] focus:border-transparent transition-all duration-300"
                 placeholder="Enter your username"
                 disabled={isLoading}
@@ -93,7 +98,10 @@ const SignIn = () => {
                 type="password"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (error) setError(''); // Clear error when user starts typing
+                }}
                 className="w-full px-4 py-3 bg-[#191716] border border-gray-600 rounded-md text-[#F3F4F4] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DD4726] focus:border-transparent transition-all duration-300"
                 placeholder="Enter your password"
                 disabled={isLoading}

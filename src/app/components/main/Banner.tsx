@@ -28,6 +28,7 @@ const Banner = () => {
   const { t, i18n } = useTranslation();
   const [bannerData, setBannerData] = useState<BannerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -54,6 +55,8 @@ const Banner = () => {
 
     fetchBannerData();
   }, []);
+
+
 
   useEffect(() => {
     if (inView && titleRef.current && bannerData) {
@@ -86,6 +89,8 @@ const Banner = () => {
         priority
       />
       <div className='absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#772613] to-[#000000] opacity-50'></div>
+      
+
       <div className='absolute top-0 left-0 w-full h-full flex items-center text-white lg:px-[50px] 2xl:px-[100px]'>
         <div ref={ref}>
           {isLoading ? (

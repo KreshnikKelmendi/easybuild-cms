@@ -13,6 +13,8 @@ const Header = () => {
   const { t, i18n } = useTranslation();
   const [isFixed, setFixed] = useState(false);
   const pathname = usePathname();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     let prevScrollY = window.scrollY;
@@ -38,6 +40,31 @@ const Header = () => {
     };
   }, [isFixed]);
 
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = () => {
+      const authStatus = localStorage.getItem('isAuthenticated');
+      const storedUsername = localStorage.getItem('username');
+      
+      if (authStatus === 'true' && storedUsername) {
+        setIsAuthenticated(true);
+        setUsername(storedUsername);
+      } else {
+        setIsAuthenticated(false);
+        setUsername('');
+      }
+    };
+
+    checkAuth();
+    
+    // Listen for storage changes (when user logs in/out from another tab)
+    window.addEventListener('storage', checkAuth);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
+  }, []);
+
   const handleNav = () => {
     setNav(!nav);
     window.scrollTo(0, 0);
@@ -60,13 +87,13 @@ const Header = () => {
   }
 
   return (
-    <div className={`w-full top-0 z-50 flex justify-center items-center h-24 lg:h-[127px] mx-auto px-5 text-[#F3F4F4] bg-[#191716] ${
-      isFixed ? 'sticky top-0 left-0 right-0 w-full z-50 flex justify-center items-center h-24 lg:h-[127px] mx-auto px-5 text-[#F3F4F4] bg-[#191716]' : ''
+    <div className={`w-full top-0 z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-3 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716] ${
+      isFixed ? 'sticky top-0 left-0 right-0 w-full z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-3 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716]' : ''
     }`}>
       {/* Logo and navigation for large devices */}
       <div className='hidden lg:flex justify-center items-center space-x-2 relative'>
         {/* Left-side navigation links */}
-        <ul className='flex items-center lg:space-x-[70px] 2xl:space-x-[160px] text-[18px] uppercase font-custom font-light font-zonapro'>
+        <ul className='flex items-center lg:space-x-[50px] xl:space-x-[70px] 2xl:space-x-[160px] text-[16px] xl:text-[18px] uppercase font-custom font-light font-zonapro'>
           <Link href="/" onClick={scrollToTop} className='cursor-pointer duration-300 hover:text-[#DD4624] font-zonapro'>
             {t('Home')}
           </Link>
@@ -121,6 +148,11 @@ const Header = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
+            
+            {/* Authentication Indicator */}
+            {isAuthenticated && (
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#DD4726] rounded-full border-2 border-[#191716]"></div>
+            )}
             <div className="absolute top-full right-0 mt-2 bg-[#191716] border border-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 min-w-[140px] z-50">
               <div className="py-2">
                 <button
@@ -155,12 +187,39 @@ const Header = () => {
                 <div className="border-t border-gray-700 my-2"></div>
                 
                 {/* Profile Option */}
-                <Link href="/signin" className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#F3F4F4] hover:bg-gray-800 hover:text-[#DD4726] transition-colors font-zonapro">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  <span className="font-zonapro">Profile</span>
-                </Link>
+                {isAuthenticated ? (
+                  <div className="px-4 py-2">
+                    <div className="flex items-center gap-3 text-sm text-[#DD4726] font-zonapro">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      <span className="font-zonapro">Welcome, {username}</span>
+                    </div>
+                    <div className="mt-2 space-y-1">
+                      <Link href="/dashboard" className="block text-xs text-[#F3F4F4] hover:text-[#DD4726] transition-colors font-zonapro">
+                        Admin Panel
+                      </Link>
+                      <button 
+                        onClick={() => {
+                          localStorage.removeItem('isAuthenticated');
+                          localStorage.removeItem('username');
+                          setIsAuthenticated(false);
+                          setUsername('');
+                        }}
+                        className="block text-xs text-red-400 hover:text-red-300 transition-colors font-zonapro"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <Link href="/signin" className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#F3F4F4] hover:bg-gray-800 hover:text-[#DD4726] transition-colors font-zonapro">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span className="font-zonapro">Profile</span>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -195,20 +254,20 @@ const Header = () => {
             </defs>
           </svg>
         </Link>
-        <div onClick={handleNav}>
-          {nav ? <AiOutlineClose size={30} color='#F3F4F4' /> : <AiOutlineMenu size={30} color='#F3F4F4' />}
+        <div onClick={handleNav} className="flex-shrink-0">
+          {nav ? <AiOutlineClose size={24} className="sm:w-[30] sm:h-[30]" color='#F3F4F4' /> : <AiOutlineMenu size={24} className="sm:w-[30] sm:h-[30]" color='#F3F4F4' />}
         </div>
       </div>
 
       {/* Mobile Navigation Menu */}
-      <ul className={
-        nav
-          ? 'fixed lg:hidden font-custom1 text-2xl left-0 top-0 w-full h-full bg-[#191716] mt-3 z-50'
-          : ' w-[100%] fixed top-0 bottom-0 left-[-100%]'
-        }>
+              <ul className={
+          nav
+            ? 'fixed lg:hidden font-custom1 text-xl sm:text-2xl left-0 top-0 w-full h-full bg-[#191716] mt-3 z-50'
+            : ' w-[100%] fixed top-0 bottom-0 left-[-100%]'
+          }>
         {/* Mobile Logo and Close Icon */}
-        <div className='flex justify-between items-center mx-4 my-2'>
-          <svg width="154" height="44" viewBox="0 0 154 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className='flex justify-between items-center mx-3 sm:mx-4 my-2'>
+          <svg width="120" height="34" className="sm:w-[154] sm:h-[44]" viewBox="0 0 154 44" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_56_327)">
               <path d="M45.451 25.0759V37.9315L39.583 43.4962H0V34.1198H35.896L45.451 25.0759Z" fill="#DD4726"/>
               <path d="M42.1363 16.1219L31.2216 26.4363H0V17.0599H27.5312L42.1363 3.25964V16.1219Z" fill="#DD4726"/>
@@ -230,34 +289,34 @@ const Header = () => {
               </clipPath>
             </defs>
           </svg>
-          <AiOutlineClose color='#F3F4F4' size={30} onClick={handleNav} className='cursor-pointer' />
+          <AiOutlineClose color='#F3F4F4' size={24} className="sm:w-[30] sm:h-[30] cursor-pointer" onClick={handleNav} />
         </div>
         
         {/* Mobile Navigation Items */}
         <div className='flex flex-col h-screen justify-center items-center mt-[-65px] text-[#F3F4F4] uppercase'>
-          <Link onClick={handleNav} href="/" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
+          <Link onClick={handleNav} href="/" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
             {t('Home')}
           </Link>
-          <Link onClick={handleNav} href="/about" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
+          <Link onClick={handleNav} href="/about" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
             {t('About')}
           </Link>
-          <Link onClick={handleNav} href="/services" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
+          <Link onClick={handleNav} href="/services" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
             {t('Services')}
           </Link>
-          <Link onClick={handleNav} href="/projects" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
+          <Link onClick={handleNav} href="/projects" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
             {t('Projects')}
           </Link>
-          <Link onClick={handleNav} href="/contact" className='p-4 text-center hover:text-black cursor-pointer border-gray-600 font-zonapro'>
+          <Link onClick={handleNav} href="/contact" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
             {t('Contact')}
           </Link>
           <div className='mt-16'>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-2 sm:gap-4">
               <button
                 onClick={() => {
                   changeLanguage('en');
                   handleNav();
                 }}
-                className={`px-3 py-2 rounded-md transition-colors font-zonapro ${
+                className={`px-2 sm:px-3 py-2 rounded-md transition-colors font-zonapro text-sm sm:text-base ${
                   i18n.language === 'en' 
                     ? 'text-[#DD4726] bg-gray-800' 
                     : 'text-[#F3F4F4] hover:text-[#DD4726]'
@@ -270,7 +329,7 @@ const Header = () => {
                   changeLanguage('de');
                   handleNav();
                 }}
-                className={`px-3 py-2 rounded-md transition-colors font-zonapro ${
+                className={`px-2 sm:px-3 py-2 rounded-md transition-colors font-zonapro text-sm sm:text-base ${
                   i18n.language === 'de' 
                     ? 'text-[#DD4726] bg-gray-800' 
                     : 'text-[#F3F4F4] hover:text-[#DD4726]'
@@ -283,7 +342,7 @@ const Header = () => {
                   changeLanguage('al');
                   handleNav();
                 }}
-                className={`px-3 py-2 rounded-md transition-colors font-zonapro ${
+                className={`px-2 sm:px-3 py-2 rounded-md transition-colors font-zonapro text-sm sm:text-base ${
                   i18n.language === 'al' 
                     ? 'text-[#DD4726] bg-gray-800' 
                     : 'text-[#F3F4F4] hover:text-[#DD4726]'
@@ -293,14 +352,48 @@ const Header = () => {
               </button>
             </div>
             
-            {/* Mobile User Icon */}
-            <div className="mt-8 flex justify-center">
-              <Link href="/signin" className="flex items-center justify-center w-12 h-12 rounded-full bg-[#DD4726] hover:bg-[#B83A1E] transition-colors duration-300 cursor-pointer">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </Link>
-            </div>
+                         {/* Mobile User Icon */}
+             <div className="mt-6 sm:mt-8 flex flex-col items-center space-y-2 sm:space-y-3">
+               {isAuthenticated ? (
+                 <>
+                   <div className="text-center">
+                     <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#DD4726] mb-2">
+                       <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                       </svg>
+                     </div>
+                     <p className="text-xs sm:text-sm text-[#DD4726] font-zonapro">Welcome, {username}</p>
+                   </div>
+                   <div className="flex flex-col space-y-1 sm:space-y-2 text-center">
+                     <Link 
+                       href="/dashboard" 
+                       onClick={handleNav}
+                       className="text-xs text-[#F3F4F4] hover:text-[#DD4726] transition-colors font-zonapro"
+                     >
+                       Admin Panel
+                     </Link>
+                     <button 
+                       onClick={() => {
+                         localStorage.removeItem('isAuthenticated');
+                         localStorage.removeItem('username');
+                         setIsAuthenticated(false);
+                         setUsername('');
+                         handleNav();
+                       }}
+                       className="text-xs text-red-400 hover:text-red-300 transition-colors font-zonapro"
+                     >
+                       Logout
+                     </button>
+                   </div>
+                 </>
+               ) : (
+                 <Link href="/signin" className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#DD4726] hover:bg-[#B83A1E] transition-colors duration-300 cursor-pointer">
+                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                   </svg>
+                 </Link>
+               )}
+             </div>
           </div>
         </div>
       </ul>

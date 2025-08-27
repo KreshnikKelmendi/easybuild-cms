@@ -97,10 +97,10 @@ const Dashboard = () => {
         <nav className="p-4 space-y-2">
           <div className="mb-4">
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2 font-zonapro">Navigation</h3>
-                          <Link 
-                href="/" 
-                className="flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro"
-              >
+            <Link 
+              href="/" 
+              className="flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro"
+            >
               <div className="p-2 bg-gray-700/50 rounded-lg group-hover:bg-[#DD4726]/20 transition-colors duration-300">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -108,6 +108,11 @@ const Dashboard = () => {
               </div>
               Go to Website
             </Link>
+            <div className="px-4 mt-2">
+              <p className="text-xs text-gray-500 font-zonapro">
+                Your session will be saved
+              </p>
+            </div>
           </div>
 
           <div className="mb-4">
@@ -234,6 +239,9 @@ const Dashboard = () => {
                 </svg>
                 Go to Website
               </Link>
+              <p className="text-gray-500 text-sm mt-3 font-zonapro">
+                Your session will be saved - you can return anytime!
+              </p>
             </div>
           )}
 
