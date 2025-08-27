@@ -53,9 +53,9 @@ const BannerAbout = () => {
   }, [inView]);
 
   return (
-    <div className='w-full relative h-[100vh] lg:h-[665px] flex flex-col lg:flex-row items-center bg-uberuns'>
+    <div className='w-full relative h-fit lg:h-[665px] flex flex-col lg:flex-row items-center bg-uberuns'>
       {/* Image Section - Left Side with Text Overlay */}
-      <div className='lg:w-1/2 w-full h-[665px] relative '>
+      <div className='lg:w-1/2 w-full h-[45vh] lg:h-[665px] relative '>
         <Image
           className='w-full h-full object-cover banner-image'
           src="/assets/aboutBannerImage.png"
@@ -83,15 +83,19 @@ const BannerAbout = () => {
       </div>
 
       {/* Video Section - Right Side */}
-      <div className='lg:w-1/2 w-full h-[665px]'>
+      <div className='lg:w-1/2 w-full h-[50vh] lg:h-[665px]'>
         <video
-          className='w-full h-full object-cover'
-          src="/assets/EASY_BUILD_1 (1).mp4"
+          className='w-full h-[50vh] lg:h-[665px] object-cover'
           playsInline
           autoPlay
           loop
           muted
-        />
+          preload="auto"
+          controls={false}
+        >
+          <source src="/assets/EASY_BUILD_1 (1).mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
     </div>
   );
