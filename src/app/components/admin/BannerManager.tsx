@@ -96,58 +96,128 @@ const BannerManager = () => {
     if (file) {
       // Check if it's an image file
       if (file.type.startsWith('image/')) {
-        setIsUploading(true);
+        await handleFileUpload(file);
+      } else {
+        setMessage('Please select an image file (PNG, JPG, etc.)');
+      }
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    if (file) {
+      setIsUploading(true);
+      setMessage('');
+
+      // Check file size - if larger than 4MB, use chunked upload
+      if (file.size > 4 * 1024 * 1024) {
+        await handleChunkedUpload(file);
+      } else {
+        await handleRegularUpload(file);
+      }
+    }
+  };
+
+  const handleChunkedUpload = async (file: File) => {
+    try {
+      setMessage('Large file detected. Using chunked upload...');
+      
+      const chunkSize = 3 * 1024 * 1024; // 3MB chunks (under Vercel's 4.5MB limit)
+      const totalChunks = Math.ceil(file.size / chunkSize);
+      
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * chunkSize;
+        const end = Math.min(start + chunkSize, file.size);
+        const chunk = file.slice(start, end);
         
-        try {
-          // Create FormData for file upload
-          const formData = new FormData();
-          formData.append('file', file);
-          
-          // Upload file to Cloudinary
-          const response = await fetch('/api/upload-image-cloudinary', {
-            method: 'POST',
-            body: formData,
-          });
-          
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-          
-          const data = await response.json();
-          
-          if (data.success) {
-            // Set the returned file path for the current language
+        const formData = new FormData();
+        formData.append('chunk', chunk);
+        formData.append('chunkIndex', i.toString());
+        formData.append('totalChunks', totalChunks.toString());
+        formData.append('fileName', file.name);
+        formData.append('fileType', file.type);
+        
+        const response = await fetch('/api/upload-chunked', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Chunk upload failed: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          if (i === totalChunks - 1) {
+            // Last chunk - file is complete
             setFormData(prev => ({
               ...prev,
               image: data.data.path
             }));
-            setMessage('Image uploaded successfully!');
-            console.log('Upload details:', data.data);
+            setMessage('Large image uploaded successfully using chunked upload!');
+            console.log('Chunked upload complete:', data.data);
           } else {
-            setMessage(data.message || 'Failed to upload image');
-            console.error('Upload failed:', data);
+            setMessage(`Uploading chunk ${i + 1}/${totalChunks}...`);
           }
-        } catch (error) {
-          console.error('Upload error:', error);
-          if (error instanceof Error) {
-                         if (error.message.includes('500')) {
-               setMessage('Server error: Cloudinary upload issue. Please check your API keys.');
-             } else if (error.message.includes('413')) {
-               setMessage('File too large. Please select a smaller image.');
-             } else if (error.message.includes('Invalid credentials')) {
-               setMessage('Cloudinary credentials error. Please check your API configuration.');
-             } else {
-               setMessage(`Upload error: ${error.message}`);
-             }
-          } else {
-            setMessage('Network error: Please check your connection and try again.');
-          }
-        } finally {
-          setIsUploading(false);
+        } else {
+          throw new Error(data.message || 'Chunk upload failed');
+        }
+      }
+    } catch (error) {
+      console.error('Chunked upload error:', error);
+      setMessage(`Chunked upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRegularUpload = async (file: File) => {
+    try {
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Upload file to Cloudinary
+      const response = await fetch('/api/upload-image-cloudinary', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Set the returned file path for the current language
+        setFormData(prev => ({
+          ...prev,
+          image: data.data.path
+        }));
+        setMessage('Image uploaded successfully!');
+        console.log('Upload details:', data.data);
+      } else {
+        setMessage(data.message || 'Failed to upload image');
+        console.error('Upload failed:', data);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      if (error instanceof Error) {
+        if (error.message.includes('500')) {
+          setMessage('Server error: Cloudinary upload issue. Please check your API keys.');
+        } else if (error.message.includes('413')) {
+          setMessage('File too large. Please select a smaller image.');
+        } else if (error.message.includes('Invalid credentials')) {
+          setMessage('Cloudinary credentials error. Please check your API configuration.');
+        } else {
+          setMessage(`Upload error: ${error.message}`);
         }
       } else {
-        setMessage('Please select an image file (PNG, JPG, etc.)');
+        setMessage('Network error: Please check your connection and try again.');
       }
+    } finally {
+      setIsUploading(false);
     }
   };
 

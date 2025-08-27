@@ -5,6 +5,9 @@
     },
     "src/app/api/upload-image-cloudinary/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/upload-chunked/route.ts": {
+      "maxDuration": 60
     }
   },
   "headers": [
@@ -19,6 +22,15 @@
     },
     {
       "source": "/api/upload-image-cloudinary",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/api/upload-chunked",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
