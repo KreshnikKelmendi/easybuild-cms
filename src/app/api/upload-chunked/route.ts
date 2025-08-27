@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
     const chunkIndex = parseInt(formData.get('chunkIndex') as string);
     const totalChunks = parseInt(formData.get('totalChunks') as string);
     const fileName = formData.get('fileName') as string;
-    const fileType = formData.get('fileType') as string;
     
     if (!chunk || !fileName) {
       return NextResponse.json(

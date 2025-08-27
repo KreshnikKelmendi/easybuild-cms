@@ -23,6 +23,18 @@ interface Project {
   updatedAt: string
 }
 
+// Type for upload result
+interface UploadResult {
+  success: boolean;
+  message?: string;
+  data?: {
+    path: string;
+    size?: number;
+    chunks?: number;
+    method?: string;
+  };
+}
+
 const ProjectManager = () => {
   const [message, setMessage] = useState('')
   const [projects, setProjects] = useState<Project[]>([])
@@ -84,7 +96,7 @@ const ProjectManager = () => {
           setIsUploading(true)
           
                       try {
-              let uploadResult: any;
+              let uploadResult: UploadResult;
               
               // Check if file needs chunking (larger than 4MB)
               if (ChunkedUploader.needsChunking(file)) {
@@ -147,7 +159,7 @@ const ProjectManager = () => {
             const uploadedImages: string[] = []
             
             for (const file of imageFiles) {
-              let uploadResult: any;
+              let uploadResult: UploadResult;
               
               // Check if file needs chunking
               if (ChunkedUploader.needsChunking(file)) {

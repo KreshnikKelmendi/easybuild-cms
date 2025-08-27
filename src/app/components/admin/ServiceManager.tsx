@@ -33,6 +33,18 @@ interface Service {
   updatedAt: string;
 }
 
+// Type for upload result
+interface UploadResult {
+  success: boolean;
+  message?: string;
+  data?: {
+    path: string;
+    size?: number;
+    chunks?: number;
+    method?: string;
+  };
+}
+
 const ServiceManager = () => {
   const { i18n } = useTranslation();
   const [message, setMessage] = useState('');
@@ -125,7 +137,7 @@ const ServiceManager = () => {
         setIsUploading(true);
         
         try {
-          let uploadResult: any;
+          let uploadResult: UploadResult;
           
           // Check if file needs chunking (larger than 4MB)
           if (ChunkedUploader.needsChunking(file)) {
@@ -142,7 +154,7 @@ const ServiceManager = () => {
             if (uploadResult.success && uploadResult.data) {
               setFormData(prev => ({
                 ...prev,
-                [type === 'main' ? 'image' : 'hoverImage']: uploadResult.data.path
+                [type === 'main' ? 'image' : 'hoverImage']: uploadResult.data!.path
               }));
               setMessage(`${type === 'main' ? 'Main' : 'Hover'} image uploaded successfully via chunked upload! (${Math.round(file.size / (1024 * 1024))}MB)`);
             } else {
@@ -786,7 +798,7 @@ const ServiceManager = () => {
                             setIsUploading(true);
                             
                             try {
-                              let uploadResult: any;
+                              let uploadResult: UploadResult;
                               
                               // Check if file needs chunking (larger than 4MB)
                               if (ChunkedUploader.needsChunking(file)) {

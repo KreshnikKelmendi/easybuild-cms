@@ -18,6 +18,18 @@ interface Wood {
   updatedAt: string;
 }
 
+// Type for upload result
+interface UploadResult {
+  success: boolean;
+  message?: string;
+  data?: {
+    path: string;
+    size?: number;
+    chunks?: number;
+    method?: string;
+  };
+}
+
 const WoodsManager = () => {
   const [message, setMessage] = useState('');
   const [woods, setWoods] = useState<Wood[]>([]);
@@ -73,7 +85,7 @@ const WoodsManager = () => {
         setIsUploading(true);
         
         try {
-          let uploadResult: any;
+          let uploadResult: UploadResult;
           
           // Check if file needs chunking (larger than 4MB)
           if (ChunkedUploader.needsChunking(file)) {
@@ -90,7 +102,7 @@ const WoodsManager = () => {
             if (uploadResult.success && uploadResult.data) {
               setFormData(prev => ({
                 ...prev,
-                imageUrl: uploadResult.data.path
+                imageUrl: uploadResult.data!.path
               }));
               setMessage(`Image uploaded successfully via chunked upload! (${Math.round(file.size / (1024 * 1024))}MB)`);
             } else {
