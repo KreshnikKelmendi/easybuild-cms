@@ -17,9 +17,9 @@ NODE_ENV=production
 GMAIL_APP_PASSWORD=your_gmail_app_password_here
 
 # File Upload Configuration
-# Maximum file size in bytes (default: 50MB)
-MAX_FILE_SIZE=52428800
-# Maximum chunk size in bytes (default: 5MB)
-MAX_CHUNK_SIZE=5242880
-# Maximum total file size for chunked uploads (default: 100MB)
-MAX_TOTAL_FILE_SIZE=104857600
+# Maximum file size in bytes (default: 100MB)
+MAX_FILE_SIZE=104857600
+# Maximum chunk size in bytes (default: 20MB)
+MAX_CHUNK_SIZE=20971520
+# Maximum total file size for chunked uploads (default: 200MB)
+MAX_TOTAL_FILE_SIZE=209715200

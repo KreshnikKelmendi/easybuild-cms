@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file size per chunk (configurable limit)
-    const maxChunkSize = parseInt(process.env.MAX_CHUNK_SIZE || '8242880'); // Default 5MB
+    const maxChunkSize = parseInt(process.env.MAX_CHUNK_SIZE || '20971520'); // Default 20MB
     if (chunk.size > maxChunkSize) {
       const maxChunkSizeMB = Math.round(maxChunkSize / (1024 * 1024));
       return NextResponse.json(
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     // Validate total file size (configurable limit)
     const totalFileSize = parseInt(formData.get('totalFileSize') as string) || 0;
-    const maxTotalSize = parseInt(process.env.MAX_TOTAL_FILE_SIZE || '104857600'); // Default 100MB
+    const maxTotalSize = parseInt(process.env.MAX_TOTAL_FILE_SIZE || '209715200'); // Default 200MB
     if (totalFileSize > maxTotalSize) {
       const maxTotalSizeMB = Math.round(maxTotalSize / (1024 * 1024));
       return NextResponse.json(

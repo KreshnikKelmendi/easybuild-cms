@@ -4,9 +4,9 @@ const nextConfig: NextConfig = {
   // Increase body size limit for file uploads
   api: {
     bodyParser: {
-      sizeLimit: '50mb',
+      sizeLimit: '200mb',
     },
-    responseLimit: '50mb',
+    responseLimit: '200mb',
   },
   images: {
     remotePatterns: [

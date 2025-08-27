@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file size (configurable limit)
-    const maxSize = parseInt(process.env.MAX_FILE_SIZE || '52428800'); // Default 50MB
+    const maxSize = parseInt(process.env.MAX_FILE_SIZE || '104857600'); // Default 100MB
     if (file.size > maxSize) {
       const maxSizeMB = Math.round(maxSize / (1024 * 1024));
       return NextResponse.json(
