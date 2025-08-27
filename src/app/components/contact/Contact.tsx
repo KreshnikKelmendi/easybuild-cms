@@ -92,7 +92,7 @@ const Contact = () => {
         setSubmitMessage(errorData.error || 'Failed to send message. Please try again.');
         setShowModal(true);
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
       setSubmitMessage('Network error. Please check your connection and try again.');
       setShowModal(true);

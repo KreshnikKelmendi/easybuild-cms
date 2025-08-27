@@ -84,18 +84,6 @@ const Projects = () => {
     }
   };
 
-  const getDescriptionInCurrentLanguage = (project: Project) => {
-    const currentLang = i18n.language;
-    switch (currentLang) {
-      case 'de':
-        return project.description.de;
-      case 'al':
-        return project.description.al;
-      default:
-        return project.description.en;
-    }
-  };
-
   const animateProjects = () => {
     projectRefs.current.forEach((ref, index) => {
       if (ref) {

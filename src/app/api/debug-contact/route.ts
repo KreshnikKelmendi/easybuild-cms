@@ -12,11 +12,10 @@ export async function GET() {
     console.log('NODE_ENV:', nodeEnv);
     
     // Test nodemailer configuration
-    let transporterTest = null;
     let authTest = null;
     
     try {
-      transporterTest = nodemailer.createTransport({
+      nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: 'noreplyeasybuild@gmail.com',
@@ -24,8 +23,9 @@ export async function GET() {
         },
       });
       authTest = 'Transporter created successfully';
-    } catch (transporterError: any) {
-      authTest = 'Transporter creation failed: ' + transporterError.message;
+    } catch (transporterError: unknown) {
+      const errorMessage = transporterError instanceof Error ? transporterError.message : 'Unknown error occurred';
+      authTest = 'Transporter creation failed: ' + errorMessage;
     }
     
     return NextResponse.json({
@@ -41,12 +41,15 @@ export async function GET() {
       timestamp: new Date().toISOString()
     });
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Debug endpoint error:', error);
+    
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    
     return NextResponse.json(
       { 
         status: 'error',
-        error: error.message,
+        error: errorMessage,
         timestamp: new Date().toISOString()
       },
       { status: 500 }

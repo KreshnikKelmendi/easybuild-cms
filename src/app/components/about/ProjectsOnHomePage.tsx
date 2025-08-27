@@ -69,13 +69,6 @@ const ProjectsOnHomePage = () => {
     return textObj[currentLanguage] || textObj.en
   }
 
-  // Function to limit text to 75 words
-  const limitTo75Words = (text: string) => {
-    const words = text.split(' ')
-    if (words.length <= 75) return text
-    return words.slice(0, 75).join(' ') + '...'
-  }
-
   // Function to handle project click
   const handleProjectClick = (projectId: string) => {
     router.push(`/projects/${projectId}`)
