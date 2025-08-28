@@ -35,9 +35,6 @@ const AboutUs = () => {
             </p>
           </div>
         </div>
-        <div className='flex justify-center items-center lg:mt-[-100px]'>
-          <Count />
-        </div>
       </div>
       <FactoryOperates />
     </>
