@@ -76,7 +76,7 @@ const ProjectsBanner = () => {
         <div className='lg:w-1/2 2xl:mr-[50px] py-12'>
           <div className='relative w-full lg:h-[449px] service-image'>
             <Image
-              src="/assets/image1.png"
+              src="/assets/banner-1756196336307.png"
               alt="Projects Banner"
               fill
               className='object-contain'
