@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Count from '../main/Count';
 
 import { useTranslation } from 'react-i18next';
 import FactoryOperates from './FactoryOperates';
