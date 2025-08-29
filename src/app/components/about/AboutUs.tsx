@@ -11,7 +11,7 @@ const AboutUs = () => {
   // Array of images for the slider
   const images = [
     '/assets/IMG_3864.JPG',
-    '/assets/IMG_3865.JPG',
+    '/assets/IMG_3865.png',
     '/assets/IMG_3866.JPG',
     '/assets/about1.png',
     '/assets/aboutBannerImage.png',

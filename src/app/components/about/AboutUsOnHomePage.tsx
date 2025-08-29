@@ -21,7 +21,7 @@ const AboutUsOnHomePage = () => {
           <div className='flex flex-col lg:flex-row px-5 lg:px-[60px] py-16 2xl:px-[120px] lg:py-36'>
               <div className='w-full lg:w-1/2'>
               <Image 
-                src="/assets/IMG_3865.jpg" 
+                src="/assets/IMG_3865.png" 
                 alt='About us image' 
                 width={600}
                 height={400}
