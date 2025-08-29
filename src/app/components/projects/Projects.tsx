@@ -132,7 +132,7 @@ const Projects = () => {
 
 
                {/* Projects Section */}
-        <div className="px-4 lg:px-[50px] py-16">
+        <div className="px-4 lg:px-[50px] 2xl:px-[100px] py-16">
          {/* Projects Grid */}
          <div ref={projectsSectionRef} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
            {currentProjects.map((project, index) => (

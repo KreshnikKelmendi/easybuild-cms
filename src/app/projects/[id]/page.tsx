@@ -153,7 +153,7 @@ const ProjectDetailPage = () => {
 
                            {/* Gallery Section */}
         <div className='lg:mt-[-200px]'>
-          <div className="px-5 lg:px-8 pb-24">
+          <div className="px-5 lg:10 pb-24">
             <div className="overflow-hidden">
               {/* Gallery Header */}
               <div className="p-8 lg:p-12 border-b border-gray-200/30">
@@ -171,7 +171,7 @@ const ProjectDetailPage = () => {
                      <div key={index} className="group relative">
                        {/* Image Container */}
                        <div 
-                         className="relative h-64 lg:h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
+                         className="relative h-64 lg:h-[55vh] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
                          onClick={() => openFullScreen(image)}
                        >
                          <Image
