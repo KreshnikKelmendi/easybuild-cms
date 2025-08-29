@@ -87,8 +87,8 @@ const Header = () => {
   }
 
   return (
-    <div className={`w-full top-0 z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-3 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716] ${
-      isFixed ? 'sticky top-0 left-0 right-0 w-full z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-3 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716]' : ''
+    <div className={`w-full top-0 z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-5 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716] ${
+      isFixed ? 'sticky top-0 left-0 right-0 w-full z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-5 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716]' : ''
     }`}>
       {/* Logo and navigation for large devices */}
       <div className='hidden lg:flex justify-center items-center space-x-2 relative'>
