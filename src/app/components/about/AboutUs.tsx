@@ -13,9 +13,6 @@ const AboutUs = () => {
     '/assets/IMG_3864.JPG',
     '/assets/IMG_3865.png',
     '/assets/IMG_3866.JPG',
-    '/assets/about1.png',
-    '/assets/aboutBannerImage.png',
-    '/assets/ourteam1.png'
   ];
 
   useEffect(() => {
