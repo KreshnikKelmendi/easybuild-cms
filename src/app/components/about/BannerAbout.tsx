@@ -1,14 +1,29 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import SplitType from 'split-type';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 
+interface AboutBannerData {
+  title: {
+    en: string;
+    de: string;
+    al: string;
+  };
+  subtitle: {
+    en: string;
+    de: string;
+    al: string;
+  };
+  image: string;
+  video: string;
+}
+
 const BannerAbout = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.5,
@@ -16,6 +31,30 @@ const BannerAbout = () => {
 
   const textRef = useRef(null);
   const headingRef = useRef(null);
+  const [bannerData, setBannerData] = useState<AboutBannerData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch banner data from API
+  useEffect(() => {
+    const fetchBannerData = async () => {
+      try {
+        const response = await fetch('/api/about-banner');
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setBannerData(data.data);
+        } else {
+          console.warn('No about banner data found, using fallback');
+        }
+      } catch (error) {
+        console.error('Error fetching about banner:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBannerData();
+  }, []);
 
   useEffect(() => {
     if (inView && headingRef.current && textRef.current) {
@@ -52,13 +91,36 @@ const BannerAbout = () => {
     }
   }, [inView]);
 
+  // Get current language or default to 'en'
+  const currentLang = i18n.language as 'en' | 'de' | 'al' || 'en';
+  
+  // Get dynamic content with fallbacks
+  const title = bannerData?.title?.[currentLang] || t('aboutUs');
+  const subtitle = bannerData?.subtitle?.[currentLang] || t('secondBannerAbout');
+  const imageSrc = bannerData?.image || "/assets/aboutBannerImage.png";
+  const videoSrc = bannerData?.video || "/assets/EASY_BUILD_1 (1).mp4";
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className='w-full relative h-fit lg:h-[665px] flex flex-col lg:flex-row items-center bg-uberuns'>
+        <div className='w-full h-[665px] flex items-center justify-center'>
+          <div className='text-white text-center'>
+            <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4'></div>
+            <p className='font-zonapro'>Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='w-full relative h-fit lg:h-[665px] flex flex-col lg:flex-row items-center bg-uberuns'>
       {/* Image Section - Left Side with Text Overlay */}
       <div className='lg:w-1/2 w-full h-[45vh] lg:h-[665px] relative '>
         <Image
           className='w-full h-full object-cover banner-image'
-          src="/assets/aboutBannerImage.png"
+          src={imageSrc}
           alt="About Us Banner"
           width={800}
           height={665}
@@ -70,13 +132,13 @@ const BannerAbout = () => {
               className='font-custom1 text-[32px] lg:text-[85px] mb-4 capitalize font-zonapro'
               ref={headingRef}
             >
-              {t('aboutUs')}
+              {title}
             </p>
             <p
               className='lg:w-[500px] text-[16px] lg:text-[18px] font-custom font-medium leading-[21.15px] mx-auto font-zonapro'
               ref={textRef}
             >
-              {t('secondBannerAbout')}
+              {subtitle}
             </p>
           </div>
         </div>
@@ -93,7 +155,7 @@ const BannerAbout = () => {
           preload="auto"
           controls={false}
         >
-          <source src="/assets/EASY_BUILD_1 (1).mp4" type="video/mp4" />
+          <source src={videoSrc} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
