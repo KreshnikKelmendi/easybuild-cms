@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     // Email content
     const mailOptions = {
       from: 'noreplyeasybuild@gmail.com',
-      to: 'kreshnik.kelmendi1994@gmail.com',
+      to: 'easybuild.ks@gmail.com',
       subject: `New Contact Form Message from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
