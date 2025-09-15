@@ -4,16 +4,68 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const AboutUs = () => {
-  const { t } = useTranslation();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+interface AboutUsData {
+  title: {
+    en: string;
+    de: string;
+    al: string;
+  };
+  description: {
+    en: string;
+    de: string;
+    al: string;
+  };
+  missionDescription: {
+    en: string;
+    de: string;
+    al: string;
+  };
+  images: string[];
+}
 
-  // Array of images for the slider
-  const images = [
+const AboutUs = () => {
+  const { t, i18n } = useTranslation();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [aboutUsData, setAboutUsData] = useState<AboutUsData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Default images as fallback
+  const defaultImages = [
     '/assets/IMG_3864.JPG',
     '/assets/IMG_3865.png',
     '/assets/IMG_3866.JPG',
   ];
+
+  // Fetch about us data from API
+  useEffect(() => {
+    const fetchAboutUsData = async () => {
+      try {
+        const response = await fetch('/api/about-us');
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setAboutUsData(data.data);
+        } else {
+          console.warn('No about us data found, using fallback');
+        }
+      } catch (error) {
+        console.error('Error fetching about us:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAboutUsData();
+  }, []);
+
+  // Get current language or default to 'en'
+  const currentLang = i18n.language as 'en' | 'de' | 'al' || 'en';
+  
+  // Get dynamic content with fallbacks
+  const title = aboutUsData?.title?.[currentLang] || t('aboutUsDescription');
+  const description = aboutUsData?.description?.[currentLang] || t('firstDescription');
+  const missionDescription = aboutUsData?.missionDescription?.[currentLang] || t('mission_firstDescription');
+  const images = aboutUsData?.images?.length ? aboutUsData.images : defaultImages;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,6 +76,29 @@ const AboutUs = () => {
 
     return () => clearInterval(interval);
   }, [images.length]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className='bg-[#DD4624] relative z-10'>
+        <div className='flex flex-col lg:flex-row px-5 lg:px-[60px] py-16 2xl:px-[120px] lg:py-36'>
+          <div className='w-full lg:w-1/2 relative overflow-hidden rounded-[15px] h-[400px] lg:h-[600px] 2xl:h-[700px] flex items-center justify-center'>
+            <div className='text-white text-center'>
+              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4'></div>
+              <p className='font-zonapro'>Loading...</p>
+            </div>
+          </div>
+          <div className='w-full lg:w-1/2 flex flex-col lg:justify-center mt-0 lg:mt-0 lg:pl-[50px] 2xl:pl-[100px] lg:py-5 2xl:py-0'>
+            <div className='animate-pulse'>
+              <div className='h-16 bg-white/20 rounded mb-6'></div>
+              <div className='h-4 bg-white/20 rounded mb-4'></div>
+              <div className='h-4 bg-white/20 rounded'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -62,13 +137,13 @@ const AboutUs = () => {
 
           <div className='w-full lg:w-1/2 flex flex-col lg:justify-center mt-0 lg:mt-0 lg:pl-[50px] 2xl:pl-[100px] lg:py-5 2xl:py-0'>
             <p className='font-custom1 text-[32px] lg:text-[60px] 2xl:text-[64px] text-[#F3F3F3] lg:leading-[67px] 2xl:leading-[75.2px] mt-6 font-zonapro'>
-              {t('aboutUsDescription')}
+              {title}
             </p>
             <p className='text-[18px] font-normal leading-[21.15px] text-[#F3F4F4] w-full 2xl:w-[667px] mt-6 font-zonapro'>
-              {t('firstDescription')}
+              {description}
             </p>
             <p className='text-[18px] font-normal leading-[21.15px] text-[#F3F4F4] w-full 2xl:w-[667px] mt-4 font-zonapro'>
-              {t('mission_firstDescription')}
+              {missionDescription}
             </p>
           </div>
         </div>

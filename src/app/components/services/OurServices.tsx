@@ -5,6 +5,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import { gsap } from 'gsap';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 interface Service {
@@ -21,6 +22,7 @@ interface Service {
 
 const OurServices = () => {
   const { t, i18n } = useTranslation();
+  const router = useRouter();
   const [services, setServices] = useState<Service[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -124,6 +126,10 @@ const OurServices = () => {
     });
   };
 
+  const handleServiceClick = () => {
+    router.push('/services');
+  };
+
   useEffect(() => {
     if (inView) {
       gsap.fromTo(
@@ -163,22 +169,30 @@ const OurServices = () => {
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={() => handleMouseLeave(index)}
           >
-            <Image
-              ref={(el) => {
-                imageRefs.current[index] = el;
-              }}
-              src={(() => {
-                const imageSrc = hoveredIndex === index && service.hoverImage ? service.hoverImage : service.image;
-                console.log(`Service ${index} - Hovered: ${hoveredIndex === index}, HoverImage: ${service.hoverImage}, FinalSrc: ${imageSrc}`);
-                return imageSrc;
-              })()}
-              alt={getTitleInCurrentLanguage(service)}
-              width={400}
-              height={489}
-              className='w-full h-60 lg:h-[55vh] object-cover rounded-lg transition-all duration-500 ease-in-out'
-            />
+            <div 
+              className='cursor-pointer'
+              onClick={handleServiceClick}
+            >
+              <Image
+                ref={(el) => {
+                  imageRefs.current[index] = el;
+                }}
+                src={(() => {
+                  const imageSrc = hoveredIndex === index && service.hoverImage ? service.hoverImage : service.image;
+                  console.log(`Service ${index} - Hovered: ${hoveredIndex === index}, HoverImage: ${service.hoverImage}, FinalSrc: ${imageSrc}`);
+                  return imageSrc;
+                })()}
+                alt={getTitleInCurrentLanguage(service)}
+                width={400}
+                height={489}
+                className='w-full h-60 lg:h-[55vh] object-cover rounded-lg transition-all duration-500 ease-in-out'
+              />
+            </div>
             <div className='block'>
-              <p className='text-[20px] 2xl:text-[25px] font-custom font-semibold mt-6 lg:mt-9 flex items-center justify-start text-black hover:text-[#DD4624] hover:scale-110 hover:duration-500 font-zonapro'>
+              <p 
+                className='text-[20px] 2xl:text-[25px] font-custom font-semibold mt-6 lg:mt-9 flex items-center justify-start text-black hover:text-[#DD4624] hover:scale-110 hover:duration-500 font-zonapro cursor-pointer'
+                onClick={handleServiceClick}
+              >
                 {getTitleInCurrentLanguage(service)} <FaArrowRight className='ml-4 bg-[#DD4624] rounded-full text-white p-[5px]' />
               </p>
             </div>

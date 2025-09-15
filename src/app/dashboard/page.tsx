@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import BannerManager from '../components/admin/BannerManager';
 import AboutBannerManager from '../components/admin/AboutBannerManager';
+import AboutUsManager from '../components/admin/AboutUsManager';
 import ServiceManager from '../components/admin/ServiceManager';
 import ProjectManager from '../components/admin/ProjectManager';
 import WoodsManager from '../components/admin/WoodsManager';
@@ -150,6 +151,21 @@ const Dashboard = () => {
               About Banner
             </button>
             <button 
+              onClick={() => setActiveTab('about-us')}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
+                activeTab === 'about-us' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
+              }`}
+            >
+              <div className={`p-2 rounded-lg transition-colors duration-300 ${
+                activeTab === 'about-us' ? 'bg-[#DD4726]/20' : 'bg-gray-700/50 group-hover:bg-[#DD4726]/20'
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              About Us Section
+            </button>
+            <button 
               onClick={() => setActiveTab('services')}
               className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
                 activeTab === 'services' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
@@ -286,6 +302,12 @@ const Dashboard = () => {
           {activeTab === 'about-banner' && (
             <div className="bg-[#2A2A2A] rounded-lg border border-gray-700">
               <AboutBannerManager />
+            </div>
+          )}
+
+          {activeTab === 'about-us' && (
+            <div className="bg-[#2A2A2A] rounded-lg border border-gray-700">
+              <AboutUsManager />
             </div>
           )}
 
