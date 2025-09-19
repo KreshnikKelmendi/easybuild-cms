@@ -11,6 +11,7 @@ import ProjectManager from '../components/admin/ProjectManager';
 import WoodsManager from '../components/admin/WoodsManager';
 import SocialMediaManager from '../components/admin/SocialMediaManager';
 import TeamManager from '../components/admin/TeamManager';
+import StepByStepManager from '../components/admin/StepByStepManager';
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -240,6 +241,21 @@ const Dashboard = () => {
               </div>
               Team
             </button>
+            <button 
+              onClick={() => setActiveTab('step-by-step')}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-[#F3F4F4] hover:bg-[#DD4726]/10 hover:text-[#DD4726] rounded-xl transition-all duration-300 text-sm font-medium group cursor-pointer font-zonapro ${
+                activeTab === 'step-by-step' ? 'bg-[#DD4726]/20 text-[#DD4726] border border-[#DD4726]/30' : ''
+              }`}
+            >
+              <div className={`p-2 rounded-lg transition-colors duration-300 ${
+                activeTab === 'step-by-step' ? 'bg-[#DD4726]/20' : 'bg-gray-700/50 group-hover:bg-[#DD4726]/20'
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
+              Step by Step
+            </button>
           </div>
         </nav>
 
@@ -338,6 +354,12 @@ const Dashboard = () => {
           {activeTab === 'team' && (
             <div className="bg-[#2A2A2A] rounded-lg border border-gray-700">
               <TeamManager />
+            </div>
+          )}
+
+          {activeTab === 'step-by-step' && (
+            <div className="bg-[#2A2A2A] rounded-lg border border-gray-700">
+              <StepByStepManager />
             </div>
           )}
         </div>
