@@ -80,58 +80,57 @@ const Banner = () => {
   };
 
   return (
-    <div className='relative w-full h-[70vh] lg:h-[800px]'>
-      <Image 
-        src={bannerData?.image || "/assets/image1.png"} 
-        alt='Banner background' 
-        fill
-        className='object-cover'
-        priority
-      />
+    <div className='relative w-full h-[70vh] lg:h-[800px] bg-[#191716]'>
+      {bannerData?.image ? (
+        <Image 
+          src={bannerData.image}
+          alt='Banner background' 
+          fill
+          className='object-cover'
+          priority
+        />
+      ) : null}
       <div className='absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#772613] to-[#000000] opacity-50'></div>
       
 
       <div className='absolute top-0 left-0 w-full h-full flex items-center text-white lg:px-[50px] 2xl:px-[100px]'>
         <div ref={ref}>
-          {isLoading ? (
-            <div className="animate-pulse">
-              <div className="h-20 bg-gray-300 rounded mb-4"></div>
-              <div className="h-6 bg-gray-300 rounded mb-8 w-3/4"></div>
-            </div>
-          ) : bannerData ? (
-            <>
-              <h1 ref={titleRef} className='text-4xl lg:text-[85px] font-bold lg:w-[1061px] lg:leading-[99.87px] px-5 font-zonapro'>
-                {getLocalizedContent(bannerData.title, currentLang)}
-              </h1>
-              <p className='lg:w-[651px] w-full lg:text-justify text-[18px] mt-8 leading-[21.15px] tracking-tighter px-5 font-zonapro'>
-                {getLocalizedContent(bannerData.subtitle, currentLang)}
-              </p>
-              <div className='flex flex-col lg:flex-row gap-y-4 mt-10 gap-x-4 px-5'>
-                <Link href="/projects" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
-                  <button className='w-full lg:w-[200px] bg-[#191716] py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500 text-white font-zonapro'>{t('firstButton')}</button>
-                </Link>
-                <Link href="/contact" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
-                  <button className='px-8 w-full lg:w-[220px] bg-[#DD4624] py-3 rounded-[8px] hover:bg-[#191716] hover:duration-500 text-white font-zonapro'>{t('secondButton')}</button>
-                </Link>
+          {!isLoading && (
+            bannerData ? (
+              <>
+                <h1 ref={titleRef} className='text-4xl lg:text-[85px] font-bold lg:w-[1061px] lg:leading-[99.87px] px-5 font-zonapro'>
+                  {getLocalizedContent(bannerData.title, currentLang)}
+                </h1>
+                <p className='lg:w-[651px] w-full lg:text-justify text-[18px] mt-8 leading-[21.15px] tracking-tighter px-5 font-zonapro'>
+                  {getLocalizedContent(bannerData.subtitle, currentLang)}
+                </p>
+                <div className='flex flex-col lg:flex-row gap-y-4 mt-10 gap-x-4 px-5'>
+                  <Link href="/projects" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+                    <button className='w-full lg:w-[200px] bg-[#191716] py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500 text-white font-zonapro'>{t('firstButton')}</button>
+                  </Link>
+                  <Link href="/contact" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+                    <button className='px-8 w-full lg:w-[220px] bg-[#DD4624] py-3 rounded-[8px] hover:bg-[#191716] hover:duration-500 text-white font-zonapro'>{t('secondButton')}</button>
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <div className='text-center'>
+                <h1 className='text-4xl lg:text-[85px] font-bold lg:w-[1061px] lg:leading-[99.87px] px-5 font-zonapro'>
+                  {t('firstBanner')}
+                </h1>
+                <p className='lg:w-[651px] w-full lg:text-justify text-[18px] mt-8 leading-[21.15px] tracking-tighter px-5 font-zonapro'>
+                  {t('secondBanner')}
+                </p>
+                <div className='flex flex-col lg:flex-row gap-y-4 mt-10 gap-x-4 px-5'>
+                  <Link href="/projects" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+                    <button className='w-full lg:w-[200px] bg-[#191716] py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500 text-white font-zonapro'>{t('firstButton')}</button>
+                  </Link>
+                  <Link href="/contact" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+                    <button className='px-8 w-full lg:w-[220px] bg-[#DD4624] py-3 rounded-[8px] hover:bg-[#191716] hover:duration-500 text-white font-zonapro'>{t('secondButton')}</button>
+                  </Link>
+                </div>
               </div>
-            </>
-          ) : (
-            <div className="text-center">
-              <h1 className='text-4xl lg:text-[85px] font-bold lg:w-[1061px] lg:leading-[99.87px] px-5 font-zonapro'>
-                {t('firstBanner')}
-              </h1>
-              <p className='lg:w-[651px] w-full lg:text-justify text-[18px] mt-8 leading-[21.15px] tracking-tighter px-5 font-zonapro'>
-                {t('secondBanner')}
-              </p>
-              <div className='flex flex-col lg:flex-row gap-y-4 mt-10 gap-x-4 px-5'>
-                <Link href="/projects" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
-                  <button className='w-full lg:w-[200px] bg-[#191716] py-3 rounded-[8px] hover:bg-[#DD4624] hover:duration-500 text-white font-zonapro'>{t('firstButton')}</button>
-                </Link>
-                <Link href="/contact" onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
-                  <button className='px-8 w-full lg:w-[220px] bg-[#DD4624] py-3 rounded-[8px] hover:bg-[#191716] hover:duration-500 text-white font-zonapro'>{t('secondButton')}</button>
-                </Link>
-              </div>
-            </div>
+            )
           )}
         </div>
         <div className='bg-[#191716] hidden w-full lg:w-[541px] 2xl:w-[541px] lg:h-[260px] p-6 rounded-[15px] lg:flex justify-center items-center absolute lg:right-[60px] 2xl:right-[100px] lg:bottom-[-60px] 2xl:bottom-[-125px] z-40'>
