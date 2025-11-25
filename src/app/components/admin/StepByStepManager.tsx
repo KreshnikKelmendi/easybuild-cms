@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
+import { compressImage } from '@/lib/imageCompression';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -111,15 +112,29 @@ const StepByStepManager = () => {
       setIsUploading(prev => ({ ...prev, [step]: true }));
       setMessage('');
 
-      if (ChunkedUploader.needsChunking(file)) {
-        await handleChunkedUpload(file, step);
-      } else {
-        await handleRegularUpload(file, step);
+      try {
+        // Compress image if it's larger than 4.5MB
+        const compressedFile = await compressImage(file);
+        
+        if (ChunkedUploader.needsChunking(compressedFile)) {
+          await handleChunkedUpload(compressedFile, step, file);
+        } else {
+          await handleRegularUpload(compressedFile, step, file);
+        }
+      } catch (error) {
+        console.error('Compression error:', error);
+        setMessage('Error compressing image. Trying to upload original file...');
+        // Fallback to original file if compression fails
+        if (ChunkedUploader.needsChunking(file)) {
+          await handleChunkedUpload(file, step);
+        } else {
+          await handleRegularUpload(file, step);
+        }
       }
     }
   };
 
-  const handleChunkedUpload = async (file: File, step: 'step1' | 'step2' | 'step3') => {
+  const handleChunkedUpload = async (file: File, step: 'step1' | 'step2' | 'step3', originalFile?: File) => {
     try {
       setMessage('Large file detected. Using chunked upload...');
       
@@ -140,7 +155,10 @@ const StepByStepManager = () => {
             [step]: uploadResult.data!.path
           }
         }));
-        setMessage(`Large image uploaded successfully for ${step}! (${Math.round(file.size / (1024 * 1024))}MB)`);
+        const sizeInfo = originalFile && file.size < originalFile.size
+          ? `Compressed from ${(originalFile.size / (1024 * 1024)).toFixed(2)}MB to ${(file.size / (1024 * 1024)).toFixed(2)}MB`
+          : `${(file.size / (1024 * 1024)).toFixed(2)}MB`
+        setMessage(`Large image uploaded successfully for ${step}! (${sizeInfo})`);
       } else {
         throw new Error(uploadResult.message || 'Chunked upload failed');
       }
@@ -152,7 +170,7 @@ const StepByStepManager = () => {
     }
   };
 
-  const handleRegularUpload = async (file: File, step: 'step1' | 'step2' | 'step3') => {
+  const handleRegularUpload = async (file: File, step: 'step1' | 'step2' | 'step3', originalFile?: File) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -176,7 +194,10 @@ const StepByStepManager = () => {
             [step]: data.data.path
           }
         }));
-        setMessage(`Image uploaded successfully for ${step}!`);
+        const sizeInfo = originalFile && file.size < originalFile.size
+          ? ` (Compressed from ${(originalFile.size / (1024 * 1024)).toFixed(2)}MB to ${(file.size / (1024 * 1024)).toFixed(2)}MB)`
+          : ''
+        setMessage(`Image uploaded successfully for ${step}!${sizeInfo}`);
       } else {
         setMessage(data.message || `Failed to upload image for ${step}`);
       }

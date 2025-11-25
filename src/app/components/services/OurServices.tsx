@@ -126,8 +126,8 @@ const OurServices = () => {
     });
   };
 
-  const handleServiceClick = () => {
-    router.push('/services');
+  const handleServiceClick = (serviceId: string) => {
+    router.push(`/services/${serviceId}`);
   };
 
   useEffect(() => {
@@ -171,7 +171,7 @@ const OurServices = () => {
           >
             <div 
               className='cursor-pointer'
-              onClick={handleServiceClick}
+              onClick={() => handleServiceClick(service._id)}
             >
               <Image
                 ref={(el) => {
@@ -191,7 +191,7 @@ const OurServices = () => {
             <div className='block'>
               <p 
                 className='text-[20px] 2xl:text-[25px] font-custom font-semibold mt-6 lg:mt-9 flex items-center justify-start text-black hover:text-[#DD4624] hover:scale-110 hover:duration-500 font-zonapro cursor-pointer'
-                onClick={handleServiceClick}
+                onClick={() => handleServiceClick(service._id)}
               >
                 {getTitleInCurrentLanguage(service)} <FaArrowRight className='ml-4 bg-[#DD4624] rounded-full text-white p-[5px]' />
               </p>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload'
+import { compressImage } from '@/lib/imageCompression'
 
 interface Project {
   _id: string
@@ -95,13 +96,16 @@ const ProjectManager = () => {
         if (file && file.type.startsWith('image/')) {
           setIsUploading(true)
           
-                      try {
-              let uploadResult: UploadResult;
-              
-              // Check if file needs chunking (larger than 4MB)
-              if (ChunkedUploader.needsChunking(file)) {
+          try {
+            // Compress image if it's larger than 4.5MB
+            const compressedFile = await compressImage(file);
+            
+            let uploadResult: UploadResult;
+            
+            // Check if file needs chunking (larger than 4MB)
+            if (ChunkedUploader.needsChunking(compressedFile)) {
                 // Use chunked upload for large files
-                uploadResult = await uploadFileInChunks(file, {
+                uploadResult = await uploadFileInChunks(compressedFile, {
                   onProgress: (progress) => {
                     console.log(`Upload progress: ${progress}%`);
                   },
@@ -115,14 +119,17 @@ const ProjectManager = () => {
                     ...prev,
                     mainImage: uploadResult.data!.path
                   }))
-                  setMessage(`Main image uploaded successfully via chunked upload! (${Math.round(file.size / (1024 * 1024))}MB)`)
+                  const sizeInfo = compressedFile.size < file.size 
+                    ? `Compressed from ${(file.size / (1024 * 1024)).toFixed(2)}MB to ${(compressedFile.size / (1024 * 1024)).toFixed(2)}MB`
+                    : `${(compressedFile.size / (1024 * 1024)).toFixed(2)}MB`
+                  setMessage(`Main image uploaded successfully via chunked upload! (${sizeInfo})`)
                 } else {
                   throw new Error(uploadResult.message || 'Chunked upload failed')
                 }
               } else {
               // Use direct Cloudinary upload for smaller files
               const formData = new FormData()
-              formData.append('file', file)
+              formData.append('file', compressedFile)
               
               const response = await fetch('/api/upload-image-cloudinary', {
                 method: 'POST',
@@ -142,7 +149,48 @@ const ProjectManager = () => {
               }
             }
           } catch (error) {
-            setMessage(error instanceof Error ? error.message : 'Error uploading image')
+            console.error('Upload error:', error);
+            // Fallback to original file if compression fails
+            if (error instanceof Error && error.message.includes('compress')) {
+              setMessage('Error compressing image. Trying to upload original file...');
+              try {
+                if (ChunkedUploader.needsChunking(file)) {
+                  const uploadResult = await uploadFileInChunks(file, {
+                    onProgress: (progress) => {
+                      console.log(`Upload progress: ${progress}%`);
+                    }
+                  });
+                  if (uploadResult.success && uploadResult.data) {
+                    setFormData(prev => ({
+                      ...prev,
+                      mainImage: uploadResult.data!.path
+                    }))
+                    setMessage('Main image uploaded successfully!')
+                  }
+                } else {
+                  const formData = new FormData()
+                  formData.append('file', file)
+                  const response = await fetch('/api/upload-image-cloudinary', {
+                    method: 'POST',
+                    body: formData,
+                  })
+                  const data = await response.json()
+                  if (data.success) {
+                    setFormData(prev => ({
+                      ...prev,
+                      mainImage: data.data.path
+                    }))
+                    setMessage('Main image uploaded successfully!')
+                  } else {
+                    throw new Error(data.message || 'Failed to upload image')
+                  }
+                }
+              } catch (fallbackError) {
+                setMessage(fallbackError instanceof Error ? fallbackError.message : 'Error uploading image')
+              }
+            } else {
+              setMessage(error instanceof Error ? error.message : 'Error uploading image')
+            }
           } finally {
             setIsUploading(false)
           }
@@ -159,26 +207,30 @@ const ProjectManager = () => {
             const uploadedImages: string[] = []
             
             for (const file of imageFiles) {
-              let uploadResult: UploadResult;
-              
-              // Check if file needs chunking
-              if (ChunkedUploader.needsChunking(file)) {
-                // Use chunked upload for large files
-                uploadResult = await uploadFileInChunks(file, {
-                  onProgress: (progress) => {
-                    console.log(`Upload progress for ${file.name}: ${progress}%`);
-                  }
-                });
+              try {
+                // Compress image if it's larger than 4.5MB
+                const compressedFile = await compressImage(file);
                 
-                if (uploadResult.success && uploadResult.data) {
-                  uploadedImages.push(uploadResult.data.path)
+                let uploadResult: UploadResult;
+                
+                // Check if file needs chunking
+                if (ChunkedUploader.needsChunking(compressedFile)) {
+                  // Use chunked upload for large files
+                  uploadResult = await uploadFileInChunks(compressedFile, {
+                    onProgress: (progress) => {
+                      console.log(`Upload progress for ${file.name}: ${progress}%`);
+                    }
+                  });
+                  
+                  if (uploadResult.success && uploadResult.data) {
+                    uploadedImages.push(uploadResult.data.path)
+                  } else {
+                    throw new Error(`Failed to upload ${file.name}: ${uploadResult.message}`)
+                  }
                 } else {
-                  throw new Error(`Failed to upload ${file.name}: ${uploadResult.message}`)
-                }
-              } else {
-                // Use direct Cloudinary upload for smaller files
-                const formData = new FormData()
-                formData.append('file', file)
+                  // Use direct Cloudinary upload for smaller files
+                  const formData = new FormData()
+                  formData.append('file', compressedFile)
                 
                 const response = await fetch('/api/upload-image-cloudinary', {
                   method: 'POST',
@@ -187,10 +239,43 @@ const ProjectManager = () => {
                 
                 const data = await response.json()
                 
-                if (data.success) {
-                  uploadedImages.push(data.data.path)
+                  if (data.success) {
+                    uploadedImages.push(data.data.path)
+                  } else {
+                    throw new Error(`Failed to upload ${file.name}: ${data.message}`)
+                  }
+                }
+              } catch (error) {
+                console.error(`Error uploading ${file.name}:`, error);
+                // Fallback to original file if compression fails
+                if (error instanceof Error && error.message.includes('compress')) {
+                  try {
+                    if (ChunkedUploader.needsChunking(file)) {
+                      const uploadResult = await uploadFileInChunks(file, {
+                        onProgress: (progress) => {
+                          console.log(`Upload progress for ${file.name}: ${progress}%`);
+                        }
+                      });
+                      if (uploadResult.success && uploadResult.data) {
+                        uploadedImages.push(uploadResult.data.path)
+                      }
+                    } else {
+                      const formData = new FormData()
+                      formData.append('file', file)
+                      const response = await fetch('/api/upload-image-cloudinary', {
+                        method: 'POST',
+                        body: formData,
+                      })
+                      const data = await response.json()
+                      if (data.success) {
+                        uploadedImages.push(data.data.path)
+                      }
+                    }
+                  } catch (fallbackError) {
+                    console.error(`Failed to upload ${file.name} even with fallback:`, fallbackError);
+                  }
                 } else {
-                  throw new Error(`Failed to upload ${file.name}: ${data.message}`)
+                  throw error;
                 }
               }
             }

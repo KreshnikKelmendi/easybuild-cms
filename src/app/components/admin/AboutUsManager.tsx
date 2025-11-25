@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
+import { compressImages } from '@/lib/imageCompression';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -101,16 +102,18 @@ const AboutUsManager = () => {
       setMessage('');
 
       try {
-        const uploadPromises = Array.from(files).map(async (file) => {
-          if (!file.type.startsWith('image/')) {
-            throw new Error(`File ${file.name} is not an image`);
-          }
-
+        // Compress all images first
+        const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+        const compressedFiles = await compressImages(imageFiles);
+        
+        const uploadPromises = compressedFiles.map(async (compressedFile, index) => {
+          const originalFile = imageFiles[index];
+          
           // Check if file needs chunking (larger than 4MB)
-          if (ChunkedUploader.needsChunking(file)) {
-            const uploadResult = await uploadFileInChunks(file, {
+          if (ChunkedUploader.needsChunking(compressedFile)) {
+            const uploadResult = await uploadFileInChunks(compressedFile, {
               onProgress: (progress) => {
-                console.log(`Uploading ${file.name}: ${progress}% complete`);
+                console.log(`Uploading ${originalFile.name}: ${progress}% complete`);
               },
             });
             
@@ -122,7 +125,7 @@ const AboutUsManager = () => {
           } else {
             // Regular upload
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('file', compressedFile);
             
             const response = await fetch('/api/upload-image-cloudinary', {
               method: 'POST',
@@ -150,10 +153,63 @@ const AboutUsManager = () => {
           images: [...prev.images, ...uploadedPaths]
         }));
         
-        setMessage(`${uploadedPaths.length} image(s) uploaded successfully!`);
+        const totalOriginalSize = imageFiles.reduce((sum, file) => sum + file.size, 0);
+        const totalCompressedSize = compressedFiles.reduce((sum, file) => sum + file.size, 0);
+        const compressionInfo = totalCompressedSize < totalOriginalSize
+          ? ` (Compressed from ${(totalOriginalSize / (1024 * 1024)).toFixed(2)}MB to ${(totalCompressedSize / (1024 * 1024)).toFixed(2)}MB)`
+          : '';
+        setMessage(`${uploadedPaths.length} image(s) uploaded successfully!${compressionInfo}`);
       } catch (error) {
         console.error('Upload error:', error);
-        setMessage(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        // Fallback: try uploading original files if compression fails
+        if (error instanceof Error && error.message.includes('compress')) {
+          setMessage('Error compressing images. Trying to upload original files...');
+          try {
+            const fallbackPromises = Array.from(files).map(async (file) => {
+              if (!file.type.startsWith('image/')) {
+                throw new Error(`File ${file.name} is not an image`);
+              }
+              if (ChunkedUploader.needsChunking(file)) {
+                const uploadResult = await uploadFileInChunks(file, {
+                  onProgress: (progress) => {
+                    console.log(`Uploading ${file.name}: ${progress}% complete`);
+                  },
+                });
+                if (uploadResult.success && uploadResult.data) {
+                  return uploadResult.data.path;
+                } else {
+                  throw new Error(uploadResult.message || 'Upload failed');
+                }
+              } else {
+                const formData = new FormData();
+                formData.append('file', file);
+                const response = await fetch('/api/upload-image-cloudinary', {
+                  method: 'POST',
+                  body: formData,
+                });
+                if (!response.ok) {
+                  throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const data = await response.json();
+                if (data.success) {
+                  return data.data.path;
+                } else {
+                  throw new Error(data.message || 'Upload failed');
+                }
+              }
+            });
+            const fallbackPaths = await Promise.all(fallbackPromises);
+            setFormData(prev => ({
+              ...prev,
+              images: [...prev.images, ...fallbackPaths]
+            }));
+            setMessage(`${fallbackPaths.length} image(s) uploaded successfully!`);
+          } catch (fallbackError) {
+            setMessage(`Upload failed: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`);
+          }
+        } else {
+          setMessage(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
       } finally {
         setIsUploading(false);
       }

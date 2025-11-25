@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
+import { compressImage } from '@/lib/imageCompression';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -109,11 +110,29 @@ const BannerManager = () => {
       setIsUploading(true);
       setMessage('');
 
-      // Check if file needs chunking (larger than 4MB)
-      if (ChunkedUploader.needsChunking(file)) {
-        await handleChunkedUpload(file);
-      } else {
-        await handleRegularUpload(file);
+      try {
+        // Compress image if it's larger than 4.5MB
+        const compressedFile = await compressImage(file);
+        setMessage(compressedFile.size < file.size 
+          ? `Image compressed from ${(file.size / (1024 * 1024)).toFixed(2)}MB to ${(compressedFile.size / (1024 * 1024)).toFixed(2)}MB`
+          : 'Processing image...'
+        );
+
+        // Check if file needs chunking (larger than 4MB)
+        if (ChunkedUploader.needsChunking(compressedFile)) {
+          await handleChunkedUpload(compressedFile);
+        } else {
+          await handleRegularUpload(compressedFile);
+        }
+      } catch (error) {
+        console.error('Compression error:', error);
+        setMessage('Error compressing image. Trying to upload original file...');
+        // Fallback to original file if compression fails
+        if (ChunkedUploader.needsChunking(file)) {
+          await handleChunkedUpload(file);
+        } else {
+          await handleRegularUpload(file);
+        }
       }
     }
   };
