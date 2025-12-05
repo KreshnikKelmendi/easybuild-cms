@@ -18,11 +18,7 @@ interface StepByStepData {
     de: string;
     al: string;
   };
-  images: {
-    step1: string;
-    step2: string;
-    step3: string;
-  };
+  images: string[];
 }
 
 const StepByStepManager = () => {
@@ -30,16 +26,12 @@ const StepByStepManager = () => {
   const [formData, setFormData] = useState<StepByStepData>({
     title: { en: '', de: '', al: '' },
     description: { en: '', de: '', al: '' },
-    images: { step1: '', step2: '', step3: '' },
+    images: [],
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [currentStepByStep, setCurrentStepByStep] = useState<StepByStepData | null>(null);
-  const [isUploading, setIsUploading] = useState<{ [key: string]: boolean }>({
-    step1: false,
-    step2: false,
-    step3: false,
-  });
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchCurrentStepByStep();
@@ -52,6 +44,10 @@ const StepByStepManager = () => {
       
       if (data.success && data.data) {
         setCurrentStepByStep(data.data);
+        const images = Array.isArray(data.data.images)
+          ? data.data.images
+          : Object.values(data.data.images || {}).filter((val: unknown): val is string => typeof val === 'string');
+
         setFormData({
           title: {
             en: data.data.title?.en || '',
@@ -63,11 +59,7 @@ const StepByStepManager = () => {
             de: data.data.description?.de || '',
             al: data.data.description?.al || ''
           },
-          images: {
-            step1: data.data.images?.step1 || '',
-            step2: data.data.images?.step2 || '',
-            step3: data.data.images?.step3 || '',
-          },
+          images,
         });
       }
     } catch (error) {
@@ -96,117 +88,65 @@ const StepByStepManager = () => {
     }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, step: 'step1' | 'step2' | 'step3') => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.type.startsWith('image/')) {
-        await handleFileUpload(file, step);
-      } else {
-        setMessage('Please select an image file (PNG, JPG, etc.)');
-      }
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const imageFiles = Array.from(files).filter((file) => file.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+      setMessage('Please select image files (PNG, JPG, etc.)');
+      return;
     }
-  };
 
-  const handleFileUpload = async (file: File, step: 'step1' | 'step2' | 'step3') => {
-    if (file) {
-      setIsUploading(prev => ({ ...prev, [step]: true }));
-      setMessage('');
+    setIsUploading(true);
+    setMessage('');
 
-      try {
-        // Compress image if it's larger than 4.5MB
+    try {
+      const uploaded: string[] = [];
+
+      for (const file of imageFiles) {
         const compressedFile = await compressImage(file);
-        
         if (ChunkedUploader.needsChunking(compressedFile)) {
-          await handleChunkedUpload(compressedFile, step, file);
-        } else {
-          await handleRegularUpload(compressedFile, step, file);
-        }
-      } catch (error) {
-        console.error('Compression error:', error);
-        setMessage('Error compressing image. Trying to upload original file...');
-        // Fallback to original file if compression fails
-        if (ChunkedUploader.needsChunking(file)) {
-          await handleChunkedUpload(file, step);
-        } else {
-          await handleRegularUpload(file, step);
-        }
-      }
-    }
-  };
-
-  const handleChunkedUpload = async (file: File, step: 'step1' | 'step2' | 'step3', originalFile?: File) => {
-    try {
-      setMessage('Large file detected. Using chunked upload...');
-      
-      const uploadResult = await uploadFileInChunks(file, {
-        onProgress: (progress) => {
-          setMessage(`Uploading ${step}... ${progress}% complete`);
-        },
-        onChunkComplete: (chunkIndex, totalChunks) => {
-          console.log(`Chunk ${chunkIndex + 1}/${totalChunks} completed for ${step}`);
-        }
-      });
-      
-      if (uploadResult.success && uploadResult.data) {
-        setFormData(prev => ({
-          ...prev,
-          images: {
-            ...prev.images,
-            [step]: uploadResult.data!.path
+          const uploadResult = await uploadFileInChunks(compressedFile);
+          if (uploadResult.success && uploadResult.data?.path) {
+            uploaded.push(uploadResult.data.path);
+          } else {
+            throw new Error(uploadResult.message || `Failed to upload ${file.name}`);
           }
-        }));
-        const sizeInfo = originalFile && file.size < originalFile.size
-          ? `Compressed from ${(originalFile.size / (1024 * 1024)).toFixed(2)}MB to ${(file.size / (1024 * 1024)).toFixed(2)}MB`
-          : `${(file.size / (1024 * 1024)).toFixed(2)}MB`
-        setMessage(`Large image uploaded successfully for ${step}! (${sizeInfo})`);
-      } else {
-        throw new Error(uploadResult.message || 'Chunked upload failed');
-      }
-    } catch (error) {
-      console.error('Chunked upload error:', error);
-      setMessage(`Chunked upload failed for ${step}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      setIsUploading(prev => ({ ...prev, [step]: false }));
-    }
-  };
-
-  const handleRegularUpload = async (file: File, step: 'step1' | 'step2' | 'step3', originalFile?: File) => {
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      const response = await fetch('/api/upload-image-cloudinary', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setFormData(prev => ({
-          ...prev,
-          images: {
-            ...prev.images,
-            [step]: data.data.path
+        } else {
+          const fd = new FormData();
+          fd.append('file', compressedFile);
+          const response = await fetch('/api/upload-image-cloudinary', { method: 'POST', body: fd });
+          const data = await response.json();
+          if (data.success) {
+            uploaded.push(data.data.path);
+          } else {
+            throw new Error(data.message || `Failed to upload ${file.name}`);
           }
+        }
+      }
+
+      if (uploaded.length > 0) {
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, ...uploaded],
         }));
-        const sizeInfo = originalFile && file.size < originalFile.size
-          ? ` (Compressed from ${(originalFile.size / (1024 * 1024)).toFixed(2)}MB to ${(file.size / (1024 * 1024)).toFixed(2)}MB)`
-          : ''
-        setMessage(`Image uploaded successfully for ${step}!${sizeInfo}`);
-      } else {
-        setMessage(data.message || `Failed to upload image for ${step}`);
+        setMessage(`${uploaded.length} image(s) uploaded successfully`);
       }
     } catch (error) {
       console.error('Upload error:', error);
-      setMessage(`Upload error for ${step}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setMessage(error instanceof Error ? error.message : 'Error uploading images');
     } finally {
-      setIsUploading(prev => ({ ...prev, [step]: false }));
+      setIsUploading(false);
+      e.target.value = '';
     }
+  };
+
+  const removeImageAt = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -217,8 +157,8 @@ const StepByStepManager = () => {
     // Check if we have all required fields
     if (!formData.title.en || !formData.title.de || !formData.title.al ||
         !formData.description.en || !formData.description.de || !formData.description.al ||
-        !formData.images.step1 || !formData.images.step2 || !formData.images.step3) {
-      setMessage('Please fill all fields and upload all three images');
+        formData.images.length < 3) {
+      setMessage('Please fill all fields and upload at least three images');
       setIsLoading(false);
       return;
     }
@@ -250,12 +190,6 @@ const StepByStepManager = () => {
     { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
     { code: 'al', name: 'Shqip', flag: '🇦🇱' }
   ];
-
-  const steps = [
-    { key: 'step1', label: 'Step 1 Image' },
-    { key: 'step2', label: 'Step 2 Image' },
-    { key: 'step3', label: 'Step 3 Image' },
-  ] as const;
 
   return (
     <div className="max-w-6xl mx-auto p-4 bg-white">
@@ -333,63 +267,50 @@ const StepByStepManager = () => {
           {/* Images */}
           <div>
             <label className="block text-sm font-medium text-black mb-2 font-zonapro">
-              Step Images
+              Step Images (min 3)
             </label>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {steps.map((step) => (
-                <div key={step.key} className="border border-gray-300 p-3 rounded">
-                  <h4 className="text-sm font-medium text-black mb-2 font-zonapro">{step.label}</h4>
-                  
-                  {/* File Upload */}
-                  <div className="mb-3">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileChange(e, step.key)}
-                      disabled={isUploading[step.key]}
-                      className="w-full px-2 py-1 border border-gray-400 rounded focus:outline-none focus:border-black text-black disabled:opacity-50 font-zonapro text-sm"
-                    />
-                    <p className="text-xs text-gray-600 mt-1 font-zonapro">
-                      {isUploading[step.key] ? 'Uploading...' : 'Select image file'}
-                    </p>
-                  </div>
-                  
-                  {/* Image Preview */}
-                  {formData.images[step.key] && (
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="text-xs font-medium text-black font-zonapro">Preview:</p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFormData(prev => ({
-                              ...prev,
-                              images: {
-                                ...prev.images,
-                                [step.key]: ''
-                              }
-                            }));
-                          }}
-                          className="text-xs text-red-600 hover:text-red-800 underline font-zonapro"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                      <div className="relative w-full h-32 border border-gray-300 rounded overflow-hidden">
-                        <Image 
-                          src={formData.images[step.key]} 
-                          alt={`${step.label} preview`} 
-                          width={200}
-                          height={128}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+            <div className="mb-3">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileChange}
+                disabled={isUploading}
+                className="w-full px-2 py-1 border border-gray-400 rounded focus:outline-none focus:border-black text-black disabled:opacity-50 font-zonapro text-sm"
+              />
+              <p className="text-xs text-gray-600 mt-1 font-zonapro">
+                {isUploading ? 'Uploading...' : 'Select one or more images'}
+              </p>
             </div>
+
+            {formData.images.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {formData.images.map((img, idx) => (
+                  <div key={img + idx} className="border border-gray-300 p-3 rounded">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-medium text-black font-zonapro">Image {idx + 1}</p>
+                      <button
+                        type="button"
+                        onClick={() => removeImageAt(idx)}
+                        className="text-xs text-red-600 hover:text-red-800 underline font-zonapro"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div className="relative w-full h-32 border border-gray-300 rounded overflow-hidden">
+                      <Image 
+                        src={img} 
+                        alt={`Step image ${idx + 1}`} 
+                        width={200}
+                        height={128}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Buttons */}
@@ -447,26 +368,28 @@ const StepByStepManager = () => {
           {/* Images Preview */}
           <div className="p-3 bg-gray-100 rounded border border-gray-200">
             <div className="font-medium text-black mb-3 font-zonapro">🖼️ Step Images</div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {steps.map((step) => (
-                <div key={step.key}>
-                  <div className="text-sm text-black mb-2 font-zonapro">
-                    <strong>{step.label}:</strong> {currentStepByStep.images?.[step.key] || 'Not set'}
-                  </div>
-                  {currentStepByStep.images?.[step.key] && (
+            {currentStepByStep.images?.length ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {currentStepByStep.images.map((img, idx) => (
+                  <div key={img + idx}>
+                    <div className="text-sm text-black mb-2 font-zonapro">
+                      <strong>Image {idx + 1}:</strong> {img}
+                    </div>
                     <div className="w-full h-32 border border-gray-300 rounded overflow-hidden">
                       <Image 
-                        src={currentStepByStep.images[step.key]} 
-                        alt={`${step.label}`}
+                        src={img} 
+                        alt={`Step image ${idx + 1}`}
                         width={200}
                         height={128}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-700 font-zonapro">No images set.</p>
+            )}
           </div>
         </div>
       )}

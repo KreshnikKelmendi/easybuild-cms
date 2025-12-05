@@ -46,15 +46,17 @@ export async function POST(request: Request) {
     const { title, description, images } = body;
 
     // Validate required fields
+    const hasValidImages = Array.isArray(images) && images.length >= 3 && images.every((img: unknown) => typeof img === 'string' && img.trim().length > 0);
+
     if (!title || !description || !images ||
         !title.en || !title.de || !title.al || 
         !description.en || !description.de || !description.al ||
-        !images.step1 || !images.step2 || !images.step3) {
+        !hasValidImages) {
       console.log('❌ Validation failed:', { title, description, images });
       return NextResponse.json(
         { 
           success: false, 
-          message: 'Title, description, and all three images are required in all languages (English, German, Albanian)' 
+          message: 'Title, description, and at least 3 images are required (images must be non-empty strings)' 
         },
         { status: 400 }
       );

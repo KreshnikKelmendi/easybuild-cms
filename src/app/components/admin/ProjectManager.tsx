@@ -42,6 +42,7 @@ const ProjectManager = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'de' | 'al'>('en')
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null)
   const [formData, setFormData] = useState<{
     title: { en: string; de: string; al: string }
     description: { en: string; de: string; al: string }
@@ -306,6 +307,23 @@ const ProjectManager = () => {
     }))
   }
 
+  const handleEdit = (project: Project) => {
+    setEditingProjectId(project._id)
+    setFormData({
+      title: { ...project.title },
+      description: { ...project.description },
+      mainImage: project.mainImage,
+      additionalImages: [...project.additionalImages]
+    })
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleCancelEdit = () => {
+    setEditingProjectId(null)
+    resetForm()
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -331,8 +349,13 @@ const ProjectManager = () => {
     }
 
     try {
-      const response = await fetch('/api/projects', {
-        method: 'POST',
+      const url = editingProjectId 
+        ? `/api/projects/${editingProjectId}`
+        : '/api/projects'
+      const method = editingProjectId ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
@@ -340,20 +363,16 @@ const ProjectManager = () => {
       const data = await response.json()
 
       if (data.success) {
-        setMessage('Project created successfully!')
+        setMessage(editingProjectId ? 'Project updated successfully!' : 'Project created successfully!')
         fetchProjects()
         // Reset form
-        setFormData({
-          title: { en: '', de: '', al: '' },
-          description: { en: '', de: '', al: '' },
-          mainImage: '',
-          additionalImages: []
-        })
+        setEditingProjectId(null)
+        resetForm()
       } else {
-        setMessage(data.message || 'Failed to create project')
+        setMessage(data.message || (editingProjectId ? 'Failed to update project' : 'Failed to create project'))
       }
     } catch {
-      setMessage('An error occurred while creating the project')
+      setMessage(editingProjectId ? 'An error occurred while updating the project' : 'An error occurred while creating the project')
     } finally {
       setIsLoading(false)
     }
@@ -408,10 +427,10 @@ const ProjectManager = () => {
         </div>
       )}
 
-      {/* Project Creation Form */}
+      {/* Project Creation/Edit Form */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100">
         <h2 className="text-xl font-semibold text-black mb-4 text-center">
-          🏗️ Create New Project
+          {editingProjectId ? '✏️ Edit Project' : '🏗️ Create New Project'}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -585,15 +604,27 @@ const ProjectManager = () => {
               disabled={isLoading || isUploading}
               className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
             >
-              {isLoading ? 'Creating...' : '✨ Create Project'}
+              {isLoading 
+                ? (editingProjectId ? 'Updating...' : 'Creating...') 
+                : (editingProjectId ? '💾 Update Project' : '✨ Create Project')}
             </button>
-            <button
-              type="button"
-              onClick={resetForm}
-              className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-semibold transition-colors duration-200"
-            >
-              Reset
-            </button>
+            {editingProjectId ? (
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-semibold transition-colors duration-200"
+              >
+                Cancel
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-semibold transition-colors duration-200"
+              >
+                Reset
+              </button>
+            )}
           </div>
         </form>
       </div>
@@ -655,15 +686,26 @@ const ProjectManager = () => {
                       {new Date(project.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <button
-                    onClick={() => handleDelete(project._id)}
-                    className="text-red-500 hover:text-red-700 transition-colors duration-200"
-                    title="Delete project"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleEdit(project)}
+                      className="text-blue-500 hover:text-blue-700 transition-colors duration-200"
+                      title="Edit project"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(project._id)}
+                      className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                      title="Delete project"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 
                 <div className="space-y-3">

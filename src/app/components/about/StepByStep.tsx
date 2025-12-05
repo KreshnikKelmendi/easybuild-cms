@@ -14,11 +14,7 @@ interface StepByStepData {
     de: string;
     al: string;
   };
-  images: {
-    step1: string;
-    step2: string;
-    step3: string;
-  };
+  images: string[];
 }
 
 const StepByStep = () => {
@@ -36,7 +32,10 @@ const StepByStep = () => {
       const data = await response.json();
       
       if (data.success && data.data) {
-        setStepByStepData(data.data);
+        const images = Array.isArray(data.data.images)
+          ? data.data.images
+          : Object.values(data.data.images || {}).filter((val: unknown): val is string => typeof val === 'string');
+        setStepByStepData({ ...data.data, images });
       }
     } catch (error) {
       console.error('Error fetching step by step data:', error);
@@ -59,27 +58,27 @@ const StepByStep = () => {
     return stepByStepData.description[currentLang] || stepByStepData.description.en || t('step_by_step_description');
   };
 
-  // Safe image getter with fallbacks
-  const getImageSrc = (step: 'step1' | 'step2' | 'step3') => {
-    if (!stepByStepData || !stepByStepData.images) {
-      return `/assets/${step}.png`;
-    }
-    return stepByStepData.images[step] || `/assets/${step}.png`;
-  };
+  const images = stepByStepData?.images ?? [];
+  const safeImages = (images.length
+    ? images
+    : ['/assets/step1.png', '/assets/step2.png', '/assets/step3.png']
+  ).slice(0, 9); // show up to 9 items in grid
 
-  // Show loading state or fallback content
+  // Show loading state
   if (isLoading) {
     return (
       <div className='w-full lg:px-[50px] 2xl:px-[110px] mt-16 lg:mt-32 px-5'>
-        <div className='w-full flex flex-col lg:flex-row lg:justify-between'>
-          <div className='flex flex-col justify-center'>
+        <div className='w-full flex flex-col lg:flex-row lg:gap-12'>
+          {/* Left: Text Content */}
+          <div className='w-full lg:w-1/2 flex flex-col justify-center'>
             <p className='text-[#DD4624] text-[18px] font-zonapro'>{t('services')}</p>
-            <p className='text-[32px] lg:text-[64px] font-custom1 font-zonapro'>{t('step_by_step')}</p>
-            <div className='lg:w-[601px] w-full text-[16px] lg:text-[18px] font-custom lg:text-left tracking-tight lg:tracking-normal leading-[22.7px] font-normal text-[#191716]'>
+            <p className='text-[32px] lg:text-[64px] font-custom1 font-zonapro mt-2'>{t('step_by_step')}</p>
+            <div className='w-full text-[16px] lg:text-[18px] font-custom tracking-tight lg:tracking-normal leading-[22.7px] font-normal text-[#191716] mt-4'>
               <p className="font-zonapro">{t('step_by_step_description')}</p>
             </div>
           </div>
-          <div className='flex justify-center items-center mt-6 lg:mt-0'>
+          {/* Right: Images Grid */}
+          <div className='w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center items-center'>
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DD4624]"></div>
           </div>
         </div>
@@ -91,61 +90,35 @@ const StepByStep = () => {
   if (!stepByStepData) {
     return (
       <div className='w-full lg:px-[50px] 2xl:px-[110px] mt-16 lg:mt-32 px-5'>
-        <div className='w-full flex flex-col lg:flex-row lg:justify-between'>
-          <div className='flex flex-col justify-center'>
+        <div className='w-full flex flex-col lg:flex-row lg:gap-12'>
+          {/* Left: Text Content */}
+          <div className='w-full lg:w-1/2 flex flex-col justify-center'>
             <p className='text-[#DD4624] text-[18px] font-zonapro'>{t('services')}</p>
-            <p className='text-[32px] lg:text-[64px] font-custom1 font-zonapro'>{t('step_by_step')}</p>
-            <div className='lg:w-[601px] w-full text-[16px] lg:text-[18px] font-custom lg:text-left tracking-tight lg:tracking-normal leading-[22.7px] font-normal text-[#191716]'>
+            <p className='text-[32px] lg:text-[64px] font-custom1 font-zonapro mt-2'>{t('step_by_step')}</p>
+            <div className='w-full text-[16px] lg:text-[18px] font-custom tracking-tight lg:tracking-normal leading-[22.7px] font-normal text-[#191716] mt-4'>
               <p className="font-zonapro">{t('step_by_step_description')}</p>
             </div>
           </div>
-          <div className='lg:hidden flex overflow-x-scroll mt-6'>
-            <div className='flex flex-nowrap'>
-              <Image 
-                src="/assets/step1.png" 
-                alt="Step 1" 
-                width={292} 
-                height={447} 
-                className='w-[292px] h-[447px] object-cover rounded-[15px] mr-4' 
-              />
-              <Image 
-                src="/assets/step2.png" 
-                alt="Step 2" 
-                width={292} 
-                height={447} 
-                className='w-[292px] h-[447px] object-cover rounded-[15px] mr-4' 
-              />
-              <Image 
-                src="/assets/step3.png" 
-                alt="Step 3" 
-                width={292} 
-                height={447} 
-                className='w-[292px] h-[447px] object-cover rounded-[15px]' 
-              />
+          {/* Right: 9 Images Grid */}
+          <div className='w-full lg:w-1/2 mt-8 lg:mt-0'>
+            <div className='grid grid-cols-3 gap-3 lg:gap-4'>
+              {safeImages.map((image, idx) => (
+                <div
+                  key={idx}
+                  className='relative aspect-square rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300'
+                >
+                  <Image 
+                    src={image} 
+                    alt={`Step ${idx + 1}`} 
+                    fill
+                    className='object-contain'
+                  />
+                  <div className='absolute bottom-2 left-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-zonapro text-[#191716] shadow'>
+                    {idx + 1}
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className='hidden lg:grid lg:grid-cols-3 gap-4 mt-6 lg:mt-0'>
-            <Image 
-              src="/assets/step1.png" 
-              alt="Step 1" 
-              width={292} 
-              height={447} 
-              className='w-full h-96 lg:w-[292px] lg:h-[447px] object-cover rounded-[15px]' 
-            />
-            <Image 
-              src="/assets/step2.png" 
-              alt="Step 2" 
-              width={292} 
-              height={447} 
-              className='w-full h-96 lg:w-[292px] lg:h-[447px] object-cover rounded-[15px]' 
-            />
-            <Image 
-              src="/assets/step3.png" 
-              alt="Step 3" 
-              width={292} 
-              height={447} 
-              className='w-full h-96 lg:w-[292px] lg:h-[447px] object-cover rounded-[15px]' 
-            />
           </div>
         </div>
       </div>
@@ -154,63 +127,36 @@ const StepByStep = () => {
 
   return (
     <div className='w-full lg:px-[50px] 2xl:px-[110px] mt-16 lg:mt-32 px-5'>
-      <div className='w-full flex flex-col lg:flex-row lg:justify-between'>
-        <div className='flex flex-col justify-center'>
+      <div className='w-full flex flex-col lg:flex-row lg:gap-12'>
+        {/* Left: Text Content */}
+        <div className='w-full lg:w-1/2 flex flex-col justify-center'>
           <p className='text-[#DD4624] text-[18px] font-zonapro'>{t('services')}</p>
-          <p className='text-[32px] lg:text-[64px] font-custom1 font-zonapro'>{getTitle()}</p>
-          <div className='lg:w-[601px] w-full text-[16px] lg:text-[18px] font-custom lg:text-left tracking-tight lg:tracking-normal leading-[22.7px] font-normal text-[#191716]'>
+          <p className='text-[32px] lg:text-[64px] font-custom1 font-zonapro mt-2'>{getTitle()}</p>
+          <div className='w-full text-[16px] lg:text-[18px] font-custom tracking-tight lg:tracking-normal leading-[22.7px] font-normal text-[#191716] mt-4'>
             <p className="font-zonapro">{getDescription()}</p>
           </div>
         </div>
 
-        <div className='lg:hidden flex overflow-x-scroll mt-6'>
-          <div className='flex flex-nowrap'>
-            <Image 
-              src={getImageSrc('step1')} 
-              alt="Step 1" 
-              width={292} 
-              height={447} 
-              className='w-[292px] h-[447px] object-cover rounded-[15px] mr-4' 
-            />
-            <Image 
-              src={getImageSrc('step2')} 
-              alt="Step 2" 
-              width={292} 
-              height={447} 
-              className='w-[292px] h-[447px] object-cover rounded-[15px] mr-4' 
-            />
-            <Image 
-              src={getImageSrc('step3')} 
-              alt="Step 3" 
-              width={292} 
-              height={447} 
-              className='w-[292px] h-[447px] object-cover rounded-[15px]' 
-            />
+        {/* Right: 9 Images Grid */}
+        <div className='w-full lg:w-1/2 mt-8 lg:mt-0'>
+          <div className='grid grid-cols-3 gap-3 lg:gap-4'>
+            {safeImages.map((image, idx) => (
+              <div
+                key={idx}
+                className='relative h-62 rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300'
+              >
+                <Image 
+                  src={image} 
+                  alt={`Step ${idx + 1}`} 
+                  fill
+                  className='object-cover'
+                />
+                <div className='absolute bottom-2 left-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-zonapro text-[#191716] shadow'>
+                  {idx + 1}
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-
-        <div className='hidden lg:grid lg:grid-cols-3 gap-4 mt-6 lg:mt-0'>
-          <Image 
-            src={getImageSrc('step1')} 
-            alt="Step 1" 
-            width={292} 
-            height={447} 
-            className='w-full h-96 lg:w-[292px] lg:h-[447px] object-cover rounded-[15px]' 
-          />
-          <Image 
-            src={getImageSrc('step2')} 
-            alt="Step 2" 
-            width={292} 
-            height={447} 
-            className='w-full h-96 lg:w-[292px] lg:h-[447px] object-cover rounded-[15px]' 
-          />
-          <Image 
-            src={getImageSrc('step3')} 
-            alt="Step 3" 
-            width={292} 
-            height={447} 
-            className='w-full h-96 lg:w-[292px] lg:h-[447px] object-cover rounded-[15px]' 
-          />
         </div>
       </div>
     </div>

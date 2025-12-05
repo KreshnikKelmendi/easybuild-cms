@@ -11,11 +11,7 @@ export interface IStepByStep {
     de: string;
     al: string;
   };
-  images: {
-    step1: string;
-    step2: string;
-    step3: string;
-  };
+  images: string[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -57,17 +53,13 @@ const StepByStepSchema = new mongoose.Schema<IStepByStep>({
     },
   },
   images: {
-    step1: {
-      type: String,
-      required: true,
-    },
-    step2: {
-      type: String,
-      required: true,
-    },
-    step3: {
-      type: String,
-      required: true,
+    type: [String],
+    required: true,
+    validate: {
+      validator: function(arr: string[]) {
+        return Array.isArray(arr) && arr.length >= 3 && arr.every((item) => typeof item === 'string' && item.trim().length > 0);
+      },
+      message: 'At least 3 images are required',
     },
   },
   isActive: {
