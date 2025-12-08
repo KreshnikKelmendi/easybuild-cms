@@ -1,13 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Increase body size limit for file uploads
-  api: {
-    bodyParser: {
-      sizeLimit: '200mb',
-    },
-    responseLimit: '200mb',
-  },
   images: {
     remotePatterns: [
       {
@@ -33,12 +26,8 @@ const nextConfig: NextConfig = {
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   },
+  // Allow mongoose on the server side (replaces experimental.serverComponentsExternalPackages)
   serverExternalPackages: ['mongoose'],
-  
-  // Add this for large file uploads in production
-  experimental: {
-    serverComponentsExternalPackages: ['mongoose'],
-  },
   
   // Handle file uploads better in production
   async headers() {
