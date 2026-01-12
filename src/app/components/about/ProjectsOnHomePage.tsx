@@ -128,7 +128,7 @@ const ProjectsOnHomePage = () => {
                           alt={getCurrentLanguageText(project.title)} 
                           width={1200}
                           height={1200}
-                          className="object-cover w-full h-[100vh] lg:h-[60vh] rounded-[15px]" 
+                          className="object-cover w-full h-[100vh] lg:h-[100vh] 2xl:h-[75vh] rounded-[15px]" 
                         />
                       ) : (
                         <div className="w-full h-[613px] rounded-[15px] bg-gray-200 flex items-center justify-center">
