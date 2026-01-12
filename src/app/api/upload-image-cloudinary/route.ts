@@ -126,23 +126,29 @@ export async function POST(request: NextRequest) {
     // Upload to Cloudinary
     const result = await new Promise<CloudinaryUploadResult>((resolve, reject) => {
       try {
+        // Simplified upload options - removed transformations to avoid errors
+        // Transformations can be applied later via URL parameters if needed
+        const uploadOptions: any = {
+          resource_type: 'image',
+          folder: 'easybuild-banners',
+          public_id: filename.replace(`.${extension}`, ''),
+          quality: 'auto',
+          fetch_format: 'auto',
+          // Removed transformation array that might be causing issues
+        };
+
         cloudinary.uploader.upload_stream(
-          {
-            resource_type: 'image',
-            folder: 'easybuild-banners',
-            public_id: filename.replace(`.${extension}`, ''),
-            transformation: [
-              { width: 1920, height: 1080, crop: 'fill', quality: 'auto' },
-              { fetch_format: 'auto' }
-            ]
-          },
+          uploadOptions,
           (error: unknown, result: unknown) => {
             if (error) {
               // Log detailed error information
+              const errorObj = error as any;
               console.error('Cloudinary upload error details:', {
                 error,
                 errorType: typeof error,
                 errorString: String(error),
+                errorMessage: errorObj?.message || String(error),
+                errorHttpCode: errorObj?.http_code,
                 filename,
                 fileSize: file.size,
                 fileType: file.type,
@@ -256,6 +262,17 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Extract more detailed error information for debugging
+    const errorObj = error as any;
+    const fullErrorDetails = {
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorType: typeof error,
+      errorCode,
+      httpCode: errorObj?.http_code,
+      cloudinaryError: errorObj?.error || errorObj?.err,
+      rawError: errorObj,
+    };
+
     return NextResponse.json(
       { 
         success: false, 
@@ -263,6 +280,7 @@ export async function POST(request: NextRequest) {
         error: error instanceof Error ? error.message : String(error),
         errorCode,
         details: errorDetails,
+        fullErrorDetails, // Include full error for debugging
         timestamp: new Date().toISOString(),
         troubleshooting: {
           step1: 'Verify your Cloudinary credentials are correctly set in your production environment variables',
@@ -270,6 +288,7 @@ export async function POST(request: NextRequest) {
           step3: 'Ensure credentials match your Cloudinary dashboard exactly (no extra spaces or quotes)',
           step4: 'Verify your Cloudinary account is active and not suspended',
           step5: 'Check Cloudinary status page: https://status.cloudinary.com',
+          step6: 'Check Vercel function logs for detailed error information',
         },
       },
       { status: 500 }
