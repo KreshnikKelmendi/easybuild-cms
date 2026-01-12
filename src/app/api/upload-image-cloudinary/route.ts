@@ -13,6 +13,24 @@ interface CloudinaryUploadResult {
   created_at: string;
 }
 
+// Define types for Cloudinary upload options
+interface CloudinaryUploadOptions {
+  resource_type: string;
+  folder: string;
+  public_id: string;
+  quality: string;
+  fetch_format: string;
+}
+
+// Define types for Cloudinary error objects
+interface CloudinaryError {
+  message?: string;
+  http_code?: number;
+  error?: string;
+  err?: string;
+  name?: string;
+}
+
 // Handle OPTIONS for CORS
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -128,7 +146,7 @@ export async function POST(request: NextRequest) {
       try {
         // Simplified upload options - removed transformations to avoid errors
         // Transformations can be applied later via URL parameters if needed
-        const uploadOptions: any = {
+        const uploadOptions: CloudinaryUploadOptions = {
           resource_type: 'image',
           folder: 'easybuild-banners',
           public_id: filename.replace(`.${extension}`, ''),
@@ -142,7 +160,7 @@ export async function POST(request: NextRequest) {
           (error: unknown, result: unknown) => {
             if (error) {
               // Log detailed error information
-              const errorObj = error as any;
+              const errorObj = error as CloudinaryError;
               console.error('Cloudinary upload error details:', {
                 error,
                 errorType: typeof error,
@@ -263,7 +281,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract more detailed error information for debugging
-    const errorObj = error as any;
+    const errorObj = error as CloudinaryError;
     const fullErrorDetails = {
       errorMessage: error instanceof Error ? error.message : String(error),
       errorType: typeof error,
