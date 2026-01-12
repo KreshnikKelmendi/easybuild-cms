@@ -86,20 +86,46 @@ vercel env add CLOUDINARY_API_SECRET
 
 ## 🔍 **Troubleshooting**
 
-### **Error: "Invalid credentials"**
-- Check your API keys are correct
-- Ensure environment variables are set in production
-- Verify the keys are copied exactly (no extra spaces)
+### **Use the Diagnostic Endpoint**
+First, check your Cloudinary configuration by visiting:
+```
+https://your-domain.com/api/debug-cloudinary
+```
+
+This endpoint will tell you:
+- ✅ If all environment variables are set
+- ✅ If credentials are valid (not placeholders)
+- ✅ If connection to Cloudinary works
+- ✅ If test upload succeeds
+- ✅ Specific error messages and recommendations
+
+### **Error: "Invalid credentials" or "Missing credentials"**
+1. **Check the diagnostic endpoint** first: `/api/debug-cloudinary`
+2. Verify all three environment variables are set:
+   - `CLOUDINARY_CLOUD_NAME`
+   - `CLOUDINARY_API_KEY`
+   - `CLOUDINARY_API_SECRET`
+3. Ensure environment variables are set in your production environment (Vercel/Netlify/etc.)
+4. Verify the keys are copied exactly (no extra spaces or quotes)
+5. **Redeploy** your application after setting environment variables
 
 ### **Error: "Upload failed"**
-- Check your internet connection
-- Verify Cloudinary service status
-- Check if you've exceeded free tier limits
+1. Check the error response - it now includes detailed error codes:
+   - `INVALID_API_KEY` - API key is wrong
+   - `INVALID_API_SECRET` - API secret is wrong
+   - `INVALID_CLOUD_NAME` - Cloud name is wrong
+   - `NETWORK_ERROR` - Cannot reach Cloudinary servers
+   - `RATE_LIMIT_EXCEEDED` - Account limits exceeded
+2. Check your internet connection
+3. Verify Cloudinary service status: https://status.cloudinary.com
+4. Check if you've exceeded free tier limits in Cloudinary dashboard
+5. Review server logs for detailed error information
 
 ### **Images not showing**
 - Check the returned URL in browser console
-- Verify the image URL is accessible
-- Check if CORS is blocking the image
+- Verify the image URL is accessible (should start with `https://res.cloudinary.com/`)
+- Check if CORS is blocking the image (should not be an issue with Cloudinary)
+- Verify `res.cloudinary.com` is in your `next.config.ts` remote patterns
 
 ## 📱 **Cloudinary Features You Now Have**
 
@@ -148,7 +174,8 @@ vercel env add CLOUDINARY_API_SECRET
 
 1. **Check Cloudinary Status**: [status.cloudinary.com](https://status.cloudinary.com)
 2. **Cloudinary Documentation**: [cloudinary.com/documentation](https://cloudinary.com/documentation)
-3. **Test your credentials**: Use the debug endpoint `/api/debug-env`
+3. **Test your credentials**: Use the diagnostic endpoint `/api/debug-cloudinary`
+4. **Check environment setup**: Use `/api/debug-env` for general environment info
 
 ## 🎉 **You're All Set!**
 

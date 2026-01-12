@@ -115,7 +115,7 @@ const ProjectsOnHomePage = () => {
             <div className="lg:block hidden w-full">
               {projects.length <= 4 ? (
                 // Static grid for 4 or fewer projects
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   {projects.map((project) => (
                     <div 
                       key={project._id} 
@@ -126,9 +126,9 @@ const ProjectsOnHomePage = () => {
                         <Image 
                           src={project.mainImage} 
                           alt={getCurrentLanguageText(project.title)} 
-                          width={400}
-                          height={613}
-                          className="object-cover object-center w-full h-[100vh] lg:h-[60vh] rounded-[15px]" 
+                          width={1200}
+                          height={1200}
+                          className="object-cover w-full h-[100vh] lg:h-[60vh] rounded-[15px]" 
                         />
                       ) : (
                         <div className="w-full h-[613px] rounded-[15px] bg-gray-200 flex items-center justify-center">
