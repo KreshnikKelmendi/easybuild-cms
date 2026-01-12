@@ -35,24 +35,60 @@ export async function GET() {
 
     if (cloudName && apiKey && apiSecret && !cloudName.includes('your_') && !apiKey.includes('your_') && !apiSecret.includes('your_')) {
       try {
-        // Test by trying to get account details
-        const result = await cloudinary.api.ping();
+        // Test connection by trying to get usage details
+        // This validates credentials are correct
+        console.log('Testing Cloudinary connection...');
+        const result = await cloudinary.api.usage();
         connectionTest = {
           success: true,
           message: 'Cloudinary connection successful',
-          response: result,
+          response: {
+            plan: result.plan,
+            credits: result.credits,
+            // Don't expose sensitive info
+          },
         };
       } catch (error) {
+        // Log to console for server-side debugging
+        console.error('Cloudinary connection test error:', error);
+        
+        // Extract detailed error information
+        let errorMessage = 'Unknown error';
+        let errorDetails: any = null;
+        
+        if (error instanceof Error) {
+          errorMessage = error.message;
+          errorDetails = {
+            name: error.name,
+            message: error.message,
+          };
+        } else if (error && typeof error === 'object') {
+          // Handle Cloudinary error objects
+          const cloudinaryError = error as any;
+          errorMessage = cloudinaryError.message || 'Cloudinary API error';
+          errorDetails = {
+            http_code: cloudinaryError.http_code,
+            name: cloudinaryError.name,
+            message: cloudinaryError.message,
+            error: cloudinaryError.error || cloudinaryError.err || undefined,
+            raw: JSON.stringify(cloudinaryError, null, 2),
+          };
+        } else {
+          errorMessage = String(error);
+        }
+        
         connectionTest = {
           success: false,
           message: 'Cloudinary connection failed',
-          error: error instanceof Error ? error.message : String(error),
+          error: errorMessage,
+          errorDetails,
           errorType: typeof error,
         };
       }
 
       // Try a small upload test (using a base64 encoded 1x1 pixel)
       try {
+        console.log('Testing Cloudinary upload...');
         const testImageBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
         
         const uploadResult = await cloudinary.uploader.upload(testImageBase64, {
@@ -60,6 +96,7 @@ export async function GET() {
           public_id: `test-${Date.now()}`,
         });
 
+        console.log('Upload test successful:', uploadResult.public_id);
         uploadTest = {
           success: true,
           message: 'Test upload successful',
@@ -67,10 +104,39 @@ export async function GET() {
           publicId: uploadResult.public_id,
         };
       } catch (error) {
+        // Log to console for server-side debugging
+        console.error('Cloudinary upload test error:', error);
+        
+        // Extract detailed error information
+        let errorMessage = 'Unknown error';
+        let errorDetails: any = null;
+        
+        if (error instanceof Error) {
+          errorMessage = error.message;
+          errorDetails = {
+            name: error.name,
+            message: error.message,
+          };
+        } else if (error && typeof error === 'object') {
+          // Handle Cloudinary error objects
+          const cloudinaryError = error as any;
+          errorMessage = cloudinaryError.message || 'Cloudinary upload error';
+          errorDetails = {
+            http_code: cloudinaryError.http_code,
+            name: cloudinaryError.name,
+            message: cloudinaryError.message,
+            error: cloudinaryError.error || cloudinaryError.err || undefined,
+            raw: JSON.stringify(cloudinaryError, null, 2),
+          };
+        } else {
+          errorMessage = String(error);
+        }
+        
         uploadTest = {
           success: false,
           message: 'Test upload failed',
-          error: error instanceof Error ? error.message : String(error),
+          error: errorMessage,
+          errorDetails,
           errorType: typeof error,
         };
       }
