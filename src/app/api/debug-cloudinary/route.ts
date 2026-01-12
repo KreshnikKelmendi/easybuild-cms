@@ -1,6 +1,24 @@
 import { NextResponse } from 'next/server';
 import cloudinary from '@/lib/cloudinary';
 
+// Type for Cloudinary error objects
+interface CloudinaryError {
+  http_code?: number;
+  name?: string;
+  message?: string;
+  error?: string;
+  err?: string;
+}
+
+// Type for error details in response
+interface ErrorDetails {
+  http_code?: number;
+  name?: string;
+  message?: string;
+  error?: string;
+  raw?: string;
+}
+
 export async function GET() {
   try {
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
@@ -54,7 +72,7 @@ export async function GET() {
         
         // Extract detailed error information
         let errorMessage = 'Unknown error';
-        let errorDetails: any = null;
+        let errorDetails: ErrorDetails | null = null;
         
         if (error instanceof Error) {
           errorMessage = error.message;
@@ -64,7 +82,7 @@ export async function GET() {
           };
         } else if (error && typeof error === 'object') {
           // Handle Cloudinary error objects
-          const cloudinaryError = error as any;
+          const cloudinaryError = error as CloudinaryError;
           errorMessage = cloudinaryError.message || 'Cloudinary API error';
           errorDetails = {
             http_code: cloudinaryError.http_code,
@@ -109,7 +127,7 @@ export async function GET() {
         
         // Extract detailed error information
         let errorMessage = 'Unknown error';
-        let errorDetails: any = null;
+        let errorDetails: ErrorDetails | null = null;
         
         if (error instanceof Error) {
           errorMessage = error.message;
@@ -119,7 +137,7 @@ export async function GET() {
           };
         } else if (error && typeof error === 'object') {
           // Handle Cloudinary error objects
-          const cloudinaryError = error as any;
+          const cloudinaryError = error as CloudinaryError;
           errorMessage = cloudinaryError.message || 'Cloudinary upload error';
           errorDetails = {
             http_code: cloudinaryError.http_code,
