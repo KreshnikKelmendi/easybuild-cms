@@ -15,7 +15,7 @@ interface CloudinaryUploadResult {
 
 // Define types for Cloudinary upload options
 interface CloudinaryUploadOptions {
-  resource_type: string;
+  resource_type: 'auto' | 'image' | 'video' | 'raw';
   folder: string;
   public_id: string;
   quality: string;
