@@ -11,7 +11,7 @@ export default function Home() {
       <Banner />
       <OurServices />
       <AboutUsOnHomePage />
-      <div className='mt-[-180px] lg:mt-[-50vh] 2xl:mt-[-40vh] z-50'>
+      <div className='mt-[-180px] lg:mt-[-50vh] 2xl:mt-[-40vh] 3xl:mt-[-28vh] z-50'>
       <ProjectsOnHomePage />
       </div>
       <Woods />
