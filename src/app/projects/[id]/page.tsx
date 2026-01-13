@@ -171,7 +171,7 @@ const ProjectDetailPage = () => {
                      <div key={index} className="group relative">
                        {/* Image Container */}
                        <div 
-                         className="relative h-64 lg:h-[55vh] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
+                         className="relative h-96 lg:h-[55vh] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
                          onClick={() => openFullScreen(image)}
                        >
                          <Image
