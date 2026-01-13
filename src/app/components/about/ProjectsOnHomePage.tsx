@@ -27,7 +27,8 @@ const ProjectsOnHomePage = () => {
   const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([])
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'de' | 'al'>('en')
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0) // For desktop carousel
+  const [mobileSlide, setMobileSlide] = useState(0) // For mobile carousel
 
   useEffect(() => {
     setCurrentLanguage(i18n.language as 'en' | 'de' | 'al')
@@ -37,12 +38,23 @@ const ProjectsOnHomePage = () => {
     fetchProjects()
   }, [])
 
-  // Auto-advance carousel when there are more than 4 projects
+  // Auto-advance carousel for desktop when there are more than 4 projects
   useEffect(() => {
     if (projects.length > 4) {
       const interval = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % Math.ceil(projects.length / 4))
       }, 3000) // Change slide every 3 seconds
+
+      return () => clearInterval(interval)
+    }
+  }, [projects.length])
+
+  // Auto-advance carousel for mobile when there are more than 1 project
+  useEffect(() => {
+    if (projects.length > 1) {
+      const interval = setInterval(() => {
+        setMobileSlide((prev) => (prev + 1) % projects.length)
+      }, 4000) // Change slide every 4 seconds for mobile
 
       return () => clearInterval(interval)
     }
@@ -312,92 +324,104 @@ const ProjectsOnHomePage = () => {
                         <div className="flex flex-col h-full justify-end text-center pb-6 text-white">
                           <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6 font-zonapro">{getCurrentLanguageText(project.title)}</p>
                         </div>
-                                                      {/* Additional Images Grid */}
-                              {project.additionalImages && project.additionalImages.length > 0 && (
-                                <div className="absolute top-4 right-4">
-                                  <div className="grid grid-cols-2 gap-2">
-                                    {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
-                                      <div
-                                        key={imgIndex}
-                                        className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
-                                      >
-                                        <Image
-                                          src={image}
-                                          alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
-                                          width={48}
-                                          height={48}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      </div>
-                                    ))}
-                                  </div>
+                        {/* Additional Images Grid */}
+                        {project.additionalImages && project.additionalImages.length > 0 && (
+                          <div className="absolute top-4 right-4">
+                            <div className="grid grid-cols-2 gap-2">
+                              {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
+                                <div
+                                  key={imgIndex}
+                                  className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
+                                >
+                                  <Image
+                                    src={image}
+                                    alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
+                                    width={48}
+                                    height={48}
+                                    className="w-full h-full object-cover"
+                                  />
                                 </div>
-                              )}
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                // Carousel for more than 1 project
+                // Auto-advancing carousel for more than 1 project on mobile
                 <div className="relative overflow-hidden">
                   <div 
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                    className="flex transition-transform duration-700 ease-in-out"
+                    style={{ transform: `translateX(-${mobileSlide * 100}%)` }}
                   >
                     {projects.map((project, slideIndex) => (
-                      <div key={slideIndex} className="flex-shrink-0 w-full">
-                        <div className="space-y-6">
-                          <div 
-                            className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
-                            onClick={() => handleProjectClick(project._id)}
-                          >
-                            {project.mainImage ? (
-                              <Image 
-                                src={project.mainImage} 
-                                alt={getCurrentLanguageText(project.title)} 
-                                width={400}
-                                height={384}
-                                className="object-cover object-center w-full h-96 rounded-[15px]" 
-                              />
-                            ) : (
-                              <div className="w-full h-96 rounded-[15px] bg-gray-200 flex items-center justify-center">
-                                <div className="text-center text-gray-500">
-                                  <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                  </svg>
-                                  <p className="font-zonapro">No image available</p>
+                      <div key={slideIndex} className="flex-shrink-0 w-full px-2">
+                        <div 
+                          className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
+                          onClick={() => handleProjectClick(project._id)}
+                        >
+                          {project.mainImage ? (
+                            <Image 
+                              src={project.mainImage} 
+                              alt={getCurrentLanguageText(project.title)} 
+                              width={400}
+                              height={384}
+                              className="object-cover object-center w-full h-96 rounded-[15px]" 
+                            />
+                          ) : (
+                            <div className="w-full h-96 rounded-[15px] bg-gray-200 flex items-center justify-center">
+                              <div className="text-center text-gray-500">
+                                <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p className="font-zonapro">No image available</p>
+                              </div>
+                            </div>
+                          )}
+                          <div className="absolute w-full h-full p-6">
+                            <div className="flex flex-col h-full justify-end text-center pb-6 text-white">
+                              <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6 font-zonapro">{getCurrentLanguageText(project.title)}</p>
+                            </div>
+                            {/* Additional Images Grid */}
+                            {project.additionalImages && project.additionalImages.length > 0 && (
+                              <div className="absolute top-4 right-4">
+                                <div className="grid grid-cols-2 gap-2">
+                                  {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
+                                    <div
+                                      key={imgIndex}
+                                      className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
+                                    >
+                                      <Image
+                                        src={image}
+                                        alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
+                                        width={48}
+                                        height={48}
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
+                                  ))}
                                 </div>
                               </div>
                             )}
-                            <div className="absolute w-full h-full p-6">
-                              <div className="flex flex-col h-full justify-end text-center pb-6 text-white">
-                                <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6 font-zonapro">{getCurrentLanguageText(project.title)}</p>
-                              </div>
-                              {/* Additional Images Grid */}
-                              {project.additionalImages && project.additionalImages.length > 0 && (
-                                <div className="absolute top-4 right-4">
-                                  <div className="grid grid-cols-2 gap-2">
-                                    {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
-                                      <div
-                                        key={imgIndex}
-                                        className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
-                                      >
-                                        <Image
-                                          src={image}
-                                          alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
-                                          width={48}
-                                          height={48}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
                           </div>
                         </div>
                       </div>
+                    ))}
+                  </div>
+                  
+                  {/* Carousel indicators for mobile */}
+                  <div className="flex justify-center mt-4 gap-2">
+                    {projects.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setMobileSlide(index)}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          mobileSlide === index ? 'w-8 bg-[#DD4624]' : 'w-2 bg-gray-300'
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
                     ))}
                   </div>
                 </div>
