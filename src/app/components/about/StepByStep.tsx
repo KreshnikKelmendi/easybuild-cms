@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
+import { FaInstagram } from 'react-icons/fa'
 
 interface StepByStepData {
   title: {
@@ -17,13 +18,21 @@ interface StepByStepData {
   images: string[];
 }
 
+interface SocialMedia {
+  platform: string;
+  url: string;
+  isActive: boolean;
+}
+
 const StepByStep = () => {
   const { t, i18n } = useTranslation();
   const [stepByStepData, setStepByStepData] = useState<StepByStepData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [instagramUrl, setInstagramUrl] = useState<string>('https://www.instagram.com/easybuildks/');
 
   useEffect(() => {
     fetchStepByStepData();
+    fetchInstagramUrl();
   }, []);
 
   const fetchStepByStepData = async () => {
@@ -41,6 +50,24 @@ const StepByStep = () => {
       console.error('Error fetching step by step data:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchInstagramUrl = async () => {
+    try {
+      const response = await fetch('/api/social-media');
+      if (response.ok) {
+        const socialMedia: SocialMedia[] = await response.json();
+        const instagram = socialMedia.find((sm: SocialMedia) => 
+          sm.platform.toLowerCase() === 'instagram' && sm.isActive
+        );
+        if (instagram && instagram.url) {
+          setInstagramUrl(instagram.url);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching Instagram URL:', error);
+      // Keep default URL if fetch fails
     }
   };
 
@@ -103,9 +130,12 @@ const StepByStep = () => {
           <div className='w-full lg:w-1/2 mt-8 lg:mt-0'>
             <div className='grid grid-cols-3 gap-3 lg:gap-4'>
               {safeImages.map((image, idx) => (
-                <div
+                <a
                   key={idx}
-                  className='relative aspect-square rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300'
+                  href={instagramUrl}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='group relative aspect-square rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105'
                 >
                   <Image 
                     src={image} 
@@ -116,7 +146,11 @@ const StepByStep = () => {
                   <div className='absolute bottom-2 left-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-zonapro text-[#191716] shadow'>
                     {idx + 1}
                   </div>
-                </div>
+                  {/* Instagram Icon Overlay on Hover */}
+                  <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'>
+                    <FaInstagram className='text-white text-3xl lg:text-4xl' />
+                  </div>
+                </a>
               ))}
             </div>
           </div>
@@ -141,9 +175,12 @@ const StepByStep = () => {
         <div className='w-full lg:w-1/2 mt-8 lg:mt-0'>
           <div className='grid grid-cols-3 gap-3 lg:gap-4'>
             {safeImages.map((image, idx) => (
-              <div
+              <a
                 key={idx}
-                className='relative h-62 rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300'
+                href={instagramUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='group relative h-62 rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105'
               >
                 <Image 
                   src={image} 
@@ -154,7 +191,11 @@ const StepByStep = () => {
                 <div className='absolute bottom-2 left-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-zonapro text-[#191716] shadow'>
                   {idx + 1}
                 </div>
-              </div>
+                {/* Instagram Icon Overlay on Hover */}
+                <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'>
+                  <FaInstagram className='text-white text-3xl lg:text-4xl' />
+                </div>
+              </a>
             ))}
           </div>
         </div>

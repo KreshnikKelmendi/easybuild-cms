@@ -163,11 +163,11 @@ const ProjectDetailPage = () => {
                 </div>
               </div>
              
-             {/* Three Main Images Display */}
+             {/* All Images Grid Display */}
              {project.additionalImages.length > 0 && (
                <div className="p-0 lg:p-12">
                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-                   {project.additionalImages.slice(0, 3).map((image, index) => (
+                   {project.additionalImages.map((image, index) => (
                      <div key={index} className="group relative">
                        {/* Image Container */}
                        <div 
@@ -207,38 +207,6 @@ const ProjectDetailPage = () => {
                      </div>
                    ))}
                  </div>
-                 
-                 {/* Additional Images (if more than 3) */}
-                 {project.additionalImages.length > 3 && (
-                   <div className="mt-12">
-                     <h4 className="text-2xl font-custom1 text-white mb-6 text-center font-zonapro">Additional Views</h4>
-                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                       {project.additionalImages.slice(3).map((image, index) => (
-                         <div key={index + 3} className="group relative">
-                           <div 
-                             className="relative h-24 lg:h-32 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
-                             onClick={() => openFullScreen(image)}
-                           >
-                             <Image
-                               src={image}
-                               alt={`Additional View ${index + 4}`}
-                               fill
-                               className="object-cover transition-transform duration-500 group-hover:scale-110"
-                             />
-                             
-                             {/* Hover Overlay */}
-                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                             
-                             {/* Image Number */}
-                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                               <span className="text-white font-bold text-lg font-zonapro">{index + 4}</span>
-                             </div>
-                           </div>
-                         </div>
-                       ))}
-                     </div>
-                   </div>
-                 )}
                </div>
              )}
              
