@@ -402,8 +402,11 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
           <div className="relative w-full h-full flex items-center justify-center">
             {/* Close Button */}
             <button
-              onClick={closeFullScreen}
-              className="absolute top-4 right-4 z-10 bg-black/20 backdrop-blur-sm hover:bg-white/30 text-black rounded-full p-3 transition-all duration-300 hover:scale-110"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeFullScreen();
+              }}
+              className="absolute top-4 right-4 z-10 bg-black text-white rounded-full p-3 transition-all duration-300 hover:bg-gray-800 hover:scale-110"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
