@@ -110,12 +110,12 @@ const ServiceDetailsClient = ({ serviceId }: ServiceDetailsClientProps) => {
     }
 
     // Convert wall images from string[] to { image, title }[] format if needed
-    const convertWallImages = (images: any): Array<{ image: string; title?: string }> | undefined => {
+    const convertWallImages = (images: string[] | Array<{ image: string; title?: string }> | undefined): Array<{ image: string; title?: string }> | undefined => {
       if (!images) return undefined;
       if (Array.isArray(images) && images.length > 0) {
         if (typeof images[0] === 'string') {
           // Convert old format (string[]) to new format
-          return images.map((img: string) => ({ image: img, title: '' }));
+          return (images as string[]).map((img: string) => ({ image: img, title: '' }));
         }
         // Already in new format
         return images as Array<{ image: string; title?: string }>;

@@ -379,11 +379,11 @@ const ServiceManager = () => {
       stepImages: service.stepImages || [],
       exteriorWall: service.exteriorWall || false,
       interiorWall: service.interiorWall || false,
-      exteriorWallImages: (service.exteriorWallImages || []).map((img: any) => 
-        typeof img === 'string' ? { image: img, title: '' } : img
+      exteriorWallImages: (service.exteriorWallImages || []).map((img: string | { image: string; title?: string }) => 
+        typeof img === 'string' ? { image: img, title: '' } : { image: img.image, title: img.title || '' }
       ),
-      interiorWallImages: (service.interiorWallImages || []).map((img: any) => 
-        typeof img === 'string' ? { image: img, title: '' } : img
+      interiorWallImages: (service.interiorWallImages || []).map((img: string | { image: string; title?: string }) => 
+        typeof img === 'string' ? { image: img, title: '' } : { image: img.image, title: img.title || '' }
       ),
       customWalls: service.customWalls || []
     });
