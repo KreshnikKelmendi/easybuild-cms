@@ -29,6 +29,11 @@ interface Service {
     image: string;
     titleKey: string;
   }>;
+  exteriorWall?: boolean;
+  interiorWall?: boolean;
+  exteriorWallImages?: Array<{ image: string; title: string }>;
+  interiorWallImages?: Array<{ image: string; title: string }>;
+  customWalls?: Array<{ name: string; images: Array<{ image: string; title: string }> }>;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -62,13 +67,23 @@ const ServiceManager = () => {
     image: string;
     hoverImage: string;
     stepImages: Array<{ image: string; titleKey: string }>;
+    exteriorWall: boolean;
+    interiorWall: boolean;
+    exteriorWallImages: Array<{ image: string; title: string }>;
+    interiorWallImages: Array<{ image: string; title: string }>;
+    customWalls: Array<{ name: string; images: Array<{ image: string; title: string }> }>;
   }>({
     title: { en: '', de: '', al: '' },
     description: { en: '', de: '', al: '' },
     description2: { en: '', de: '', al: '' },
     image: '',
     hoverImage: '',
-    stepImages: []
+    stepImages: [],
+    exteriorWall: false,
+    interiorWall: false,
+    exteriorWallImages: [],
+    interiorWallImages: [],
+    customWalls: []
   });
 
   useEffect(() => {
@@ -273,12 +288,7 @@ const ServiceManager = () => {
       return;
     }
 
-    // Check if all step images are uploaded
-    if (formData.stepImages.length < 3 || formData.stepImages.some(step => !step.image || !step.titleKey)) {
-      setMessage('Please upload all 3 step images and provide title keys');
-      setIsLoading(false);
-      return;
-    }
+    // Step images are optional - no validation needed
 
     // Additional validation for edit mode
     if (isEditing && !editingServiceId) {
@@ -333,7 +343,12 @@ const ServiceManager = () => {
           description2: { en: '', de: '', al: '' },
           image: '',
           hoverImage: '',
-          stepImages: []
+          stepImages: [],
+          exteriorWall: false,
+          interiorWall: false,
+          exteriorWallImages: [],
+          interiorWallImages: [],
+          customWalls: []
         });
       } else {
         setMessage(data.message || (isEditing ? 'Failed to update service' : 'Failed to create service'));
@@ -361,7 +376,16 @@ const ServiceManager = () => {
       description2: service.description2 || { en: '', de: '', al: '' },
       image: service.image,
       hoverImage: service.hoverImage || '',
-      stepImages: service.stepImages || []
+      stepImages: service.stepImages || [],
+      exteriorWall: service.exteriorWall || false,
+      interiorWall: service.interiorWall || false,
+      exteriorWallImages: (service.exteriorWallImages || []).map((img: any) => 
+        typeof img === 'string' ? { image: img, title: '' } : img
+      ),
+      interiorWallImages: (service.interiorWallImages || []).map((img: any) => 
+        typeof img === 'string' ? { image: img, title: '' } : img
+      ),
+      customWalls: service.customWalls || []
     });
     setCurrentLanguage('en'); // Reset to English for editing
     setMessage('Editing service. Make your changes and click "Update Service".');
@@ -407,7 +431,12 @@ const ServiceManager = () => {
       description2: { en: '', de: '', al: '' },
       image: '',
       hoverImage: '',
-      stepImages: []
+      stepImages: [],
+      exteriorWall: false,
+      interiorWall: false,
+      exteriorWallImages: [],
+      interiorWallImages: [],
+      customWalls: []
     });
     
     // Exit edit mode if editing
@@ -692,8 +721,8 @@ const ServiceManager = () => {
               />
               <label htmlFor="image-upload" className="cursor-pointer">
                 {formData.image ? (
-                  <div className="space-y-2">
-                    <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
+                  <div className="space-y-2 relative">
+                    <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden relative group">
                       <Image 
                         src={formData.image} 
                         alt="Preview" 
@@ -701,6 +730,19 @@ const ServiceManager = () => {
                         height={80}
                         className="w-full h-full object-cover"
                       />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setFormData(prev => ({ ...prev, image: '' }));
+                          setMessage('Main image deleted. Please upload a new image before saving.');
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs font-zonapro hover:bg-red-600"
+                        title="Delete main image (required - upload new one before saving)"
+                      >
+                        ×
+                      </button>
                     </div>
                     <p className="text-xs text-black font-zonapro">Click to change image</p>
                   </div>
@@ -750,8 +792,8 @@ const ServiceManager = () => {
               />
               <label htmlFor="hover-image-upload" className="cursor-pointer">
                 {formData.hoverImage ? (
-                  <div className="space-y-2">
-                    <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
+                  <div className="space-y-2 relative">
+                    <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden relative group">
                       <Image 
                         src={formData.hoverImage} 
                         alt="Hover Preview" 
@@ -759,6 +801,19 @@ const ServiceManager = () => {
                         height={80}
                         className="w-full h-full object-cover"
                       />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setFormData(prev => ({ ...prev, hoverImage: '' }));
+                          setMessage('Hover image deleted');
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs font-zonapro hover:bg-red-600"
+                        title="Delete hover image"
+                      >
+                        ×
+                      </button>
                     </div>
                     <p className="text-xs text-black font-zonapro">Click to change hover image</p>
                   </div>
@@ -785,16 +840,16 @@ const ServiceManager = () => {
              <div className="space-y-4">
                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                  <label className="block text-sm font-semibold text-blue-800 mb-2 font-zonapro">
-                   🔄 {i18n.language === 'de' ? 'Schritt-für-Schritt-Prozessbilder (Erforderlich - 3 Bilder)' : 
-                        i18n.language === 'al' ? 'Imazhet e Procesit Hap pas Hapi (E Kërkuar - 3 imazhe)' : 
-                        'Step-by-Step Process Images (Required - 3 images)'}
+                   🔄 {i18n.language === 'de' ? 'Schritt-für-Schritt-Prozessbilder (Optional)' : 
+                        i18n.language === 'al' ? 'Imazhet e Procesit Hap pas Hapi (Opsionale)' : 
+                        'Step-by-Step Process Images (Optional)'}
                  </label>
                  <p className="text-xs text-blue-700 mb-3 font-zonapro">
                    {i18n.language === 'de' ? 
-                     'Laden Sie 3 Bilder hoch, die den schrittweisen Prozess Ihres Services zeigen. Diese werden im Abschnitt "Wie wir bauen" angezeigt.' :
+                     'Laden Sie optional Bilder hoch, die den schrittweisen Prozess Ihres Services zeigen. Diese werden im Abschnitt "Wie wir bauen" angezeigt. Für Services wie "Modular Construction" können Sie stattdessen andere Inhalte verwenden.' :
                     i18n.language === 'al' ? 
-                     'Ngarkoni 3 imazhe që tregojnë procesin hap pas hapi të shërbimit tuaj. Këto do të shfaqen në seksionin "Si Ndërtojmë".' :
-                     'Upload 3 images that show the step-by-step process of your service. These will be displayed in the "How We Build" section.'
+                     'Ngarkoni opsionalisht imazhe që tregojnë procesin hap pas hapi të shërbimit tuaj. Këto do të shfaqen në seksionin "Si Ndërtojmë". Për shërbime si "Modular Construction" mund të përdorni përmbajtje të ndryshme.' :
+                     'Optionally upload images that show the step-by-step process of your service. These will be displayed in the "How We Build" section. For services like "Modular Construction" you can use different content instead.'
                    }
                  </p>
                  <div className="text-xs text-blue-600 font-zonapro">
@@ -830,7 +885,6 @@ const ServiceManager = () => {
                             }));
                           }}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-400 font-zonapro"
-                          required
                         />
                       </div>
                     </div>
@@ -971,8 +1025,8 @@ const ServiceManager = () => {
                     />
                     <label htmlFor={`step-image-upload-${index}`} className="cursor-pointer">
                       {formData.stepImages[index]?.image ? (
-                        <div className="space-y-2">
-                          <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
+                        <div className="space-y-2 relative">
+                          <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden relative group">
                             <Image 
                               src={formData.stepImages[index].image} 
                               alt={`Step ${index + 1}`} 
@@ -980,8 +1034,22 @@ const ServiceManager = () => {
                               height={80}
                               className="w-full h-full object-cover"
                             />
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                const newStepImages = formData.stepImages.filter((_, i) => i !== index);
+                                setFormData(prev => ({ ...prev, stepImages: newStepImages }));
+                                setMessage('Step image deleted');
+                              }}
+                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs font-zonapro hover:bg-red-600"
+                              title="Delete step image"
+                            >
+                              ×
+                            </button>
                           </div>
-                                                     <p className="text-xs text-black font-zonapro">Click to change image</p>
+                          <p className="text-xs text-black font-zonapro">Click to change image</p>
                         </div>
                       ) : (
                         <div className="space-y-2">
@@ -999,6 +1067,478 @@ const ServiceManager = () => {
                         </div>
                       )}
                     </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+                     {/* Wall Options */}
+            <div className="space-y-4 pt-6 border-t border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 font-zonapro">
+                🏗️ {i18n.language === 'de' ? 'Wand-Optionen' : 
+                     i18n.language === 'al' ? 'Opsionet e Mureve' : 
+                     'Wall Options'}
+              </label>
+              <p className="text-xs text-gray-500 mb-3 font-zonapro">
+                {i18n.language === 'de' ? 
+                  'Wählen Sie aus, welche Wandtypen für diesen Service verfügbar sind' :
+                 i18n.language === 'al' ? 
+                  'Zgjidhni cilat lloje muresh janë të disponueshme për këtë shërbim' :
+                  'Select which wall types are available for this service'
+                }
+              </p>
+              
+              <div className="flex flex-col gap-4">
+                {/* Exterior Wall Checkbox */}
+                <label className="flex items-center space-x-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={formData.exteriorWall}
+                    onChange={(e) => setFormData(prev => ({ ...prev, exteriorWall: e.target.checked }))}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                  />
+                  <div className="flex-1">
+                    <span className="text-sm font-semibold text-gray-700 font-zonapro">
+                      {i18n.language === 'de' ? 'Außenwand' : 
+                       i18n.language === 'al' ? 'Mur i Jashtëm' : 
+                       'Exterior Wall'}
+                    </span>
+                    <p className="text-xs text-gray-500 font-zonapro">
+                      {i18n.language === 'de' ? 
+                        'Service ist für Außenwände verfügbar' :
+                       i18n.language === 'al' ? 
+                        'Shërbimi është i disponueshëm për mure të jashtme' :
+                        'Service is available for exterior walls'
+                      }
+                    </p>
+                  </div>
+                </label>
+
+                {/* Interior Wall Checkbox */}
+                <label className="flex items-center space-x-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={formData.interiorWall}
+                    onChange={(e) => setFormData(prev => ({ ...prev, interiorWall: e.target.checked }))}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                  />
+                  <div className="flex-1">
+                    <span className="text-sm font-semibold text-gray-700 font-zonapro">
+                      {i18n.language === 'de' ? 'Innenwand' : 
+                       i18n.language === 'al' ? 'Mur i Brendshëm' : 
+                       'Interior Wall'}
+                    </span>
+                    <p className="text-xs text-gray-500 font-zonapro">
+                      {i18n.language === 'de' ? 
+                        'Service ist für Innenwände verfügbar' :
+                       i18n.language === 'al' ? 
+                        'Shërbimi është i disponueshëm për mure të brendshme' :
+                        'Service is available for interior walls'
+                      }
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Exterior Wall Images Section */}
+            {formData.exteriorWall && (
+              <div className="space-y-4 p-6 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="text-lg font-semibold text-gray-800 font-zonapro">
+                  {i18n.language === 'de' ? 'Außenwand Bilder' : 
+                   i18n.language === 'al' ? 'Imazhe të Murit të Jashtëm' : 
+                   'Exterior Wall Images'}
+                </h3>
+                <p className="text-sm text-gray-600 font-zonapro mb-4">
+                  {i18n.language === 'de' ? 
+                    'Laden Sie Bilder für Außenwände hoch' :
+                   i18n.language === 'al' ? 
+                    'Ngarkoni imazhe për mure të jashtme' :
+                    'Upload images for exterior walls'}
+                </p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {formData.exteriorWallImages.map((img, index) => (
+                    <div key={index} className="relative group space-y-2">
+                      <div className="relative">
+                        <div className="w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden">
+                          <Image 
+                            src={img.image} 
+                            alt={`Exterior wall ${index + 1}`} 
+                            width={200}
+                            height={128}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newImages = formData.exteriorWallImages.filter((_, i) => i !== index);
+                            setFormData(prev => ({ ...prev, exteriorWallImages: newImages }));
+                          }}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs font-zonapro"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder={i18n.language === 'de' ? 'Bildtitel (optional)' : 
+                                     i18n.language === 'al' ? 'Titulli i imazhit (opsional)' : 
+                                     'Image title (optional)'}
+                        value={img.title || ''}
+                        onChange={(e) => {
+                          const newImages = [...formData.exteriorWallImages];
+                          newImages[index] = { ...newImages[index], title: e.target.value };
+                          setFormData(prev => ({ ...prev, exteriorWallImages: newImages }));
+                        }}
+                        className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-400 font-zonapro"
+                      />
+                    </div>
+                  ))}
+                  
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors duration-200">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setIsUploading(true);
+                          try {
+                            const compressedFile = await compressImage(file);
+                            let uploadResult: UploadResult;
+                            
+                            if (ChunkedUploader.needsChunking(compressedFile)) {
+                              uploadResult = await uploadFileInChunks(compressedFile, {
+                                onProgress: (progress) => console.log(`Upload progress: ${progress}%`)
+                              });
+                            } else {
+                              const uploadFormData = new FormData();
+                              uploadFormData.append('file', compressedFile);
+                              const response = await fetch('/api/upload-image-cloudinary', {
+                                method: 'POST',
+                                body: uploadFormData,
+                              });
+                              const data = await response.json();
+                              uploadResult = { success: data.success, data: data.data, message: data.message };
+                            }
+                            
+                            if (uploadResult.success && uploadResult.data) {
+                              setFormData(prev => ({
+                                ...prev,
+                                exteriorWallImages: [...prev.exteriorWallImages, { image: uploadResult.data!.path, title: '' }]
+                              }));
+                              setMessage('Exterior wall image uploaded successfully!');
+                            } else {
+                              throw new Error(uploadResult.message || 'Failed to upload image');
+                            }
+                          } catch (error) {
+                            console.error('Upload error:', error);
+                            setMessage(error instanceof Error ? error.message : 'Error uploading image');
+                          } finally {
+                            setIsUploading(false);
+                          }
+                        }
+                      }}
+                      className="hidden"
+                      id="exterior-wall-upload"
+                    />
+                    <label
+                      htmlFor="exterior-wall-upload"
+                      className="cursor-pointer flex flex-col items-center justify-center h-full"
+                    >
+                      <span className="text-2xl mb-2">📷</span>
+                      <span className="text-xs text-gray-600 font-zonapro">
+                        {i18n.language === 'de' ? 'Bild hinzufügen' : 
+                         i18n.language === 'al' ? 'Shto imazh' : 
+                         'Add Image'}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Interior Wall Images Section */}
+            {formData.interiorWall && (
+              <div className="space-y-4 p-6 bg-green-50 rounded-lg border border-green-200">
+                <h3 className="text-lg font-semibold text-gray-800 font-zonapro">
+                  {i18n.language === 'de' ? 'Innenwand Bilder' : 
+                   i18n.language === 'al' ? 'Imazhe të Murit të Brendshëm' : 
+                   'Interior Wall Images'}
+                </h3>
+                <p className="text-sm text-gray-600 font-zonapro mb-4">
+                  {i18n.language === 'de' ? 
+                    'Laden Sie Bilder für Innenwände hoch' :
+                   i18n.language === 'al' ? 
+                    'Ngarkoni imazhe për mure të brendshme' :
+                    'Upload images for interior walls'}
+                </p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {formData.interiorWallImages.map((img, index) => (
+                    <div key={index} className="relative group space-y-2">
+                      <div className="relative">
+                        <div className="w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden">
+                          <Image 
+                            src={img.image} 
+                            alt={`Interior wall ${index + 1}`} 
+                            width={200}
+                            height={128}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newImages = formData.interiorWallImages.filter((_, i) => i !== index);
+                            setFormData(prev => ({ ...prev, interiorWallImages: newImages }));
+                          }}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs font-zonapro"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder={i18n.language === 'de' ? 'Bildtitel (optional)' : 
+                                     i18n.language === 'al' ? 'Titulli i imazhit (opsional)' : 
+                                     'Image title (optional)'}
+                        value={img.title || ''}
+                        onChange={(e) => {
+                          const newImages = [...formData.interiorWallImages];
+                          newImages[index] = { ...newImages[index], title: e.target.value };
+                          setFormData(prev => ({ ...prev, interiorWallImages: newImages }));
+                        }}
+                        className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-800 placeholder-gray-400 font-zonapro"
+                      />
+                    </div>
+                  ))}
+                  
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-green-400 transition-colors duration-200">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setIsUploading(true);
+                          try {
+                            const compressedFile = await compressImage(file);
+                            let uploadResult: UploadResult;
+                            
+                            if (ChunkedUploader.needsChunking(compressedFile)) {
+                              uploadResult = await uploadFileInChunks(compressedFile, {
+                                onProgress: (progress) => console.log(`Upload progress: ${progress}%`)
+                              });
+                            } else {
+                              const uploadFormData = new FormData();
+                              uploadFormData.append('file', compressedFile);
+                              const response = await fetch('/api/upload-image-cloudinary', {
+                                method: 'POST',
+                                body: uploadFormData,
+                              });
+                              const data = await response.json();
+                              uploadResult = { success: data.success, data: data.data, message: data.message };
+                            }
+                            
+                            if (uploadResult.success && uploadResult.data) {
+                              setFormData(prev => ({
+                                ...prev,
+                                interiorWallImages: [...prev.interiorWallImages, { image: uploadResult.data!.path, title: '' }]
+                              }));
+                              setMessage('Interior wall image uploaded successfully!');
+                            } else {
+                              throw new Error(uploadResult.message || 'Failed to upload image');
+                            }
+                          } catch (error) {
+                            console.error('Upload error:', error);
+                            setMessage(error instanceof Error ? error.message : 'Error uploading image');
+                          } finally {
+                            setIsUploading(false);
+                          }
+                        }
+                      }}
+                      className="hidden"
+                      id="interior-wall-upload"
+                    />
+                    <label
+                      htmlFor="interior-wall-upload"
+                      className="cursor-pointer flex flex-col items-center justify-center h-full"
+                    >
+                      <span className="text-2xl mb-2">📷</span>
+                      <span className="text-xs text-gray-600 font-zonapro">
+                        {i18n.language === 'de' ? 'Bild hinzufügen' : 
+                         i18n.language === 'al' ? 'Shto imazh' : 
+                         'Add Image'}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Custom Walls Section */}
+            <div className="space-y-4 p-6 bg-purple-50 rounded-lg border border-purple-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800 font-zonapro">
+                  {i18n.language === 'de' ? 'Benutzerdefinierte Wandtypen' : 
+                   i18n.language === 'al' ? 'Llojet e Mureve të Personalizuara' : 
+                   'Custom Wall Types'}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({
+                      ...prev,
+                      customWalls: [...prev.customWalls, { name: '', images: [] }]
+                    }));
+                  }}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-semibold transition-colors font-zonapro"
+                >
+                  + {i18n.language === 'de' ? 'Wandtyp hinzufügen' : 
+                      i18n.language === 'al' ? 'Shto Lloj Muri' : 
+                      'Add Wall Type'}
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 font-zonapro mb-4">
+                {i18n.language === 'de' ? 
+                  'Erstellen Sie benutzerdefinierte Wandtypen wie "Modular Construction" mit eigenen Namen und Bildern' :
+                 i18n.language === 'al' ? 
+                  'Krijoni lloje muresh të personalizuara si "Modular Construction" me emra dhe imazhe tuaja' :
+                  'Create custom wall types like "Modular Construction" with your own names and images'}
+              </p>
+
+              {formData.customWalls.map((customWall, wallIndex) => (
+                <div key={wallIndex} className="mb-6 p-4 bg-white rounded-lg border border-purple-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <input
+                      type="text"
+                      placeholder={i18n.language === 'de' ? 'Wandtyp Name (z.B. Modular Construction)' : 
+                                   i18n.language === 'al' ? 'Emri i Llojit të Murit (p.sh. Modular Construction)' : 
+                                   'Wall Type Name (e.g. Modular Construction)'}
+                      value={customWall.name}
+                      onChange={(e) => {
+                        const newCustomWalls = [...formData.customWalls];
+                        newCustomWalls[wallIndex] = { ...newCustomWalls[wallIndex], name: e.target.value };
+                        setFormData(prev => ({ ...prev, customWalls: newCustomWalls }));
+                      }}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 placeholder-gray-400 font-zonapro"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newCustomWalls = formData.customWalls.filter((_, i) => i !== wallIndex);
+                        setFormData(prev => ({ ...prev, customWalls: newCustomWalls }));
+                      }}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm font-semibold transition-colors font-zonapro"
+                    >
+                      {i18n.language === 'de' ? 'Löschen' : 
+                       i18n.language === 'al' ? 'Fshi' : 
+                       'Delete'}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {customWall.images.map((img, imgIndex) => (
+                      <div key={imgIndex} className="relative group space-y-2">
+                        <div className="relative">
+                          <div className="w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden">
+                            <Image 
+                              src={img.image} 
+                              alt={`${customWall.name} ${imgIndex + 1}`} 
+                              width={200}
+                              height={128}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newCustomWalls = [...formData.customWalls];
+                              newCustomWalls[wallIndex].images = newCustomWalls[wallIndex].images.filter((_, i) => i !== imgIndex);
+                              setFormData(prev => ({ ...prev, customWalls: newCustomWalls }));
+                            }}
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs font-zonapro"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          placeholder={i18n.language === 'de' ? 'Bildtitel (optional)' : 
+                                       i18n.language === 'al' ? 'Titulli i imazhit (opsional)' : 
+                                       'Image title (optional)'}
+                          value={img.title || ''}
+                          onChange={(e) => {
+                            const newCustomWalls = [...formData.customWalls];
+                            newCustomWalls[wallIndex].images[imgIndex] = { ...newCustomWalls[wallIndex].images[imgIndex], title: e.target.value };
+                            setFormData(prev => ({ ...prev, customWalls: newCustomWalls }));
+                          }}
+                          className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-800 placeholder-gray-400 font-zonapro"
+                        />
+                      </div>
+                    ))}
+                    
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-purple-400 transition-colors duration-200">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setIsUploading(true);
+                            try {
+                              const compressedFile = await compressImage(file);
+                              let uploadResult: UploadResult;
+                              
+                              if (ChunkedUploader.needsChunking(compressedFile)) {
+                                uploadResult = await uploadFileInChunks(compressedFile, {
+                                  onProgress: (progress) => console.log(`Upload progress: ${progress}%`)
+                                });
+                              } else {
+                                const uploadFormData = new FormData();
+                                uploadFormData.append('file', compressedFile);
+                                const response = await fetch('/api/upload-image-cloudinary', {
+                                  method: 'POST',
+                                  body: uploadFormData,
+                                });
+                                const data = await response.json();
+                                uploadResult = { success: data.success, data: data.data, message: data.message };
+                              }
+                              
+                              if (uploadResult.success && uploadResult.data) {
+                                const newCustomWalls = [...formData.customWalls];
+                                newCustomWalls[wallIndex].images = [...newCustomWalls[wallIndex].images, { image: uploadResult.data!.path, title: '' }];
+                                setFormData(prev => ({ ...prev, customWalls: newCustomWalls }));
+                                setMessage(`${customWall.name || 'Custom wall'} image uploaded successfully!`);
+                              } else {
+                                throw new Error(uploadResult.message || 'Failed to upload image');
+                              }
+                            } catch (error) {
+                              console.error('Upload error:', error);
+                              setMessage(error instanceof Error ? error.message : 'Error uploading image');
+                            } finally {
+                              setIsUploading(false);
+                            }
+                          }
+                        }}
+                        className="hidden"
+                        id={`custom-wall-upload-${wallIndex}`}
+                      />
+                      <label
+                        htmlFor={`custom-wall-upload-${wallIndex}`}
+                        className="cursor-pointer flex flex-col items-center justify-center h-full"
+                      >
+                        <span className="text-2xl mb-2">📷</span>
+                        <span className="text-xs text-gray-600 font-zonapro">
+                          {i18n.language === 'de' ? 'Bild hinzufügen' : 
+                           i18n.language === 'al' ? 'Shto imazh' : 
+                           'Add Image'}
+                        </span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1187,6 +1727,43 @@ const ServiceManager = () => {
                      </div>
                    </div>
                    
+                   {/* Wall Options */}
+                   {(service.exteriorWall || service.interiorWall) && (
+                     <div className="bg-gray-50 rounded-lg p-4">
+                       <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2 font-zonapro">
+                         🏗️ {i18n.language === 'de' ? 'Wand-Optionen' : 
+                              i18n.language === 'al' ? 'Opsionet e Mureve' : 
+                              'Wall Options'}
+                       </h4>
+                       <div className="flex flex-wrap gap-2">
+                         {service.exteriorWall && (
+                           <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold font-zonapro flex items-center gap-1">
+                             {i18n.language === 'de' ? 'Außenwand' : 
+                              i18n.language === 'al' ? 'Mur i Jashtëm' : 
+                              'Exterior Wall'}
+                             {service.exteriorWallImages && service.exteriorWallImages.length > 0 && (
+                               <span className="text-green-600" title={`${service.exteriorWallImages.length} image(s)`}>
+                                 📷 {service.exteriorWallImages.length}
+                               </span>
+                             )}
+                           </span>
+                         )}
+                         {service.interiorWall && (
+                           <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold font-zonapro flex items-center gap-1">
+                             {i18n.language === 'de' ? 'Innenwand' : 
+                              i18n.language === 'al' ? 'Mur i Brendshëm' : 
+                              'Interior Wall'}
+                             {service.interiorWallImages && service.interiorWallImages.length > 0 && (
+                               <span className="text-green-600" title={`${service.interiorWallImages.length} image(s)`}>
+                                 📷 {service.interiorWallImages.length}
+                               </span>
+                             )}
+                           </span>
+                         )}
+                       </div>
+                     </div>
+                   )}
+
                    {/* Step Images */}
                    {service.stepImages && service.stepImages.length > 0 && (
                      <div className="bg-gray-50 rounded-lg p-4">

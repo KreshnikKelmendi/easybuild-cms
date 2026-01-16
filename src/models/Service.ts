@@ -22,6 +22,23 @@ const serviceSchema = new mongoose.Schema({
     image: { type: String, required: true },
     titleKey: { type: String, required: true }
   }],
+  exteriorWall: { type: Boolean, default: false },
+  interiorWall: { type: Boolean, default: false },
+  exteriorWallImages: [{
+    image: { type: String, required: true },
+    title: { type: String, default: '' }
+  }],
+  interiorWallImages: [{
+    image: { type: String, required: true },
+    title: { type: String, default: '' }
+  }],
+  customWalls: [{
+    name: { type: String, required: true },
+    images: [{
+      image: { type: String, required: true },
+      title: { type: String, default: '' }
+    }]
+  }],
   isActive: { type: Boolean, default: true }
 }, {
   timestamps: true

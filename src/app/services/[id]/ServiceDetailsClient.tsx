@@ -27,6 +27,11 @@ interface Service {
     image: string;
     titleKey: string;
   }>;
+  exteriorWall?: boolean;
+  interiorWall?: boolean;
+  exteriorWallImages?: Array<{ image: string; title?: string }> | string[];
+  interiorWallImages?: Array<{ image: string; title?: string }> | string[];
+  customWalls?: Array<{ name: string; images: Array<{ image: string; title?: string }> }>;
   isActive: boolean;
 }
 
@@ -53,6 +58,8 @@ const ServiceDetailsClient = ({ serviceId }: ServiceDetailsClientProps) => {
           throw new Error(data.message || 'Failed to load service');
         }
 
+        console.log('Fetched service data:', data.data);
+        console.log('Custom walls:', data.data?.customWalls);
         setService(data.data);
       } catch (err) {
         console.error('Failed to fetch service:', err);
@@ -102,6 +109,20 @@ const ServiceDetailsClient = ({ serviceId }: ServiceDetailsClientProps) => {
       );
     }
 
+    // Convert wall images from string[] to { image, title }[] format if needed
+    const convertWallImages = (images: any): Array<{ image: string; title?: string }> | undefined => {
+      if (!images) return undefined;
+      if (Array.isArray(images) && images.length > 0) {
+        if (typeof images[0] === 'string') {
+          // Convert old format (string[]) to new format
+          return images.map((img: string) => ({ image: img, title: '' }));
+        }
+        // Already in new format
+        return images as Array<{ image: string; title?: string }>;
+      }
+      return [];
+    };
+
     const enhancedService = {
       ...service,
       description:
@@ -119,6 +140,9 @@ const ServiceDetailsClient = ({ serviceId }: ServiceDetailsClientProps) => {
           al: 'Përshkrimi shtesë nuk është i disponueshëm',
         } as Service['description2']),
       stepImages: service.stepImages || [],
+      exteriorWallImages: convertWallImages(service.exteriorWallImages),
+      interiorWallImages: convertWallImages(service.interiorWallImages),
+      customWalls: service.customWalls || [],
     };
 
     return <ServiceDetail service={enhancedService} />;

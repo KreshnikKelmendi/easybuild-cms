@@ -29,6 +29,11 @@ interface Service {
     image: string;
     titleKey: string;
   }>;
+  exteriorWall?: boolean;
+  interiorWall?: boolean;
+  exteriorWallImages?: Array<{ image: string; title?: string }> | string[];
+  interiorWallImages?: Array<{ image: string; title?: string }> | string[];
+  customWalls?: Array<{ name: string; images: Array<{ image: string; title?: string }> }>;
   isActive: boolean;
 }
 
@@ -198,6 +203,33 @@ const ServicesPage = () => {
                        <p className="text-[15px] text-[#191716]/60 font-custom font-zonapro leading-tight mt-3 flex-1">
                          {description2}
                        </p>
+
+                       {/* Wall Options Badges */}
+                       {(service.exteriorWall || service.interiorWall || (service.customWalls && service.customWalls.length > 0)) && (
+                         <div className="flex flex-wrap gap-2 mt-4">
+                           {service.exteriorWall && (
+                             <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold font-zonapro">
+                               {i18n.language === 'de' ? 'Außenwand' : 
+                                i18n.language === 'al' ? 'Mur i Jashtëm' : 
+                                'Exterior Wall'}
+                             </span>
+                           )}
+                           {service.interiorWall && (
+                             <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold font-zonapro">
+                               {i18n.language === 'de' ? 'Innenwand' : 
+                                i18n.language === 'al' ? 'Mur i Brendshëm' : 
+                                'Interior Wall'}
+                             </span>
+                           )}
+                           {service.customWalls && service.customWalls.length > 0 && service.customWalls.map((customWall: { name: string; images: Array<{ image: string; title?: string }> }, index: number) => (
+                             customWall.name && customWall.name.trim() !== '' && (
+                               <span key={`custom-${index}`} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold font-zonapro">
+                                 {customWall.name}
+                               </span>
+                             )
+                           ))}
+                         </div>
+                       )}
 
                        <Link
                          href={`/services/${service._id}`}

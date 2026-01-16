@@ -17,6 +17,11 @@ interface Service {
   };
   image: string;
   hoverImage?: string;
+  exteriorWall?: boolean;
+  interiorWall?: boolean;
+  exteriorWallImages?: Array<{ image: string; title?: string }> | string[];
+  interiorWallImages?: Array<{ image: string; title?: string }> | string[];
+  customWalls?: Array<{ name: string; images: Array<{ image: string; title?: string }> }>;
   isActive: boolean;
 }
 
@@ -195,6 +200,33 @@ const OurServices = () => {
               >
                 {getTitleInCurrentLanguage(service)} <FaArrowRight className='ml-4 bg-[#DD4624] rounded-full text-white p-[5px]' />
               </p>
+              
+              {/* Wall Options Badges */}
+              {(service.exteriorWall || service.interiorWall || (service.customWalls && service.customWalls.length > 0)) && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {service.exteriorWall && (
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold font-zonapro">
+                      {i18n.language === 'de' ? 'Außenwand' : 
+                       i18n.language === 'al' ? 'Mur i Jashtëm' : 
+                       'Exterior Wall'}
+                    </span>
+                  )}
+                  {service.interiorWall && (
+                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold font-zonapro">
+                      {i18n.language === 'de' ? 'Innenwand' : 
+                       i18n.language === 'al' ? 'Mur i Brendshëm' : 
+                       'Interior Wall'}
+                    </span>
+                  )}
+                  {service.customWalls && service.customWalls.length > 0 && service.customWalls.map((customWall: { name: string; images: Array<{ image: string; title?: string }> }, index: number) => (
+                    customWall.name && customWall.name.trim() !== '' && (
+                      <span key={`custom-${index}`} className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold font-zonapro">
+                        {customWall.name}
+                      </span>
+                    )
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ))}

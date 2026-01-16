@@ -58,12 +58,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    if (!body.stepImages || body.stepImages.length < 3) {
-      return NextResponse.json(
-        { success: false, message: 'At least 3 step images are required' },
-        { status: 400 }
-      );
-    }
+    // Step images are optional - no validation needed
     
     // Create new service
     const service = new Service({
@@ -73,6 +68,11 @@ export async function POST(request: NextRequest) {
       image: body.image,
       hoverImage: body.hoverImage || '',
       stepImages: body.stepImages,
+      exteriorWall: body.exteriorWall || false,
+      interiorWall: body.interiorWall || false,
+      exteriorWallImages: body.exteriorWallImages || [],
+      interiorWallImages: body.interiorWallImages || [],
+      customWalls: body.customWalls || [],
       isActive: true,
     });
     
@@ -131,6 +131,11 @@ export async function PUT(request: NextRequest) {
     if (body.image) service.image = body.image;
     if (body.hoverImage !== undefined) service.hoverImage = body.hoverImage;
     if (body.stepImages) service.stepImages = body.stepImages;
+    if (body.exteriorWall !== undefined) service.exteriorWall = body.exteriorWall;
+    if (body.interiorWall !== undefined) service.interiorWall = body.interiorWall;
+    if (body.exteriorWallImages !== undefined) service.exteriorWallImages = body.exteriorWallImages;
+    if (body.interiorWallImages !== undefined) service.interiorWallImages = body.interiorWallImages;
+    if (body.customWalls !== undefined) service.customWalls = body.customWalls;
     if (body.isActive !== undefined) service.isActive = body.isActive;
     
     await service.save();
