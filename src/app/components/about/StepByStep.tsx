@@ -173,14 +173,14 @@ const StepByStep = () => {
 
         {/* Right: 9 Images Grid */}
         <div className='w-full lg:w-1/2 mt-8 lg:mt-0'>
-          <div className='grid grid-cols-3 gap-3 lg:gap-4'>
+          <div className='grid grid-cols-3 lg:grid-cols-3 gap-1 lg:gap-4'>
             {safeImages.map((image, idx) => (
               <a
                 key={idx}
                 href={instagramUrl}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='group relative h-62 rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105'
+                className='group relative h-40 lg:h-52 rounded-[15px] overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105'
               >
                 <Image 
                   src={image} 
@@ -188,9 +188,7 @@ const StepByStep = () => {
                   fill
                   className='object-cover'
                 />
-                <div className='absolute bottom-2 left-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-zonapro text-[#191716] shadow'>
-                  {idx + 1}
-                </div>
+               
                 {/* Instagram Icon Overlay on Hover */}
                 <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'>
                   <FaInstagram className='text-white text-3xl lg:text-4xl' />
