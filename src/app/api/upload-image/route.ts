@@ -92,6 +92,8 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error) {
       if (error.message.includes('BLOB_READ_WRITE_TOKEN')) {
         errorMessage = 'Vercel Blob is not configured on the server';
+      } else if (error.message.includes('Cannot use public access on a private store')) {
+        errorMessage = 'Your Blob store is private but the app is trying to upload public images. Set BLOB_ACCESS=private or switch the store to public.';
       } else {
         errorMessage = error.message;
       }

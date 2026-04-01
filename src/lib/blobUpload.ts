@@ -16,6 +16,16 @@ export function ensureBlobTokenConfigured() {
   }
 }
 
+export function getBlobAccess(): 'public' | 'private' {
+  const access = process.env.BLOB_ACCESS?.trim().toLowerCase();
+
+  if (access === 'private') {
+    return 'private';
+  }
+
+  return 'public';
+}
+
 export function buildBlobPath(originalName: string, folder = DEFAULT_FOLDER) {
   const extension = originalName.includes('.')
     ? originalName.split('.').pop()?.toLowerCase() ?? 'jpg'
@@ -41,7 +51,7 @@ export async function uploadToBlob({
   ensureBlobTokenConfigured();
 
   return put(buildBlobPath(originalName, folder), body, {
-    access: 'public',
+    access: getBlobAccess(),
     addRandomSuffix: true,
     contentType,
   });
