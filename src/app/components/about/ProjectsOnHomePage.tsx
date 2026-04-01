@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { toDisplayImageUrl } from '@/lib/blobUrl'
 
 interface Project {
   _id: string
@@ -136,7 +137,7 @@ const ProjectsOnHomePage = () => {
                     >
                       {project.mainImage ? (
                         <Image 
-                          src={project.mainImage} 
+                          src={toDisplayImageUrl(project.mainImage)} 
                           alt={getCurrentLanguageText(project.title)} 
                           width={1200}
                           height={1200}
@@ -178,7 +179,7 @@ const ProjectsOnHomePage = () => {
                             >
                               {project.mainImage ? (
                                 <Image 
-                                  src={project.mainImage} 
+                                  src={toDisplayImageUrl(project.mainImage)} 
                                   alt={getCurrentLanguageText(project.title)} 
                                   width={400}
                                   height={400}
@@ -222,7 +223,7 @@ const ProjectsOnHomePage = () => {
                     >
                       {project.mainImage ? (
                         <Image 
-                          src={project.mainImage} 
+                          src={toDisplayImageUrl(project.mainImage)} 
                           alt={getCurrentLanguageText(project.title)} 
                           width={400}
                           height={384}
@@ -262,7 +263,7 @@ const ProjectsOnHomePage = () => {
                             >
                               {project.mainImage ? (
                                 <Image 
-                                  src={project.mainImage} 
+                                  src={toDisplayImageUrl(project.mainImage)} 
                                   alt={getCurrentLanguageText(project.title)} 
                                   width={400}
                                   height={384}
@@ -304,7 +305,7 @@ const ProjectsOnHomePage = () => {
                     >
                       {project.mainImage ? (
                         <Image 
-                          src={project.mainImage} 
+                          src={toDisplayImageUrl(project.mainImage)} 
                           alt={getCurrentLanguageText(project.title)} 
                           width={400}
                           height={384}
@@ -334,7 +335,7 @@ const ProjectsOnHomePage = () => {
                                   className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
                                 >
                                   <Image
-                                    src={image}
+                                    src={toDisplayImageUrl(image)}
                                     alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
                                     width={48}
                                     height={48}
@@ -364,7 +365,7 @@ const ProjectsOnHomePage = () => {
                         >
                           {project.mainImage ? (
                             <Image 
-                              src={project.mainImage} 
+                              src={toDisplayImageUrl(project.mainImage)} 
                               alt={getCurrentLanguageText(project.title)} 
                               width={400}
                               height={384}
@@ -394,7 +395,7 @@ const ProjectsOnHomePage = () => {
                                       className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
                                     >
                                       <Image
-                                        src={image}
+                                        src={toDisplayImageUrl(image)}
                                         alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
                                         width={48}
                                         height={48}

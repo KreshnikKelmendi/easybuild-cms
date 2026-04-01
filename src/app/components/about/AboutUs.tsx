@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface AboutUsData {
   title: {
@@ -108,7 +109,7 @@ const AboutUs = () => {
             {images.map((image, index) => (
               <Image 
                 key={image}
-                src={image} 
+                src={toDisplayImageUrl(image)} 
                 alt={`About Us ${index + 1}`} 
                 width={1500}
                 height={1500}

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
 import { compressImage } from '@/lib/imageCompression';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface Wood {
   _id: string;
@@ -382,7 +383,7 @@ const WoodsManager = () => {
                   <div className="space-y-2">
                     <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden">
                       <Image 
-                        src={formData.imageUrl} 
+                        src={toDisplayImageUrl(formData.imageUrl)} 
                         alt="Preview" 
                         width={96}
                         height={80}
@@ -507,7 +508,7 @@ const WoodsManager = () => {
                     <p className="text-xs font-medium text-black uppercase mb-1">Image</p>
                     <div className="w-full h-20 border border-gray-200 rounded-md overflow-hidden">
                       <Image 
-                        src={wood.imageUrl} 
+                        src={toDisplayImageUrl(wood.imageUrl)} 
                         alt="Wood"
                         width={400}
                         height={80}

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload'
 import { compressImage } from '@/lib/imageCompression'
+import { toDisplayImageUrl } from '@/lib/blobUrl'
 
 interface Project {
   _id: string
@@ -506,7 +507,7 @@ const ProjectManager = () => {
                   <div className="space-y-2">
                     <div className="w-32 h-24 mx-auto border border-gray-300 rounded-lg overflow-hidden">
                       <Image 
-                        src={formData.mainImage} 
+                        src={toDisplayImageUrl(formData.mainImage)} 
                         alt="Main Preview" 
                         width={128}
                         height={96}
@@ -576,7 +577,7 @@ const ProjectManager = () => {
                     <div key={index} className="relative">
                       <div className="w-full h-20 border border-gray-200 rounded-md overflow-hidden">
                         <Image 
-                          src={image} 
+                          src={toDisplayImageUrl(image)} 
                           alt={`Additional ${index + 1}`}
                           width={80}
                           height={80}
@@ -724,7 +725,7 @@ const ProjectManager = () => {
                     <p className="text-xs font-medium text-black uppercase mb-1">Main Image</p>
                     <div className="w-full h-20 border border-gray-200 rounded-md overflow-hidden">
                       <Image 
-                        src={project.mainImage} 
+                        src={toDisplayImageUrl(project.mainImage)} 
                         alt="Project"
                         width={80}
                         height={80}
@@ -740,7 +741,7 @@ const ProjectManager = () => {
                         {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
                           <div key={imgIndex} className="w-full h-16 border border-gray-200 rounded-md overflow-hidden">
                             <Image 
-                              src={image} 
+                              src={toDisplayImageUrl(image)} 
                               alt={`Additional ${imgIndex + 1}`}
                               width={64}
                               height={64}

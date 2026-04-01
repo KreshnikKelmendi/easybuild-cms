@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -364,7 +365,7 @@ const TeamManager = () => {
                 </div>
                 <div className="relative w-32 h-24 border border-gray-300 rounded overflow-hidden">
                   <Image 
-                    src={formData.image} 
+                    src={toDisplayImageUrl(formData.image)} 
                     alt="Preview" 
                     width={128}
                     height={96}
@@ -436,7 +437,7 @@ const TeamManager = () => {
             {currentTeam.image && (
               <div className="w-32 h-24 border border-gray-300 rounded overflow-hidden">
                 <Image 
-                  src={currentTeam.image} 
+                  src={toDisplayImageUrl(currentTeam.image)} 
                   alt="Team image"
                   width={128}
                   height={96}

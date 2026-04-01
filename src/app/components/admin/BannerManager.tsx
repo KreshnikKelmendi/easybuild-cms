@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
 import { compressImage } from '@/lib/imageCompression';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -371,7 +372,7 @@ const BannerManager = () => {
                 </div>
                 <div className="relative w-32 h-24 border border-gray-300 rounded overflow-hidden">
                   <Image 
-                    src={formData.image} 
+                    src={toDisplayImageUrl(formData.image)} 
                     alt="Preview" 
                     width={128}
                     height={96}
@@ -442,7 +443,7 @@ const BannerManager = () => {
             {currentBanner.image && (
               <div className="w-32 h-24 border border-gray-300 rounded overflow-hidden">
                 <Image 
-                  src={currentBanner.image} 
+                  src={toDisplayImageUrl(currentBanner.image)} 
                   alt="Banner background"
                   width={128}
                   height={96}

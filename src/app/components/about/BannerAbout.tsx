@@ -6,6 +6,7 @@ import SplitType from 'split-type';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface AboutBannerData {
   title: {
@@ -120,7 +121,7 @@ const BannerAbout = () => {
       <div className='lg:w-1/2 w-full h-[45vh] lg:h-[665px] relative '>
         <Image
           className='w-full h-full object-cover banner-image'
-          src={imageSrc}
+          src={toDisplayImageUrl(imageSrc)}
           alt="About Us Banner"
           width={800}
           height={665}

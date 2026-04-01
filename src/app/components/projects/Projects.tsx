@@ -7,6 +7,7 @@ import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface Project {
   _id: string;
@@ -147,7 +148,7 @@ const Projects = () => {
                {/* Project Image */}
                <div className="relative h-80 overflow-hidden">
                  <Image
-                   src={project.mainImage}
+                  src={toDisplayImageUrl(project.mainImage)}
                    alt={getTitleInCurrentLanguage(project)}
                    fill
                    className="object-cover transition-transform duration-1000 group-hover:scale-125"
@@ -185,7 +186,7 @@ const Projects = () => {
                        {project.additionalImages.slice(0, 3).map((image, imgIndex) => (
                          <div key={imgIndex} className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg group-hover:border-[#DD4624]/30 transition-all duration-500 transform group-hover:scale-110">
                            <Image
-                             src={image}
+                             src={toDisplayImageUrl(image)}
                              alt={`Additional ${imgIndex + 1}`}
                              fill
                              className="object-cover"

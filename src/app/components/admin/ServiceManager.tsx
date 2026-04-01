@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
 import { compressImage } from '@/lib/imageCompression';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface Service {
   _id: string;
@@ -724,7 +725,7 @@ const ServiceManager = () => {
                   <div className="space-y-2 relative">
                     <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden relative group">
                       <Image 
-                        src={formData.image} 
+                        src={toDisplayImageUrl(formData.image)} 
                         alt="Preview" 
                         width={96}
                         height={80}
@@ -795,7 +796,7 @@ const ServiceManager = () => {
                   <div className="space-y-2 relative">
                     <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden relative group">
                       <Image 
-                        src={formData.hoverImage} 
+                        src={toDisplayImageUrl(formData.hoverImage)} 
                         alt="Hover Preview" 
                         width={96}
                         height={80}
@@ -1028,7 +1029,7 @@ const ServiceManager = () => {
                         <div className="space-y-2 relative">
                           <div className="w-24 h-20 mx-auto border border-gray-300 rounded-lg overflow-hidden relative group">
                             <Image 
-                              src={formData.stepImages[index].image} 
+                              src={toDisplayImageUrl(formData.stepImages[index].image)} 
                               alt={`Step ${index + 1}`} 
                               width={96}
                               height={80}
@@ -1163,7 +1164,7 @@ const ServiceManager = () => {
                       <div className="relative">
                         <div className="w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden">
                           <Image 
-                            src={img.image} 
+                            src={toDisplayImageUrl(img.image)} 
                             alt={`Exterior wall ${index + 1}`} 
                             width={200}
                             height={128}
@@ -1282,7 +1283,7 @@ const ServiceManager = () => {
                       <div className="relative">
                         <div className="w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden">
                           <Image 
-                            src={img.image} 
+                            src={toDisplayImageUrl(img.image)} 
                             alt={`Interior wall ${index + 1}`} 
                             width={200}
                             height={128}
@@ -1446,7 +1447,7 @@ const ServiceManager = () => {
                         <div className="relative">
                           <div className="w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden">
                             <Image 
-                              src={img.image} 
+                              src={toDisplayImageUrl(img.image)} 
                               alt={`${customWall.name} ${imgIndex + 1}`} 
                               width={200}
                               height={128}
@@ -1718,7 +1719,7 @@ const ServiceManager = () => {
                      </h4>
                      <div className="w-full h-32 border border-gray-200 rounded-lg overflow-hidden">
                        <Image 
-                         src={service.image} 
+                        src={toDisplayImageUrl(service.image)} 
                          alt="Service"
                          width={400}
                          height={128}
@@ -1789,7 +1790,7 @@ const ServiceManager = () => {
                              <div className="w-16 h-16 bg-gray-200 rounded overflow-hidden">
                                {step.image ? (
                                  <Image 
-                                   src={step.image} 
+                                  src={toDisplayImageUrl(step.image)} 
                                    alt={`Step ${index + 1}`}
                                    width={64}
                                    height={64}

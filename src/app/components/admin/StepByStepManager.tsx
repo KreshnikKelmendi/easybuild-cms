@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
 import { compressImage } from '@/lib/imageCompression';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -300,7 +301,7 @@ const StepByStepManager = () => {
                     </div>
                     <div className="relative w-full h-32 border border-gray-300 rounded overflow-hidden">
                       <Image 
-                        src={img} 
+                        src={toDisplayImageUrl(img)} 
                         alt={`Step image ${idx + 1}`} 
                         width={200}
                         height={128}
@@ -377,7 +378,7 @@ const StepByStepManager = () => {
                     </div>
                     <div className="w-full h-32 border border-gray-300 rounded overflow-hidden">
                       <Image 
-                        src={img} 
+                        src={toDisplayImageUrl(img)} 
                         alt={`Step image ${idx + 1}`}
                         width={200}
                         height={128}

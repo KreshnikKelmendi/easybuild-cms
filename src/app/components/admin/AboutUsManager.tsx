@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChunkedUploader, uploadFileInChunks } from '@/lib/chunkedUpload';
 import { compressImages } from '@/lib/imageCompression';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 type LanguageCode = 'en' | 'de' | 'al';
 
@@ -384,7 +385,7 @@ const AboutUsManager = () => {
                     <div key={index} className="relative group">
                       <div className="relative w-full h-24 border border-gray-300 rounded overflow-hidden">
                         <Image 
-                          src={image} 
+                          src={toDisplayImageUrl(image)} 
                           alt={`Preview ${index + 1}`} 
                           width={100}
                           height={96}
@@ -468,7 +469,7 @@ const AboutUsManager = () => {
                   <div key={index} className="relative">
                     <div className="w-full h-24 border border-gray-300 rounded overflow-hidden">
                       <Image 
-                        src={image} 
+                        src={toDisplayImageUrl(image)} 
                         alt={`About us image ${index + 1}`}
                         width={100}
                         height={96}

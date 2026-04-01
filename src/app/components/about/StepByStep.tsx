@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
 import { FaInstagram } from 'react-icons/fa'
+import { toDisplayImageUrl } from '@/lib/blobUrl'
 
 interface StepByStepData {
   title: {
@@ -138,7 +139,7 @@ const StepByStep = () => {
                   className='group relative aspect-square rounded-[15px] overflow-hidden border border-[#191716]/10 bg-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105'
                 >
                   <Image 
-                    src={image} 
+                    src={toDisplayImageUrl(image)} 
                     alt={`Step ${idx + 1}`} 
                     fill
                     className='object-contain'
@@ -183,7 +184,7 @@ const StepByStep = () => {
                 className='group relative h-40 lg:h-52 rounded-[15px] overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105'
               >
                 <Image 
-                  src={image} 
+                  src={toDisplayImageUrl(image)} 
                   alt={`Step ${idx + 1}`} 
                   fill
                   className='object-cover'

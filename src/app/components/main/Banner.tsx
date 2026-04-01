@@ -9,6 +9,7 @@ import Link from 'next/link';
 
 import { useTranslation } from 'react-i18next';
 import Quality from './Quality';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface BannerData {
   title: {
@@ -83,7 +84,7 @@ const Banner = () => {
     <div className='relative w-full h-[70vh] lg:h-[800px] bg-[#191716]'>
       {bannerData?.image ? (
         <Image 
-          src={bannerData.image}
+          src={toDisplayImageUrl(bannerData.image)}
           alt='Banner background' 
           fill
           className='object-cover'

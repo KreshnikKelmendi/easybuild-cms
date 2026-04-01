@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface Project {
   _id: string;
@@ -175,7 +176,7 @@ const ProjectDetailPage = () => {
                          onClick={() => openFullScreen(image)}
                        >
                          <Image
-                           src={image}
+                          src={toDisplayImageUrl(image)}
                            alt={`Project Image ${index + 1}`}
                            fill
                            className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -243,7 +244,7 @@ const ProjectDetailPage = () => {
              {/* Full Screen Image */}
              <div className="relative w-full h-full flex items-center justify-center">
                <Image
-                 src={selectedImage}
+                 src={toDisplayImageUrl(selectedImage)}
                  alt="Full Screen View"
                  fill
                  className="object-contain"

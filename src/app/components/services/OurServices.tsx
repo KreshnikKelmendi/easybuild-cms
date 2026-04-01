@@ -7,6 +7,7 @@ import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface Service {
   _id: string;
@@ -185,7 +186,7 @@ const OurServices = () => {
                 src={(() => {
                   const imageSrc = hoveredIndex === index && service.hoverImage ? service.hoverImage : service.image;
                   console.log(`Service ${index} - Hovered: ${hoveredIndex === index}, HoverImage: ${service.hoverImage}, FinalSrc: ${imageSrc}`);
-                  return imageSrc;
+                  return toDisplayImageUrl(imageSrc);
                 })()}
                 alt={getTitleInCurrentLanguage(service)}
                 width={400}

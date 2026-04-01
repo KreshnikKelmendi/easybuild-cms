@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface Wood {
   _id: string;
@@ -82,7 +83,7 @@ const Woods = () => {
           {woods.map((wood) => (
             <div key={wood._id} className='flex flex-col justify-center items-center'>
               <Image 
-                src={wood.imageUrl} 
+                src={toDisplayImageUrl(wood.imageUrl)} 
                 alt={wood.title[currentLanguage]} 
                 width={190}
                 height={188}

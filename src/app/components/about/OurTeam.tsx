@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface TeamData {
   title: {
@@ -83,7 +84,7 @@ const OurTeam = () => {
       </div>
       <div className='w-full'>
         <Image 
-          src={imageSrc}
+          src={toDisplayImageUrl(imageSrc)}
           alt="Team" 
           width={1067}
           height={874}

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { FaArrowRight } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import ServicesInPage from '../components/services/ServicesInPage';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface Service {
   _id: string;
@@ -178,7 +179,7 @@ const ServicesPage = () => {
                    >
                     <div className="relative">
                       <Image
-                        src={service.image || '/assets/service-page-1.png'}
+                        src={toDisplayImageUrl(service.image || '/assets/service-page-1.png')}
                         alt={title}
                         width={800}
                         height={520}

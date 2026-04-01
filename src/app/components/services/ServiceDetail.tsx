@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
+import { toDisplayImageUrl } from '@/lib/blobUrl';
 
 interface StepImage {
   image: string;
@@ -130,7 +131,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
                 onClick={() => openFullScreen(service.image || '/assets/image1.png')}
               >
                 <Image
-                  src={service.image || '/assets/image1.png'}
+                  src={toDisplayImageUrl(service.image || '/assets/image1.png')}
                   width={600}
                   height={420}
                   className="w-full h-full lg:h-[60vh] object-contain rounded-2xl transition-transform duration-300 group-hover:scale-105"
@@ -178,7 +179,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
               >
                 <div className="relative h-[320px] lg:h-[360px]">
                   <Image
-                    src={item.image}
+                    src={toDisplayImageUrl(item.image)}
                     width={400}
                     height={280}
                     className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
@@ -245,7 +246,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
                   >
                     <div className="relative h-[320px] lg:h-[360px]">
                       <Image
-                        src={image}
+                        src={toDisplayImageUrl(image)}
                         width={400}
                         height={280}
                         className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
@@ -306,7 +307,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
                   >
                     <div className="relative h-[320px] lg:h-[360px]">
                       <Image
-                        src={image}
+                        src={toDisplayImageUrl(image)}
                         width={400}
                         height={280}
                         className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
@@ -366,7 +367,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
                   >
                     <div className="relative h-[320px] lg:h-[360px]">
                       <Image
-                        src={image}
+                        src={toDisplayImageUrl(image)}
                         width={400}
                         height={280}
                         className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
@@ -419,7 +420,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service }) => {
               onClick={(e) => e.stopPropagation()}
             >
               <Image
-                src={selectedImage}
+                src={toDisplayImageUrl(selectedImage)}
                 alt="Full Screen View"
                 fill
                 className="object-contain"
