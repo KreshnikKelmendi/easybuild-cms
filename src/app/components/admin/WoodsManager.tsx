@@ -120,7 +120,7 @@ const WoodsManager = () => {
             const formData = new FormData();
             formData.append('file', compressedFile);
             
-            const response = await fetch('/api/upload-image-cloudinary', {
+            const response = await fetch('/api/upload-image', {
               method: 'POST',
               body: formData,
             });
@@ -162,7 +162,7 @@ const WoodsManager = () => {
               } else {
                 const formData = new FormData();
                 formData.append('file', file);
-                const response = await fetch('/api/upload-image-cloudinary', {
+                const response = await fetch('/api/upload-image', {
                   method: 'POST',
                   body: formData,
                 });

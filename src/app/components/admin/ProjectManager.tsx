@@ -132,7 +132,7 @@ const ProjectManager = () => {
               const formData = new FormData()
               formData.append('file', compressedFile)
               
-              const response = await fetch('/api/upload-image-cloudinary', {
+              const response = await fetch('/api/upload-image', {
                 method: 'POST',
                 body: formData,
               })
@@ -171,7 +171,7 @@ const ProjectManager = () => {
                 } else {
                   const formData = new FormData()
                   formData.append('file', file)
-                  const response = await fetch('/api/upload-image-cloudinary', {
+                  const response = await fetch('/api/upload-image', {
                     method: 'POST',
                     body: formData,
                   })
@@ -233,7 +233,7 @@ const ProjectManager = () => {
                   const formData = new FormData()
                   formData.append('file', compressedFile)
                 
-                const response = await fetch('/api/upload-image-cloudinary', {
+                const response = await fetch('/api/upload-image', {
                   method: 'POST',
                   body: formData,
                 })
@@ -263,7 +263,7 @@ const ProjectManager = () => {
                     } else {
                       const formData = new FormData()
                       formData.append('file', file)
-                      const response = await fetch('/api/upload-image-cloudinary', {
+                      const response = await fetch('/api/upload-image', {
                         method: 'POST',
                         body: formData,
                       })

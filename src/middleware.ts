@@ -3,8 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // Handle large file uploads for API routes
-  if (request.nextUrl.pathname.startsWith('/api/upload-image') || 
-      request.nextUrl.pathname.startsWith('/api/upload-image-cloudinary')) {
+  if (request.nextUrl.pathname.startsWith('/api/upload-image')) {
     
     // Set headers for large file uploads
     const response = NextResponse.next();
@@ -21,6 +20,5 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/api/upload-image/:path*',
-    '/api/upload-image-cloudinary/:path*',
   ],
 };

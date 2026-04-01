@@ -175,7 +175,7 @@ const BannerManager = () => {
       formData.append('file', file);
       
       // Upload file to Cloudinary
-      const response = await fetch('/api/upload-image-cloudinary', {
+      const response = await fetch('/api/upload-image', {
         method: 'POST',
         body: formData,
       });

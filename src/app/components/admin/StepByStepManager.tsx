@@ -116,7 +116,7 @@ const StepByStepManager = () => {
         } else {
           const fd = new FormData();
           fd.append('file', compressedFile);
-          const response = await fetch('/api/upload-image-cloudinary', { method: 'POST', body: fd });
+          const response = await fetch('/api/upload-image', { method: 'POST', body: fd });
           const data = await response.json();
           if (data.success) {
             uploaded.push(data.data.path);

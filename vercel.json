@@ -21,15 +21,6 @@
       ]
     },
     {
-      "source": "/api/upload-image-cloudinary",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
       "source": "/api/upload-chunked",
       "headers": [
         {

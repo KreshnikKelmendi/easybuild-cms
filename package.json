@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@types/nodemailer": "^7.0.1",
-    "cloudinary": "^2.7.0",
+    "@vercel/blob": "^2.3.2",
     "gsap": "^3.13.0",
     "i18next": "^25.3.6",
     "mongoose": "^8.17.2",

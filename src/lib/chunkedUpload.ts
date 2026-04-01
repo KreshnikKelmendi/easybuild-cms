@@ -53,19 +53,29 @@ export class ChunkedUploader {
 
   async upload(): Promise<ChunkedUploadResult> {
     try {
+      let finalResult: ChunkedUploadResult | null = null;
+
       // Upload each chunk
       for (let i = 0; i < this.chunks.length; i++) {
         const chunk = this.chunks[i];
-        const success = await this.uploadChunk(chunk, i, this.totalChunks);
-        
-        if (!success) {
+        const result = await this.uploadChunk(chunk, i, this.totalChunks);
+
+        if (!result.success) {
           throw new Error(`Failed to upload chunk ${i + 1}/${this.totalChunks}`);
+        }
+
+        if (i === this.totalChunks - 1) {
+          finalResult = result;
         }
 
         // Update progress
         const progress = Math.round(((i + 1) / this.totalChunks) * 100);
         this.config.onProgress(progress);
         this.config.onChunkComplete(i, this.totalChunks);
+      }
+
+      if (finalResult) {
+        return finalResult;
       }
 
       return {
@@ -89,7 +99,7 @@ export class ChunkedUploader {
     }
   }
 
-  private async uploadChunk(chunk: Blob, chunkIndex: number, totalChunks: number): Promise<boolean> {
+  private async uploadChunk(chunk: Blob, chunkIndex: number, totalChunks: number): Promise<ChunkedUploadResult> {
     let retries = 0;
 
     while (retries < this.config.maxRetries) {
@@ -107,12 +117,13 @@ export class ChunkedUploader {
           body: formData
         });
 
+        const result = await response.json();
+
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          throw new Error(result.message || `HTTP ${response.status}: ${response.statusText}`);
         }
 
-        const result = await response.json();
-        return result.success;
+        return result as ChunkedUploadResult;
 
       } catch (error) {
         retries++;
@@ -120,7 +131,11 @@ export class ChunkedUploader {
         
         if (retries >= this.config.maxRetries) {
           console.error(`Chunk ${chunkIndex + 1} upload failed after ${retries} retries`);
-          return false;
+          return {
+            success: false,
+            message: `Chunk ${chunkIndex + 1} upload failed`,
+            error: error instanceof Error ? error.message : 'Unknown error',
+          };
         }
 
         // Wait before retrying
@@ -128,7 +143,11 @@ export class ChunkedUploader {
       }
     }
 
-    return false;
+    return {
+      success: false,
+      message: `Chunk ${chunkIndex + 1} upload failed`,
+      error: 'Unknown error',
+    };
   }
 
   // Helper method to check if file needs chunking

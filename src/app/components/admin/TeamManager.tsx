@@ -154,7 +154,7 @@ const TeamManager = () => {
       const formData = new FormData();
       formData.append('file', file);
       
-      const response = await fetch('/api/upload-image-cloudinary', {
+      const response = await fetch('/api/upload-image', {
         method: 'POST',
         body: formData,
       });

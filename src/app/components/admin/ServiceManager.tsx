@@ -187,7 +187,7 @@ const ServiceManager = () => {
             const formData = new FormData();
             formData.append('file', compressedFile);
             
-            const response = await fetch('/api/upload-image-cloudinary', {
+            const response = await fetch('/api/upload-image', {
               method: 'POST',
               body: formData,
             });
@@ -226,7 +226,7 @@ const ServiceManager = () => {
               } else {
                 const formData = new FormData();
                 formData.append('file', file);
-                const response = await fetch('/api/upload-image-cloudinary', {
+                const response = await fetch('/api/upload-image', {
                   method: 'POST',
                   body: formData,
                 });
@@ -936,7 +936,7 @@ const ServiceManager = () => {
                                 const uploadFormData = new FormData();
                                 uploadFormData.append('file', compressedFile);
                                 
-                                const response = await fetch('/api/upload-image-cloudinary', {
+                                const response = await fetch('/api/upload-image', {
                                   method: 'POST',
                                   body: uploadFormData,
                                 });
@@ -985,7 +985,7 @@ const ServiceManager = () => {
                                   } else {
                                     const uploadFormData = new FormData();
                                     uploadFormData.append('file', file);
-                                    const response = await fetch('/api/upload-image-cloudinary', {
+                                    const response = await fetch('/api/upload-image', {
                                       method: 'POST',
                                       body: uploadFormData,
                                     });
@@ -1216,7 +1216,7 @@ const ServiceManager = () => {
                             } else {
                               const uploadFormData = new FormData();
                               uploadFormData.append('file', compressedFile);
-                              const response = await fetch('/api/upload-image-cloudinary', {
+                              const response = await fetch('/api/upload-image', {
                                 method: 'POST',
                                 body: uploadFormData,
                               });
@@ -1335,7 +1335,7 @@ const ServiceManager = () => {
                             } else {
                               const uploadFormData = new FormData();
                               uploadFormData.append('file', compressedFile);
-                              const response = await fetch('/api/upload-image-cloudinary', {
+                              const response = await fetch('/api/upload-image', {
                                 method: 'POST',
                                 body: uploadFormData,
                               });
@@ -1500,7 +1500,7 @@ const ServiceManager = () => {
                               } else {
                                 const uploadFormData = new FormData();
                                 uploadFormData.append('file', compressedFile);
-                                const response = await fetch('/api/upload-image-cloudinary', {
+                                const response = await fetch('/api/upload-image', {
                                   method: 'POST',
                                   body: uploadFormData,
                                 });

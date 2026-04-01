@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync, readFileSync, unlinkSync, rmdirSync } from 'fs';
+import { uploadToBlob } from '@/lib/blobUpload';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,10 +11,18 @@ export async function POST(request: NextRequest) {
     const chunkIndex = parseInt(formData.get('chunkIndex') as string);
     const totalChunks = parseInt(formData.get('totalChunks') as string);
     const fileName = formData.get('fileName') as string;
+    const fileType = (formData.get('fileType') as string) || 'application/octet-stream';
     
     if (!chunk || !fileName) {
       return NextResponse.json(
         { success: false, message: 'Missing chunks or fileName' },
+        { status: 400 }
+      );
+    }
+
+    if (!fileType.startsWith('image/')) {
+      return NextResponse.json(
+        { success: false, message: 'File must be an image' },
         { status: 400 }
       );
     }
@@ -53,14 +62,6 @@ export async function POST(request: NextRequest) {
 
     // If this is the last chunk, combine all chunks
     if (chunkIndex === totalChunks - 1) {
-      const finalPath = join(process.cwd(), 'public', 'uploads', fileName);
-      const finalDir = join(process.cwd(), 'public', 'uploads');
-      
-      if (!existsSync(finalDir)) {
-        await mkdir(finalDir, { recursive: true });
-      }
-
-      // Combine chunks (simplified - in production you'd want to stream this)
       const chunks: Buffer[] = [];
       for (let i = 0; i < totalChunks; i++) {
         const chunkPath = join(tempDir, `chunk-${i}`);
@@ -69,7 +70,12 @@ export async function POST(request: NextRequest) {
       }
       
       const finalBuffer = Buffer.concat(chunks);
-      await writeFile(finalPath, finalBuffer);
+      const blob = await uploadToBlob({
+        body: finalBuffer,
+        originalName: fileName,
+        contentType: fileType,
+        folder: 'images',
+      });
 
       // Clean up chunks
       for (let i = 0; i < totalChunks; i++) {
@@ -80,14 +86,16 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'File uploaded successfully via chunks',
+        message: 'File uploaded successfully via chunks to Vercel Blob',
         data: {
           fileName,
-          path: `/uploads/${fileName}`,
+          path: blob.url,
+          url: blob.url,
+          pathname: blob.pathname,
           size: finalBuffer.length,
           chunks: totalChunks,
-          method: 'chunked'
-        }
+          method: 'chunked',
+        },
       });
     }
 
