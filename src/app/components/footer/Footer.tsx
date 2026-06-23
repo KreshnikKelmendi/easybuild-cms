@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok, FaWhatsapp, FaTelegram } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTiktok, FaWhatsapp, FaTelegram, FaPhone } from 'react-icons/fa';
 import { IconType } from 'react-icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,6 +16,24 @@ interface SocialMedia {
   isActive: boolean;
   order: number;
 }
+
+const contactNumbers = [
+  {
+    labelKey: 'footer_office',
+    phone: '+38349346779',
+    display: '+383 49 346 779',
+  },
+  {
+    labelKey: 'footer_stuttgart_office',
+    phone: '+4915172740676',
+    display: '+49 151 72740676',
+  },
+  {
+    labelKey: 'footer_agent_dach',
+    phone: '+4915565930367',
+    display: '+49 155 65930367',
+  },
+] as const;
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -41,7 +59,7 @@ const Footer = () => {
     }
   };
 
-  const getIconComponent = (iconName: string) => {
+  const getIconComponent = (iconName: string, size = 37) => {
     const iconMap: { [key: string]: IconType } = {
       'FaFacebookF': FaFacebookF,
       'FaInstagram': FaInstagram,
@@ -52,10 +70,10 @@ const Footer = () => {
       'FaWhatsapp': FaWhatsapp,
       'FaTelegram': FaTelegram,
     };
-    
+
     const IconComponent = iconMap[iconName];
     if (IconComponent) {
-      return <IconComponent size={37} color="#F3F4F4" />;
+      return <IconComponent size={size} color='currentColor' />;
     }
     return null;
   };
@@ -70,7 +88,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className='lg:h-[615px] bg-[#191716] text-white px-5 lg:px-[50px] 2xl:px-[120px] py-8 flex flex-col lg:flex-row justify-between items-start lg:items-center mt-[-35px] lg:mt-[-100px]'>
+    <footer className='min-h-[615px] bg-[#191716] text-white px-5 lg:px-[50px] 2xl:px-[120px] py-12 lg:py-16 flex flex-col lg:flex-row justify-between items-start mt-[-35px] lg:mt-[-100px]'>
       <div className='flex flex-col lg:flex-row lg:items-start gap-16 lg:gap-24'>
         {/* Logo Section */}
         <div className='flex flex-col lg:items-start mt-16'>
@@ -129,36 +147,62 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Get in Touch Section */}
-        <div className='lg:mt-16'>
-          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4] uppercase font-zonapro'>{t('firstBanner')}</p>
-          <ul className='space-y-8 text-[15px] font-custom font-normal'>
-            <li><span className='hover:text-gray-400 font-zonapro'>{t('aboutUsDescription')}</span></li>
-            <li className='flex gap-10 py-4'>
-              {isLoading ? (
-                <>
-                  <div className='animate-pulse bg-gray-600 w-[64px] h-[64px] rounded-full'></div>
-                  <div className='animate-pulse bg-gray-600 w-[64px] h-[64px] rounded-full'></div>
-                  <div className='animate-pulse bg-gray-600 w-[64px] h-[64px] rounded-full'></div>
-                </>
-              ) : socialMedia.length > 0 ? (
-                socialMedia.map((social: SocialMedia) => (
-                  <a 
-                    key={social._id} 
-                    href={social.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className='hover:text-gray-400 hover:bg-[#DD4624] hover:rounded-full flex items-center justify-center w-[64px] h-[64px] transition-all duration-300'
-                    title={social.platform}
-                  >
-                    {getIconComponent(social.icon)}
-                  </a>
-                ))
-              ) : (
-                <div className='text-gray-400 text-sm font-zonapro'>No social media links available</div>
-              )}
-            </li>
+        {/* Contact Section */}
+        <div className='lg:mt-16 min-w-[260px]'>
+          <p className='text-[15px] font-custom font-bold mb-8 text-[#F3F4F4] uppercase font-zonapro tracking-wide'>
+            {t('get_in_touch')}
+          </p>
+
+          <ul className='space-y-5 mb-10'>
+            {contactNumbers.map(({ labelKey, phone, display }) => (
+              <li key={labelKey}>
+                <a
+                  href={`tel:${phone}`}
+                  className='group flex items-start gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4 transition-all duration-300 hover:border-[#DD4726]/40 hover:bg-[#DD4726]/10'
+                >
+                  <span className='mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#DD4726]/15 text-[#DD4726] transition-colors duration-300 group-hover:bg-[#DD4726] group-hover:text-white'>
+                    <FaPhone size={14} />
+                  </span>
+                  <span className='flex flex-col gap-1'>
+                    <span className='text-[11px] font-zonapro font-semibold uppercase tracking-[0.12em] text-[#F3F4F4]/60 group-hover:text-[#DD4726] transition-colors duration-300'>
+                      {t(labelKey)}
+                    </span>
+                    <span className='text-[15px] font-zonapro font-medium text-[#F3F4F4] group-hover:text-white transition-colors duration-300'>
+                      {display}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
           </ul>
+
+          <p className='text-[11px] font-zonapro font-semibold uppercase tracking-[0.12em] text-[#F3F4F4]/50 mb-4'>
+            {t('Contact')}
+          </p>
+          <div className='flex flex-wrap gap-4'>
+            {isLoading ? (
+              <>
+                <div className='animate-pulse bg-gray-600 w-12 h-12 rounded-full' />
+                <div className='animate-pulse bg-gray-600 w-12 h-12 rounded-full' />
+                <div className='animate-pulse bg-gray-600 w-12 h-12 rounded-full' />
+              </>
+            ) : socialMedia.length > 0 ? (
+              socialMedia.map((social: SocialMedia) => (
+                <a
+                  key={social._id}
+                  href={social.url}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-[#F3F4F4] transition-all duration-300 hover:border-[#DD4726] hover:bg-[#DD4726] hover:text-white'
+                  title={social.platform}
+                >
+                  {getIconComponent(social.icon, 18)}
+                </a>
+              ))
+            ) : (
+              <div className='text-gray-400 text-sm font-zonapro'>No social media links available</div>
+            )}
+          </div>
         </div>
 
       </div>

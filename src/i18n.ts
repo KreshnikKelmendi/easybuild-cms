@@ -48,6 +48,9 @@ const resources = {
       'firstDescriptionTeam': 'Our team at EasyBuild is driven by a passion for innovation, constantly seeking new ways to improve and refine how structures are built.',
       'secondDescriptionTeam': 'Through our commitment to advanced prefabrication techniques, we not only simplify the construction process but also raise standards of quality and environmental responsibility.',
       'get_in_touch': 'Get In Touch',
+      'footer_office': 'Office',
+      'footer_stuttgart_office': 'Stuttgart Office',
+      'footer_agent_dach': 'Agent for Germany, Switzerland & Austria',
       'contact_desc1': 'Ready to start your next construction project? We\'re here to help bring your vision to life. Contact us today to discuss your project requirements and get a free consultation.',
       'projects_desc1': 'From residential homes to commercial buildings and large-scale facilities, our projects showcase the versatility and efficiency of lightweight construction. We take pride in delivering exceptional results across various sectors, including residential, commercial, and institutional projects. Each project highlights our commitment to quality, sustainability, and innovation. Stay tuned as we update this section with our latest achievements and ongoing projects.'
     }
@@ -98,6 +101,9 @@ const resources = {
       'firstDescriptionTeam': 'Unser Team bei EasyBuild wird von einer Leidenschaft für Innovation angetrieben und sucht ständig nach neuen Wegen, um die Art und Weise zu verbessern und zu verfeinern, wie Strukturen gebaut werden.',
       'secondDescriptionTeam': 'Durch unser Engagement für fortschrittliche Vorfertigungstechniken vereinfachen wir nicht nur den Bauprozess, sondern heben auch die Standards für Qualität und Umweltverantwortung an.',
       'get_in_touch': 'Kontakt aufnehmen',
+      'footer_office': 'Büro',
+      'footer_stuttgart_office': 'Stuttgart Büro',
+      'footer_agent_dach': 'Ansprechpartner für Deutschland, Schweiz & Österreich',
       'contact_desc1': 'Bereit, Ihr nächstes Bauprojekt zu starten? Wir sind hier, um Ihnen zu helfen, Ihre Vision zum Leben zu erwecken. Kontaktieren Sie uns noch heute, um Ihre Projektanforderungen zu besprechen und eine kostenlose Beratung zu erhalten.',
       'projects_desc1': 'Von Wohnhäusern bis hin zu Gewerbebauten und Großanlagen zeigen unsere Projekte die Vielseitigkeit und Effizienz des Leichtbaus. Wir sind stolz darauf, außergewöhnliche Ergebnisse in verschiedenen Sektoren zu liefern, einschließlich Wohn-, Gewerbe- und institutioneller Projekte. Jedes Projekt unterstreicht unser Engagement für Qualität, Nachhaltigkeit und Innovation. Bleiben Sie dran, während wir diesen Bereich mit unseren neuesten Erfolgen und laufenden Projekten aktualisieren.'
     }
@@ -148,6 +154,9 @@ const resources = {
       'firstDescriptionTeam': 'Ekipi ynë në EasyBuild udhëhiqet nga një pasion për inovacionin, duke kërkuar vazhdimisht mënyra të reja për të përmirësuar dhe rafinuar mënyrën se si ndërtohen strukturat.',
       'secondDescriptionTeam': 'Përmes angazhimit tonë ndaj teknikave të avancuara të parafabrikimit, ne jo vetëm që thjeshtojmë procesin e ndërtimit, por gjithashtu ngrisim standardet e cilësisë dhe përgjegjësisë mjedisore.',
       'get_in_touch': 'Na Kontaktoni',
+      'footer_office': 'Zyra',
+      'footer_stuttgart_office': 'Zyra Stuttgart',
+      'footer_agent_dach': 'Agjent për Gjermani, Zvicër dhe Austri',
       'contact_desc1': 'Gati për të filluar projektin tuaj të ri të ndërtimit? Ne jemi këtu për t\'ju ndihmuar të sillni vizionin tuaj në jetë. Kontaktoni me ne sot për të diskutuar kërkesat e projektit tuaj dhe për të marrë një konsultim falas.',
       'projects_desc1': 'Nga shtëpitë rezidenciale te ndërtesat komerciale dhe objektet me përmasa të mëdha, projektet tona tregojnë shumëllojshmërinë dhe efikasitetin e ndërtimit të lehtë. Ne jemi krenarë që ofrojmë rezultate të jashtëzakonshme në sektorë të ndryshëm, duke përfshirë projektet rezidenciale, komerciale dhe institucionale. Çdo projekt nënvizon përkushtimin tonë për cilësi, qëndrueshmëri dhe inovacion. Qëndroni të lidhur ndërsa ne përditësojmë këtë seksion me arritjet tona më të fundit dhe projektet e vazhdueshme.'
     }

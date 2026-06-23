@@ -15,14 +15,18 @@ export async function GET() {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('MongoDB connection failed:', error);
-    
+    const reason =
+      error && typeof error === 'object' && 'reason' in error
+        ? (error as { reason?: unknown }).reason
+        : undefined;
+
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         message: 'MongoDB connection failed',
         error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        reason: reason ? JSON.parse(JSON.stringify(reason)) : undefined,
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
