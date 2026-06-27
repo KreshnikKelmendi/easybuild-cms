@@ -1,13 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
-import Image from 'next/image'
-
 
 const AboutUsOnHomePage = () => {
   const { t } = useTranslation()
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   const handleScrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -15,34 +14,65 @@ const AboutUsOnHomePage = () => {
     }
   }
 
-  return (
-    <>
-      <div className='bg-[#DD4624] h-fit lg:h-[120ch] rounded-[15px] relative'>
-          <div className='flex flex-col lg:flex-row px-5 lg:px-[60px] py-16 2xl:px-[120px] lg:py-36'>
-              <div className='w-full lg:w-1/2'>
-              <Image 
-                src="/assets/Easybuild shorts.00_07_59_18.webp" 
-                alt='About us image' 
-                width={1200}
-                height={600}
-                className='w-full h-full object-contain rounded-[15px]' 
-              />
-              </div>
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
 
-              <div className='w-full lg:w-1/2 flex flex-col lg:justify-center mt-12 lg:mt-0 lg:pl-[50px] 2xl:pl-[100px] lg:py-5 2xl:py-0'>
-              <p className='text-[#F3F4F4] text-[18px] font-custom font-normal uppercase font-zonapro'>{t('aboutUs')}</p>
-              <p className='font-custom1 text-2xl lg:text-[60px] 2xl:text-[64px] text-[#F3F3F3] lg:leading-[67px] 2xl:leading-[75.2px] mt-6 font-zonapro'>{t('aboutUsDescription')}</p>
-              <p className='text-[18px] font-normal leading-[21.15px] text-[#F3F4F4] w-full 2xl:w-[667px] mt-6 font-zonapro'>{t('firstDescription')}</p>
-              <p className='text-[18px] font-normal leading-[21.15px] text-[#F3F4F4] w-full 2xl:w-[667px] mt-4 font-zonapro'>{t('secondDescription')}</p>
-              <Link href="/about" onClick={handleScrollToTop}>
-                <button className='w-full lg:w-[200px] bg-[#191716] py-3 rounded-[8px] hover:bg-white hover:text-black hover:duration-500 text-[#F3F4F4] font-custom mt-6 font-zonapro'>{t('readMore')}</button>
-              </Link>
-              </div>
+    video.play().catch(() => {
+      // Autoplay may be blocked until user interaction on some browsers.
+    })
+  }, [])
+
+  return (
+    <section className="relative w-full min-h-[90vh] overflow-hidden lg:min-h-screen">
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        className="absolute inset-0 h-full w-full object-cover"
+        aria-hidden="true"
+      >
+        <source src="/assets/easybuild-factory.mp4" type="video/mp4" />
+      </video>
+
+      <div className="absolute inset-0 bg-gradient-to-r from-[#191716]/92 via-[#191716]/65 to-[#191716]/25" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#191716]/40 via-transparent to-[#191716]/20" />
+
+      <div className="relative z-10 flex min-h-[90vh] items-center px-5 py-20 lg:min-h-screen lg:px-[60px] lg:py-28 2xl:px-[120px]">
+        <div className="w-full max-w-3xl">
+          <div className="mb-6 flex items-center gap-4">
+            <span className="h-px w-12 bg-[#DD4726]" />
+            <p className="font-zonapro text-sm font-medium uppercase tracking-[0.2em] text-[#DD4726]">
+              {t('aboutUs')}
+            </p>
           </div>
-           {/* Projects Section */}
-    
+
+          <h2 className="font-zonapro text-3xl font-normal leading-tight text-[#F3F4F4] sm:text-4xl lg:text-[56px] lg:leading-[1.15] 2xl:text-[64px]">
+            {t('aboutUsDescription')}
+          </h2>
+
+          <p className="mt-6 max-w-2xl font-zonapro text-base leading-relaxed text-[#F3F4F4]/90 lg:text-lg lg:leading-7">
+            {t('firstDescription')}
+          </p>
+
+          <p className="mt-4 max-w-2xl font-zonapro text-base leading-relaxed text-[#F3F4F4]/80 lg:text-lg lg:leading-7">
+            {t('secondDescription')}
+          </p>
+
+          <Link href="/about" onClick={handleScrollToTop} className="mt-8 inline-block">
+            <button
+              type="button"
+              className="rounded-lg bg-[#DD4726] px-8 py-3.5 font-zonapro text-sm font-medium uppercase tracking-wide text-[#F3F4F4] transition-all duration-300 hover:bg-[#F3F4F4] hover:text-[#191716]"
+            >
+              {t('readMore')}
+            </button>
+          </Link>
+        </div>
       </div>
-    </>
+    </section>
   )
 }
 

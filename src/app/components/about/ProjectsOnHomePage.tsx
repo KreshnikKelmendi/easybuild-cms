@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { toDisplayImageUrl } from '@/lib/blobUrl'
 
 interface Project {
@@ -23,13 +24,137 @@ interface Project {
   isActive: boolean
 }
 
+interface ProjectCardProps {
+  project: Project
+  title: string
+  description: string
+  viewLabel: string
+  onClick: () => void
+}
+
+const ProjectCard = ({ project, title, description, viewLabel, onClick }: ProjectCardProps) => (
+  <article className="group cursor-pointer" onClick={onClick}>
+    <div className="relative mb-5 aspect-[3/4] overflow-hidden rounded-2xl bg-[#eceae4]">
+      {project.mainImage ? (
+        <Image
+          src={toDisplayImageUrl(project.mainImage)}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-[#999999]">
+          <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+      )}
+
+      <div className="absolute inset-0 bg-gradient-to-t from-[#191716]/90 via-[#191716]/55 to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
+
+      <div className="absolute inset-x-0 bottom-0 translate-y-full p-5 transition-transform duration-500 ease-out group-hover:translate-y-0">
+        <p className="mb-3 line-clamp-3 font-zonapro text-sm leading-relaxed text-[#F3F4F4]">
+          {description}
+        </p>
+        <span className="inline-flex font-zonapro text-sm font-medium text-[#DD4726]">
+          {viewLabel}
+        </span>
+      </div>
+    </div>
+
+    <div className="flex items-baseline justify-between gap-4">
+      <h3 className="font-zonapro text-lg font-semibold leading-tight text-[#1a1a1a] transition-colors duration-300 group-hover:text-[#DD4726] sm:text-xl">
+        {title}
+      </h3>
+      <span className="shrink-0 font-zonapro text-sm font-normal text-[#666666] lg:hidden">
+        {viewLabel}
+      </span>
+    </div>
+  </article>
+)
+
+const CarouselControls = ({
+  total,
+  current,
+  onPrevious,
+  onNext,
+  onGoTo,
+}: {
+  total: number
+  current: number
+  onPrevious: () => void
+  onNext: () => void
+  onGoTo: (index: number) => void
+}) => {
+  if (total <= 1) return null
+
+  return (
+    <div className="mt-8 flex items-center justify-center gap-4">
+      <button
+        type="button"
+        onClick={onPrevious}
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#191716]/15 text-[#191716] transition-colors duration-300 hover:border-[#DD4726] hover:bg-[#DD4726] hover:text-white"
+        aria-label="Previous slide"
+      >
+        <FaChevronLeft size={14} />
+      </button>
+
+      <div className="flex items-center gap-2">
+        {Array.from({ length: total }).map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => onGoTo(index)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              current === index ? 'w-8 bg-[#DD4726]' : 'w-2 bg-[#191716]/20'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={onNext}
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#191716]/15 text-[#191716] transition-colors duration-300 hover:border-[#DD4726] hover:bg-[#DD4726] hover:text-white"
+        aria-label="Next slide"
+      >
+        <FaChevronRight size={14} />
+      </button>
+    </div>
+  )
+}
+
 const ProjectsOnHomePage = () => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([])
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'de' | 'al'>('en')
-  const [currentSlide, setCurrentSlide] = useState(0) // For desktop carousel
-  const [mobileSlide, setMobileSlide] = useState(0) // For mobile carousel
+  const [mobileSlide, setMobileSlide] = useState(0)
+  const [desktopSlide, setDesktopSlide] = useState(0)
+
+  const useDesktopCarousel = projects.length > 3
+  const desktopItemsPerSlide = useDesktopCarousel ? 4 : projects.length
+
+  const desktopSlides = useMemo(() => {
+    if (!useDesktopCarousel) return [projects]
+
+    const chunks: Project[][] = []
+    for (let i = 0; i < projects.length; i += desktopItemsPerSlide) {
+      chunks.push(projects.slice(i, i + desktopItemsPerSlide))
+    }
+    return chunks
+  }, [projects, useDesktopCarousel, desktopItemsPerSlide])
+
+  const desktopGridClass = useDesktopCarousel
+    ? 'grid grid-cols-4 gap-6 xl:gap-8'
+    : 'grid grid-cols-3 gap-6 xl:gap-8'
 
   useEffect(() => {
     setCurrentLanguage(i18n.language as 'en' | 'de' | 'al')
@@ -39,39 +164,38 @@ const ProjectsOnHomePage = () => {
     fetchProjects()
   }, [])
 
-  // Auto-advance carousel for desktop when there are more than 4 projects
   useEffect(() => {
-    if (projects.length > 4) {
-      const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % Math.ceil(projects.length / 4))
-      }, 3000) // Change slide every 3 seconds
-
-      return () => clearInterval(interval)
-    }
+    setMobileSlide(0)
+    setDesktopSlide(0)
   }, [projects.length])
 
-  // Auto-advance carousel for mobile when there are more than 1 project
   useEffect(() => {
-    if (projects.length > 1) {
-      const interval = setInterval(() => {
-        setMobileSlide((prev) => (prev + 1) % projects.length)
-      }, 4000) // Change slide every 4 seconds for mobile
+    if (projects.length <= 1) return
 
-      return () => clearInterval(interval)
-    }
+    const interval = setInterval(() => {
+      setMobileSlide((prev) => (prev + 1) % projects.length)
+    }, 4000)
+
+    return () => clearInterval(interval)
   }, [projects.length])
+
+  useEffect(() => {
+    if (!useDesktopCarousel || desktopSlides.length <= 1) return
+
+    const interval = setInterval(() => {
+      setDesktopSlide((prev) => (prev + 1) % desktopSlides.length)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [useDesktopCarousel, desktopSlides.length])
 
   const fetchProjects = async () => {
     try {
       const response = await fetch('/api/projects')
       const data = await response.json()
-      
-      console.log('Projects API response:', data)
-      
+
       if (data.success) {
-        const activeProjects = data.data.filter((project: Project) => project.isActive)
-        console.log('Active projects:', activeProjects)
-        setProjects(activeProjects)
+        setProjects(data.data.filter((project: Project) => project.isActive))
       }
     } catch (error) {
       console.error('Error fetching projects:', error)
@@ -82,356 +206,100 @@ const ProjectsOnHomePage = () => {
     return textObj[currentLanguage] || textObj.en
   }
 
-  // Function to handle project click
   const handleProjectClick = (projectId: string) => {
     router.push(`/projects/${projectId}`)
   }
 
-  if (projects.length === 0) {
+  const renderProjectCard = (project: Project) => {
+    const title = getCurrentLanguageText(project.title)
+    const description = getCurrentLanguageText(project.description)
+
     return (
-      <div className="bg-white py-0 lg:py-24">
-        <div className="mx-auto px-5 lg:px-[60px] 2xl:px-[120px]">
-          <div className="text-center">
-            <div className="bg-gray-100 rounded-lg p-8 border-2 border-dashed border-gray-300">
-              <div className="text-center text-gray-500">
-                <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                <p className="text-lg font-medium mb-2">No projects available</p>
-                <p className="text-sm">Projects will appear here once they are created in the admin panel.</p>
-                <div className="mt-4 text-xs text-gray-400">
-                  <p>Debug info: projects.length = {projects.length}</p>
-                  <p>Check browser console for API response details</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ProjectCard
+        key={project._id}
+        project={project}
+        title={title}
+        description={description}
+        viewLabel={t('viewProject')}
+        onClick={() => handleProjectClick(project._id)}
+      />
     )
   }
 
-  // Function to get projects for current slide
-  const getProjectsForSlide = (slideIndex: number) => {
-    const startIndex = slideIndex * 4
-    return projects.slice(startIndex, startIndex + 4)
+  if (projects.length === 0) {
+    return (
+      <section className="py-16 lg:py-24">
+        <div className="mx-auto px-5 lg:px-[60px] 2xl:px-[120px]">
+          <p className="font-zonapro text-center text-[#666666]">{t('projectsDescription')}</p>
+        </div>
+      </section>
+    )
   }
 
   return (
-    <div className="bg-white py-16 lg:py-24">
-      <div className="mx-auto px-5 lg:px-[60px] 2xl:px-[120px]">
+    <section className="py-14 lg:py-20">
+      <div className="mx-auto flex flex-col gap-8 px-5 lg:flex-row lg:items-start lg:gap-12 xl:gap-16 lg:px-[60px] 2xl:px-[120px]">
+        <div className="flex shrink-0 items-start lg:py-6">
+          <h2 className="font-zonapro text-[2.25rem] font-normal leading-none tracking-tight text-[#1a1a1a] sm:text-[2.75rem] lg:text-[3.25rem] lg:[writing-mode:vertical-rl] lg:rotate-180">
+            {t('ourProjects')}
+          </h2>
+        </div>
 
-        {/* Projects Display */}
-        <div className="mx-auto z-50">
-          <div className="flex items-center justify-center w-full h-full py-26 sm:py-8">
-            {/* Desktop and large size devices - 4 projects in a row */}
-            <div className="lg:block hidden w-full">
-              {projects.length <= 4 ? (
-                // Static grid for 4 or fewer projects
-                <div className="grid grid-cols-3 gap-4">
-                  {projects.map((project) => (
-                    <div 
-                      key={project._id} 
-                      className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() => handleProjectClick(project._id)}
-                    >
-                      {project.mainImage ? (
-                        <Image 
-                          src={toDisplayImageUrl(project.mainImage)} 
-                          alt={getCurrentLanguageText(project.title)} 
-                          width={1200}
-                          height={1200}
-                          className="object-cover w-full h-[100vh] lg:h-[100vh] 2xl:h-[75vh] rounded-[15px]" 
-                        />
-                      ) : (
-                        <div className="w-full h-[613px] rounded-[15px] bg-gray-200 flex items-center justify-center">
-                          <div className="text-center text-gray-500">
-                            <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p className="font-zonapro">No image available</p>
-                          </div>
-                        </div>
-                      )}
-                      <div className="absolute w-full h-full p-6">
-                        <div className="flex flex-col h-full justify-end text-center pb-6 lg:text-[24px] font-custom font-normal text-white">
-                          <p className="text-xl lg:text-[24px] font-custom font-normal leading-5 lg:leading-6 font-zonapro">{getCurrentLanguageText(project.title)}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                // Carousel for more than 4 projects
-                <div className="relative overflow-hidden">
-                  <div 
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                  >
-                    {Array.from({ length: Math.ceil(projects.length / 4) }).map((_, slideIndex) => (
-                      <div key={slideIndex} className="flex-shrink-0 w-full">
-                        <div className="grid grid-cols-4 gap-4">
-                          {getProjectsForSlide(slideIndex).map((project) => (
-                            <div 
-                              key={project._id} 
-                              className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
-                              onClick={() => handleProjectClick(project._id)}
-                            >
-                              {project.mainImage ? (
-                                <Image 
-                                  src={toDisplayImageUrl(project.mainImage)} 
-                                  alt={getCurrentLanguageText(project.title)} 
-                                  width={400}
-                                  height={400}
-                                  className="object-cover object-center w-full h-[65vh] rounded-[15px]" 
-                                />
-                              ) : (
-                                <div className="w-full h-[613px] rounded-[15px] bg-gray-200 flex items-center justify-center">
-                                  <div className="text-center text-gray-500">
-                                    <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <p className="font-zonapro">No image available</p>
-                                  </div>
-                                </div>
-                              )}
-                              <div className="absolute w-full h-full p-6">
-                                <div className="flex flex-col h-full justify-end text-center pb-6 lg:text-[24px] font-custom font-normal text-white">
-                                  <p className="text-xl lg:text-[24px] font-custom font-normal leading-5 lg:leading-6 font-zonapro">{getCurrentLanguageText(project.title)}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+        <div className="min-w-0 flex-1">
+          {/* Mobile carousel — 1 project per slide, auto-advance */}
+          <div className="lg:hidden">
+            <div className="relative overflow-hidden">
+              <div
+                className="flex transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${mobileSlide * 100}%)` }}
+              >
+                {projects.map((project) => (
+                  <div key={project._id} className="w-full shrink-0 px-1">
+                    {renderProjectCard(project)}
                   </div>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
 
-            {/* Tablet and medium size devices - 2 projects in a row */}
-            <div className="lg:hidden md:block hidden w-full">
-              {projects.length <= 2 ? (
-                // Static grid for 2 or fewer projects
-                <div className="grid grid-cols-2 gap-6">
-                  {projects.map((project) => (
-                    <div 
-                      key={project._id} 
-                      className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() => handleProjectClick(project._id)}
-                    >
-                      {project.mainImage ? (
-                        <Image 
-                          src={toDisplayImageUrl(project.mainImage)} 
-                          alt={getCurrentLanguageText(project.title)} 
-                          width={400}
-                          height={384}
-                          className="object-cover object-center w-full" 
-                        />
-                      ) : (
-                        <div className="w-full h-96 bg-gray-200 flex items-center justify-center">
-                          <div className="text-center text-gray-500">
-                            <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p className="font-zonapro">No image available</p>
-                          </div>
-                        </div>
-                      )}
-                      <div className="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
-                        <h2 className="lg:text-xl leading-4 text-base lg:leading-5 text-white font-zonapro">{getCurrentLanguageText(project.title)}</h2>
-                      </div>
+            <CarouselControls
+              total={projects.length}
+              current={mobileSlide}
+              onPrevious={() => setMobileSlide((prev) => (prev - 1 + projects.length) % projects.length)}
+              onNext={() => setMobileSlide((prev) => (prev + 1) % projects.length)}
+              onGoTo={setMobileSlide}
+            />
+          </div>
+
+          {/* Desktop layout */}
+          <div className="hidden lg:block">
+            <div className="relative overflow-hidden">
+              <div
+                className="flex transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${desktopSlide * 100}%)` }}
+              >
+                {desktopSlides.map((slideProjects, slideIndex) => (
+                  <div key={slideIndex} className="w-full shrink-0">
+                    <div className={desktopGridClass}>
+                      {slideProjects.map((project) => renderProjectCard(project))}
                     </div>
-                  ))}
-                </div>
-              ) : (
-                // Carousel for more than 2 projects
-                <div className="relative overflow-hidden">
-                  <div 
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                  >
-                    {Array.from({ length: Math.ceil(projects.length / 2) }).map((_, slideIndex) => (
-                      <div key={slideIndex} className="flex-shrink-0 w-full">
-                        <div className="grid grid-cols-2 gap-6">
-                          {projects.slice(slideIndex * 2, slideIndex * 2 + 2).map((project) => (
-                            <div 
-                              key={project._id} 
-                              className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
-                              onClick={() => handleProjectClick(project._id)}
-                            >
-                              {project.mainImage ? (
-                                <Image 
-                                  src={toDisplayImageUrl(project.mainImage)} 
-                                  alt={getCurrentLanguageText(project.title)} 
-                                  width={400}
-                                  height={384}
-                                  className="object-cover object-center w-full h-96" 
-                                />
-                              ) : (
-                                <div className="w-full h-96 bg-gray-200 flex items-center justify-center">
-                                  <div className="text-center text-gray-500">
-                                    <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <p className="font-zonapro">No image available</p>
-                                  </div>
-                                </div>
-                              )}
-                              <div className="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
-                                <h2 className="lg:text-xl leading-4 text-base lg:leading-5 text-white font-zonapro">{getCurrentLanguageText(project.title)}</h2>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
                   </div>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
 
-            {/* Mobile and Small size Devices - 1 project at a time */}
-            <div className="block md:hidden w-full">
-              {projects.length <= 1 ? (
-                // Static display for 1 project
-                <div className="space-y-6">
-                  {projects.map((project) => (
-                    <div 
-                      key={project._id} 
-                      className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() => handleProjectClick(project._id)}
-                    >
-                      {project.mainImage ? (
-                        <Image 
-                          src={toDisplayImageUrl(project.mainImage)} 
-                          alt={getCurrentLanguageText(project.title)} 
-                          width={400}
-                          height={384}
-                          className="object-cover object-center w-full h-96 rounded-[15px]" 
-                        />
-                      ) : (
-                        <div className="w-full h-96 rounded-[15px] bg-gray-200 flex items-center justify-center">
-                          <div className="text-center text-gray-500">
-                            <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p className="font-zonapro">No image available</p>
-                          </div>
-                        </div>
-                      )}
-                      <div className="absolute w-full h-full p-6">
-                        <div className="flex flex-col h-full justify-end text-center pb-6 text-white">
-                          <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6 font-zonapro">{getCurrentLanguageText(project.title)}</p>
-                        </div>
-                        {/* Additional Images Grid */}
-                        {project.additionalImages && project.additionalImages.length > 0 && (
-                          <div className="absolute top-4 right-4">
-                            <div className="grid grid-cols-2 gap-2">
-                              {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
-                                <div
-                                  key={imgIndex}
-                                  className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
-                                >
-                                  <Image
-                                    src={toDisplayImageUrl(image)}
-                                    alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
-                                    width={48}
-                                    height={48}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                // Auto-advancing carousel for more than 1 project on mobile
-                <div className="relative overflow-hidden">
-                  <div 
-                    className="flex transition-transform duration-700 ease-in-out"
-                    style={{ transform: `translateX(-${mobileSlide * 100}%)` }}
-                  >
-                    {projects.map((project, slideIndex) => (
-                      <div key={slideIndex} className="flex-shrink-0 w-full px-2">
-                        <div 
-                          className="flex flex-shrink-0 relative w-full cursor-pointer hover:scale-105 transition-transform duration-300"
-                          onClick={() => handleProjectClick(project._id)}
-                        >
-                          {project.mainImage ? (
-                            <Image 
-                              src={toDisplayImageUrl(project.mainImage)} 
-                              alt={getCurrentLanguageText(project.title)} 
-                              width={400}
-                              height={384}
-                              className="object-cover object-center w-full h-96 rounded-[15px]" 
-                            />
-                          ) : (
-                            <div className="w-full h-96 rounded-[15px] bg-gray-200 flex items-center justify-center">
-                              <div className="text-center text-gray-500">
-                                <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <p className="font-zonapro">No image available</p>
-                              </div>
-                            </div>
-                          )}
-                          <div className="absolute w-full h-full p-6">
-                            <div className="flex flex-col h-full justify-end text-center pb-6 text-white">
-                              <p className="text-xl lg:text-2xl font-semibold leading-5 lg:leading-6 font-zonapro">{getCurrentLanguageText(project.title)}</p>
-                            </div>
-                            {/* Additional Images Grid */}
-                            {project.additionalImages && project.additionalImages.length > 0 && (
-                              <div className="absolute top-4 right-4">
-                                <div className="grid grid-cols-2 gap-2">
-                                  {project.additionalImages.slice(0, 4).map((image, imgIndex) => (
-                                    <div
-                                      key={imgIndex}
-                                      className="w-12 h-12 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-gray-100"
-                                    >
-                                      <Image
-                                        src={toDisplayImageUrl(image)}
-                                        alt={`${getCurrentLanguageText(project.title)} ${imgIndex + 1}`}
-                                        width={48}
-                                        height={48}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Carousel indicators for mobile */}
-                  <div className="flex justify-center mt-4 gap-2">
-                    {projects.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setMobileSlide(index)}
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          mobileSlide === index ? 'w-8 bg-[#DD4624]' : 'w-2 bg-gray-300'
-                        }`}
-                        aria-label={`Go to slide ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            <CarouselControls
+              total={desktopSlides.length}
+              current={desktopSlide}
+              onPrevious={() =>
+                setDesktopSlide((prev) => (prev - 1 + desktopSlides.length) % desktopSlides.length)
+              }
+              onNext={() => setDesktopSlide((prev) => (prev + 1) % desktopSlides.length)}
+              onGoTo={setDesktopSlide}
+            />
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

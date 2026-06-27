@@ -1,103 +1,159 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import Image from 'next/image';
-import { toDisplayImageUrl } from '@/lib/blobUrl';
+import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import Image from 'next/image'
+import { toDisplayImageUrl } from '@/lib/blobUrl'
 
 interface Wood {
-  _id: string;
+  _id: string
   title: {
-    en: string;
-    de: string;
-    al: string;
-  };
-  imageUrl: string;
-  isActive: boolean;
-  order: number;
+    en: string
+    de: string
+    al: string
+  }
+  imageUrl: string
+  isActive: boolean
+  order: number
 }
 
+interface WoodCardProps {
+  wood: Wood
+  title: string
+}
+
+const MobileWoodCard = ({ wood, title }: WoodCardProps) => (
+  <article className="group flex flex-col items-center justify-center">
+    <div className="relative h-24 w-24 overflow-hidden rounded-full sm:h-28 sm:w-28">
+      <Image
+        src={toDisplayImageUrl(wood.imageUrl)}
+        alt={title}
+        fill
+        sizes="112px"
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+    </div>
+    <p className="mt-4 w-full max-w-[160px] text-center font-zonapro text-base font-normal leading-snug text-[#F3F4F4]">
+      {title}
+    </p>
+  </article>
+)
+
+const DesktopWoodCard = ({ wood, title }: WoodCardProps) => (
+  <article className="group flex items-center gap-5 rounded-[15px] bg-[#191716]/10 p-5 transition-all duration-300 hover:bg-[#191716]/20">
+    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[15px] ring-2 ring-[#F3F4F4]/20 transition-all duration-300 group-hover:ring-[#F3F4F4]/45 xl:h-24 xl:w-24">
+      <Image
+        src={toDisplayImageUrl(wood.imageUrl)}
+        alt={title}
+        fill
+        sizes="96px"
+        className="object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+    </div>
+    <h3 className="font-zonapro text-lg font-normal leading-snug text-[#F3F4F4] xl:text-xl">
+      {title}
+    </h3>
+  </article>
+)
+
 const Woods = () => {
-  const { t, i18n } = useTranslation();
-  const [woods, setWoods] = useState<Wood[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { t, i18n } = useTranslation()
+  const [woods, setWoods] = useState<Wood[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  const currentLanguage = i18n.language as 'en' | 'de' | 'al'
 
   useEffect(() => {
-    fetchWoods();
-  }, []);
+    fetchWoods()
+  }, [])
 
   const fetchWoods = async () => {
     try {
-      const response = await fetch('/api/woods');
-      const data = await response.json();
-      
+      const response = await fetch('/api/woods')
+      const data = await response.json()
+
       if (data.success) {
-        setWoods(data.data);
+        setWoods(data.data)
       }
     } catch (error) {
-      console.error('Error fetching woods:', error);
+      console.error('Error fetching woods:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
-
-  const currentLanguage = i18n.language as 'en' | 'de' | 'al';
-
-  if (isLoading) {
-    return (
-      <div className='mt-6 lg:mt-20 flex flex-col items-center text-left lg:text-left mx-auto px-5 lg:px-0'>
-        <div className='flex flex-col mb-10'>
-          <p className='font-custom text-[#191716] text-left lg:text-center lg:tracking-normal text-[32px] lg:text-[48px] font-semibold font-zonapro'>
-            {t('materials_that_we_use')}
-          </p>
-          <p className='lg:w-[548px] w-full text-left lg:text-center lg:tracking-normal font-custom lg:text-[20px] leading-[23.5px] mt-2 font-zonapro'>
-            {t('second_materials_that_we_use')}
-          </p>
-        </div>
-        <div className='flex justify-center items-center mt-6 lg:mt-16'>
-          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600'></div>
-        </div>
-      </div>
-    );
   }
 
+  const header = (
+    <div className="mb-10 max-w-3xl lg:mb-12">
+      <h2 className="font-zonapro text-[2.25rem] font-normal leading-tight text-[#F3F4F4] sm:text-4xl lg:text-[48px] lg:leading-[1.1]">
+        {t('materials_that_we_use')}
+      </h2>
+      <p className="mt-4 max-w-2xl font-zonapro text-base leading-relaxed text-[#F3F4F4]/90 lg:mt-6 lg:text-lg">
+        {t('second_materials_that_we_use')}
+      </p>
+    </div>
+  )
+
+  const loadingState = (
+    <div className="flex items-center justify-center py-16">
+      <div className="h-12 w-12 animate-spin rounded-full border-2 border-[#F3F4F4]/30 border-t-[#F3F4F4]" />
+    </div>
+  )
+
+  const emptyState = (
+    <p className="py-16 text-center font-zonapro text-lg text-[#F3F4F4]/80">
+      {t('no_materials_available')}
+    </p>
+  )
+
   return (
-    <div className='mt-6 lg:mt-20 flex flex-col items-center lg:text-left mx-auto px-5 lg:px-0'>
-      <div className='flex flex-col mb-10'>
-        <p className='font-custom text-[#191716] text-left lg:text-center tracking-tighter lg:tracking-normal text-[32px] lg:text-[48px] font-semibold font-zonapro'>
-          {t('materials_that_we_use')}
-        </p>
-        <p className='lg:w-[548px] w-full text-justify lg:text-center tracking-tighter lg:tracking-normal font-custom lg:text-[20px] leading-[23.5px] mt-2 font-zonapro'>
-          {t('second_materials_that_we_use')}
-        </p>
+    <section className="w-full">
+      {/* Mobile */}
+      <div className="px-5 py-10 lg:hidden">
+        <div className="overflow-hidden rounded-[15px] bg-[#DD4624] px-6 py-12">
+          {header}
+
+          {isLoading ? (
+            loadingState
+          ) : woods.length === 0 ? (
+            emptyState
+          ) : (
+            <div className="grid grid-cols-2 gap-8">
+              {woods.map((wood) => (
+                <MobileWoodCard
+                  key={wood._id}
+                  wood={wood}
+                  title={wood.title[currentLanguage]}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {woods.length === 0 ? (
-        <div className='text-center mt-6 lg:mt-16'>
-          <p className='text-gray-500 font-custom text-lg font-zonapro'>
-            {t('no_materials_available')}
-          </p>
-        </div>
-      ) : (
-        <div className='grid lg:gap-10 gap-6 grid-cols-3 lg:grid-cols-7 w-full lg:px-16 2xl:px-36 justify-center items-center mt-6 lg:mt-16'>
-          {woods.map((wood) => (
-            <div key={wood._id} className='flex flex-col justify-center items-center'>
-              <Image 
-                src={toDisplayImageUrl(wood.imageUrl)} 
-                alt={wood.title[currentLanguage]} 
-                width={190}
-                height={188}
-                className='w-28 h-auto lg:w-40 lg:h-auto 2xl:w-[190px] 2xl:h-[188px] object-cover rounded-full' 
-              />
-              <p className='mt-4 text-center font-custom font-normal text-[24px] w-[140px] lg:w-[150px] 2xl:w-[160px] whitespace-nowrap overflow-hidden text-ellipsis font-zonapro'>
-                {wood.title[currentLanguage]}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+      {/* Desktop — rounded container, horizontal cards */}
+      <div className="hidden px-[60px] py-16 lg:block 2xl:px-[120px] 2xl:py-20">
+        <div className="w-full overflow-hidden rounded-[15px] bg-[#DD4624] px-10 py-14 2xl:px-16 2xl:py-16">
+          {header}
 
-export default Woods;
+          {isLoading ? (
+            loadingState
+          ) : woods.length === 0 ? (
+            emptyState
+          ) : (
+            <div className="grid grid-cols-3 gap-6 xl:gap-8">
+              {woods.map((wood) => (
+                <DesktopWoodCard
+                  key={wood._id}
+                  wood={wood}
+                  title={wood.title[currentLanguage]}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default Woods
