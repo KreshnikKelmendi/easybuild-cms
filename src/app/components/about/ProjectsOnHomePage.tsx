@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
+import { useInView } from 'react-intersection-observer'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -79,6 +80,39 @@ const ProjectCard = ({ project, title, description, viewLabel, onClick }: Projec
   </article>
 )
 
+const SeeAllButton = ({ label, onClick }: { label: string; onClick: () => void }) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.15 })
+
+  return (
+    <div ref={ref} className="mt-10 flex justify-center lg:justify-end">
+      <button
+        type="button"
+        onClick={onClick}
+        className={`group inline-flex cursor-pointer items-center gap-2 font-zonapro text-sm font-medium text-[#191716] transition-all duration-700 ease-out hover:text-[#DD4726] ${
+          inView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}
+      >
+        <span className="border-b border-transparent pb-0.5 transition-colors duration-300 group-hover:border-[#DD4726]">
+          {label}
+        </span>
+        <svg
+          className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M5 19L19 5" />
+          <path d="M11 5h8v8" />
+        </svg>
+      </button>
+    </div>
+  )
+}
+
 const CarouselControls = ({
   total,
   current,
@@ -95,17 +129,17 @@ const CarouselControls = ({
   if (total <= 1) return null
 
   return (
-    <div className="mt-8 flex items-center justify-center gap-4">
+    <div className="mt-8 flex w-full items-center justify-between lg:w-auto lg:justify-center lg:gap-4">
       <button
         type="button"
         onClick={onPrevious}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#191716]/15 text-[#191716] transition-colors duration-300 hover:border-[#DD4726] hover:bg-[#DD4726] hover:text-white"
+        className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#191716]/15 text-[#191716] transition-colors duration-300 hover:border-[#DD4726] hover:bg-[#DD4726] hover:text-white"
         aria-label="Previous slide"
       >
         <FaChevronLeft size={14} />
       </button>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-1 items-center justify-center gap-2 lg:flex-none">
         {Array.from({ length: total }).map((_, index) => (
           <button
             key={index}
@@ -122,7 +156,7 @@ const CarouselControls = ({
       <button
         type="button"
         onClick={onNext}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#191716]/15 text-[#191716] transition-colors duration-300 hover:border-[#DD4726] hover:bg-[#DD4726] hover:text-white"
+        className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#191716]/15 text-[#191716] transition-colors duration-300 hover:border-[#DD4726] hover:bg-[#DD4726] hover:text-white"
         aria-label="Next slide"
       >
         <FaChevronRight size={14} />
@@ -210,6 +244,11 @@ const ProjectsOnHomePage = () => {
     router.push(`/projects/${projectId}`)
   }
 
+  const handleSeeAllProjects = () => {
+    router.push('/projects')
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }
+
   const renderProjectCard = (project: Project) => {
     const title = getCurrentLanguageText(project.title)
     const description = getCurrentLanguageText(project.description)
@@ -228,75 +267,84 @@ const ProjectsOnHomePage = () => {
 
   if (projects.length === 0) {
     return (
-      <section className="py-16 lg:py-24">
-        <div className="mx-auto px-5 lg:px-[60px] 2xl:px-[120px]">
-          <p className="font-zonapro text-center text-[#666666]">{t('projectsDescription')}</p>
-        </div>
+      <section className="px-5 py-12 lg:px-[60px] lg:py-24 2xl:px-[120px]">
+        <p className="font-zonapro text-center text-[#666666]">{t('projectsDescription')}</p>
       </section>
     )
   }
 
   return (
-    <section className="py-14 lg:py-20">
-      <div className="mx-auto flex flex-col gap-8 px-5 lg:flex-row lg:items-start lg:gap-12 xl:gap-16 lg:px-[60px] 2xl:px-[120px]">
+    <section className="py-16 lg:py-36">
+      {/* Mobile header */}
+      <div className="px-6 lg:hidden">
+        <p className="font-zonapro text-left text-[#DD4624]">{t('Projects')}</p>
+        <p className="mt-3 font-zonapro text-left text-[32px] font-semibold text-black">{t('ourProjects')}</p>
+        <p className="mt-6 max-w-full font-zonapro text-[18px] leading-[26px] text-[#191716]">
+          {t('projectsDescription')}
+        </p>
+      </div>
+
+      {/* Mobile layout */}
+      <div className="mt-14 px-6 lg:hidden">
+        <div className="relative overflow-hidden">
+          <div
+            className="flex transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${mobileSlide * 100}%)` }}
+          >
+            {projects.map((project) => (
+              <div key={project._id} className="w-full shrink-0 px-1">
+                {renderProjectCard(project)}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <CarouselControls
+          total={projects.length}
+          current={mobileSlide}
+          onPrevious={() => setMobileSlide((prev) => (prev - 1 + projects.length) % projects.length)}
+          onNext={() => setMobileSlide((prev) => (prev + 1) % projects.length)}
+          onGoTo={setMobileSlide}
+        />
+
+        <SeeAllButton label={t('seeAll')} onClick={handleSeeAllProjects} />
+      </div>
+
+      {/* Large devices */}
+      <div className="mx-auto hidden px-5 lg:flex lg:flex-row lg:items-start lg:gap-12 lg:px-[60px] xl:gap-16 2xl:px-[120px]">
         <div className="flex shrink-0 items-start lg:py-6">
-          <h2 className="font-zonapro text-[2.25rem] font-normal leading-none tracking-tight text-[#1a1a1a] sm:text-[2.75rem] lg:text-[3.25rem] lg:[writing-mode:vertical-rl] lg:rotate-180">
+          <h2 className="font-zonapro text-[3.25rem] font-normal leading-none tracking-tight text-[#1a1a1a] [writing-mode:vertical-rl] rotate-180">
             {t('ourProjects')}
           </h2>
         </div>
 
         <div className="min-w-0 flex-1">
-          {/* Mobile carousel — 1 project per slide, auto-advance */}
-          <div className="lg:hidden">
-            <div className="relative overflow-hidden">
-              <div
-                className="flex transition-transform duration-700 ease-in-out"
-                style={{ transform: `translateX(-${mobileSlide * 100}%)` }}
-              >
-                {projects.map((project) => (
-                  <div key={project._id} className="w-full shrink-0 px-1">
-                    {renderProjectCard(project)}
+          <div className="relative overflow-hidden">
+            <div
+              className="flex transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateX(-${desktopSlide * 100}%)` }}
+            >
+              {desktopSlides.map((slideProjects, slideIndex) => (
+                <div key={slideIndex} className="w-full shrink-0">
+                  <div className={desktopGridClass}>
+                    {slideProjects.map((project) => renderProjectCard(project))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-
-            <CarouselControls
-              total={projects.length}
-              current={mobileSlide}
-              onPrevious={() => setMobileSlide((prev) => (prev - 1 + projects.length) % projects.length)}
-              onNext={() => setMobileSlide((prev) => (prev + 1) % projects.length)}
-              onGoTo={setMobileSlide}
-            />
           </div>
 
-          {/* Desktop layout */}
-          <div className="hidden lg:block">
-            <div className="relative overflow-hidden">
-              <div
-                className="flex transition-transform duration-700 ease-in-out"
-                style={{ transform: `translateX(-${desktopSlide * 100}%)` }}
-              >
-                {desktopSlides.map((slideProjects, slideIndex) => (
-                  <div key={slideIndex} className="w-full shrink-0">
-                    <div className={desktopGridClass}>
-                      {slideProjects.map((project) => renderProjectCard(project))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <CarouselControls
+            total={desktopSlides.length}
+            current={desktopSlide}
+            onPrevious={() =>
+              setDesktopSlide((prev) => (prev - 1 + desktopSlides.length) % desktopSlides.length)
+            }
+            onNext={() => setDesktopSlide((prev) => (prev + 1) % desktopSlides.length)}
+            onGoTo={setDesktopSlide}
+          />
 
-            <CarouselControls
-              total={desktopSlides.length}
-              current={desktopSlide}
-              onPrevious={() =>
-                setDesktopSlide((prev) => (prev - 1 + desktopSlides.length) % desktopSlides.length)
-              }
-              onNext={() => setDesktopSlide((prev) => (prev + 1) % desktopSlides.length)}
-              onGoTo={setDesktopSlide}
-            />
-          </div>
+          <SeeAllButton label={t('seeAll')} onClick={handleSeeAllProjects} />
         </div>
       </div>
     </section>

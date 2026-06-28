@@ -36,6 +36,22 @@ interface ServiceCardProps {
   onClick: () => void
 }
 
+const DiagonalArrow = ({ className = '' }: { className?: string }) => (
+  <svg
+    className={`h-5 w-5 ${className}`}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.75"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <path d="M5 19L19 5" />
+    <path d="M11 5h8v8" />
+  </svg>
+)
+
 const ServiceCard = ({
   service,
   title,
@@ -45,7 +61,7 @@ const ServiceCard = ({
   onClick,
 }: ServiceCardProps) => (
   <article className="group cursor-pointer" onClick={onClick}>
-    <div className="relative mb-5 aspect-[3/4] overflow-hidden rounded-2xl bg-[#eceae4]">
+    <div className="relative mb-3 aspect-[4/5] max-h-[280px] w-full overflow-hidden rounded-2xl bg-[#eceae4] sm:max-h-[320px] lg:mb-5 lg:aspect-[3/4] lg:max-h-none">
       <Image
         src={toDisplayImageUrl(service.image)}
         alt={title}
@@ -89,12 +105,15 @@ const ServiceCard = ({
       </div>
     </div>
 
-    <div className="flex items-baseline justify-between gap-4">
+    <div className="flex items-center justify-between gap-4">
       <h3 className="font-zonapro text-lg font-semibold leading-tight text-[#1a1a1a] transition-colors duration-300 group-hover:text-[#DD4726] sm:text-xl">
         {title}
       </h3>
-      <span className="shrink-0 font-zonapro text-sm font-normal text-[#666666] lg:hidden">
-        {viewLabel}
+      <span
+        className="flex shrink-0 items-center justify-center text-[#DD4624] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 lg:hidden"
+        aria-label={viewLabel}
+      >
+        <DiagonalArrow />
       </span>
     </div>
   </article>
@@ -275,7 +294,7 @@ const OurServices = () => {
   }
 
   return (
-    <section className="bg-[#F3F4F4] py-16 lg:py-20">
+    <section className="bg-[#F3F4F4] py-16 lg:py-36">
       {/* Mobile header */}
       <div className="px-6 lg:hidden">
         <p className="font-zonapro text-left text-[#DD4624]">{t('services')}</p>

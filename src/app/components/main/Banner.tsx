@@ -81,7 +81,7 @@ const Banner = () => {
   };
 
   return (
-    <div className="relative w-full h-[70vh] bg-[#191716] lg:h-[800px]">
+    <div className="relative w-full h-screen bg-[#191716] lg:h-screen">
       {bannerData?.image ? (
         <Image
           src={toDisplayImageUrl(bannerData.image)}
@@ -93,8 +93,8 @@ const Banner = () => {
       ) : null}
       <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-b from-[#772613] to-[#000000] opacity-50" />
 
-      <div className="absolute top-0 left-0 flex h-full w-full items-center text-white lg:px-[50px] 2xl:px-[100px]">
-        <div ref={ref}>
+      <div className="absolute top-0 left-0 flex h-full w-full items-end pb-32 text-white sm:pb-24 lg:items-center lg:pb-0 lg:px-[50px] 2xl:px-[100px]">
+        <div ref={ref} className="w-full lg:w-auto">
           {!isLoading &&
             (bannerData ? (
               <>
@@ -112,7 +112,7 @@ const Banner = () => {
                     {getLocalizedContent(bannerData.subtitle, currentLang)}
                   </span>
                 </p>
-                <div className="mt-10 flex flex-col gap-x-4 gap-y-4 px-5 lg:flex-row">
+                <div className="mt-10 grid grid-cols-2 gap-4 px-5 lg:flex lg:flex-row">
                   <Link
                     href="/projects"
                     onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
@@ -146,7 +146,7 @@ const Banner = () => {
                   <span className="lg:hidden">{getMobileSubtitle(t('secondBanner'))}</span>
                   <span className="hidden lg:inline">{t('secondBanner')}</span>
                 </p>
-                <div className="mt-10 flex flex-col gap-x-4 gap-y-4 px-5 lg:flex-row">
+                <div className="mt-10 grid grid-cols-2 gap-4 px-5 lg:flex lg:flex-row">
                   <Link
                     href="/projects"
                     onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}

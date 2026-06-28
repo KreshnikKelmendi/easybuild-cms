@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
+import Count from '../main/Count'
 
 const AboutUsOnHomePage = () => {
   const { t } = useTranslation()
@@ -24,7 +25,7 @@ const AboutUsOnHomePage = () => {
   }, [])
 
   return (
-    <section className="relative w-full min-h-[90vh] overflow-hidden lg:min-h-screen">
+    <section className="relative w-full min-h-[90vh] overflow-hidden pb-44 sm:pb-48 lg:min-h-screen lg:pb-52">
       <video
         ref={videoRef}
         autoPlay
@@ -71,6 +72,10 @@ const AboutUsOnHomePage = () => {
             </button>
           </Link>
         </div>
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 z-20 px-5 pb-6 lg:px-[60px] lg:pb-10 2xl:px-[120px]">
+        <Count />
       </div>
     </section>
   )

@@ -84,7 +84,7 @@ const Woods = () => {
 
   const header = (
     <div className="mb-10 max-w-3xl lg:mb-12">
-      <h2 className="font-zonapro text-[2.25rem] font-normal leading-tight text-[#F3F4F4] sm:text-4xl lg:text-[48px] lg:leading-[1.1]">
+      <h2 className="font-zonapro text-[32px] font-semibold leading-tight text-[#F3F4F4] sm:text-4xl lg:text-[48px] lg:leading-[1.1]">
         {t('materials_that_we_use')}
       </h2>
       <p className="mt-4 max-w-2xl font-zonapro text-base leading-relaxed text-[#F3F4F4]/90 lg:mt-6 lg:text-lg">
@@ -108,7 +108,7 @@ const Woods = () => {
   return (
     <section className="w-full">
       {/* Mobile */}
-      <div className="px-5 py-10 lg:hidden">
+      <div className="px-0 py-10 lg:hidden">
         <div className="overflow-hidden rounded-[15px] bg-[#DD4624] px-6 py-12">
           {header}
 
@@ -131,7 +131,7 @@ const Woods = () => {
       </div>
 
       {/* Desktop — rounded container, horizontal cards */}
-      <div className="hidden px-[60px] py-16 lg:block 2xl:px-[120px] 2xl:py-20">
+      <div className="hidden px-[60px] py-16 lg:py-0 lg:block 2xl:px-[120px]">
         <div className="w-full overflow-hidden rounded-[15px] bg-[#DD4624] px-10 py-14 2xl:px-16 2xl:py-16">
           {header}
 
