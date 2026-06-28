@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
+import { AiOutlineClose } from 'react-icons/ai';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { usePathname } from 'next/navigation';
@@ -65,9 +65,19 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = nav ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [nav]);
+
   const handleNav = () => {
-    setNav(!nav);
-    window.scrollTo(0, 0);
+    setNav((prev) => !prev);
+  };
+
+  const closeNav = () => {
+    setNav(false);
   };
 
   const changeLanguage = (lng: string) => {
@@ -87,9 +97,9 @@ const Header = () => {
   }
 
   return (
-    <div className={`w-full top-0 z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-5 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716] ${
+    <div className={`w-full top-0 z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-5 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716] transition-colors duration-500 ${
       isFixed ? 'sticky top-0 left-0 right-0 w-full z-50 flex justify-center items-center h-20 md:h-24 lg:h-[127px] mx-auto px-5 sm:px-4 md:px-5 text-[#F3F4F4] bg-[#191716]' : ''
-    }`}>
+    } ${nav ? 'fixed top-0 left-0 right-0 z-[60] lg:static' : ''}`}>
       {/* Logo and navigation for large devices */}
       <div className='hidden lg:flex justify-center items-center space-x-2 relative'>
         {/* Left-side navigation links */}
@@ -229,7 +239,7 @@ const Header = () => {
       </div>
 
       {/* Logo and navigation for mobile devices */}
-      <div className='flex lg:hidden justify-between items-center w-full'>
+      <div className="relative z-[60] flex w-full items-center justify-between bg-[#191716] lg:hidden">
         <Link href="/" onClick={scrollToTop}>
           <svg width="154" height="44" viewBox="0 0 154 44" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_56_327)">
@@ -254,59 +264,66 @@ const Header = () => {
             </defs>
           </svg>
         </Link>
-        <div onClick={handleNav} className="flex-shrink-0">
-          {nav ? <AiOutlineClose size={24} className="sm:w-[30] sm:h-[30]" color='#F3F4F4' /> : <AiOutlineMenu size={24} className="sm:w-[30] sm:h-[30]" color='#F3F4F4' />}
-        </div>
+        <button
+          type="button"
+          onClick={nav ? closeNav : handleNav}
+          className="flex-shrink-0 cursor-pointer transition-transform duration-300 hover:scale-105"
+          aria-label={nav ? 'Close menu' : 'Open menu'}
+        >
+          {nav ? (
+            <AiOutlineClose size={24} className="sm:h-[30px] sm:w-[30px]" color="#FFFFFF" />
+          ) : (
+            <svg
+              width="48"
+              height="38"
+              viewBox="0 0 48 38"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-10 w-auto sm:h-12"
+              aria-hidden="true"
+            >
+              <line x1="7" y1="14.5" x2="42" y2="14.5" stroke="#FFFFFF" strokeWidth="2" />
+              <line x1="7" y1="22.5" x2="42" y2="22.5" stroke="#FFFFFF" strokeWidth="2" />
+            </svg>
+          )}
+        </button>
       </div>
 
+      {/* Mobile menu backdrop */}
+      <div
+        className={`fixed inset-x-0 top-20 bottom-0 z-40 bg-black/60 backdrop-blur-[2px] transition-opacity duration-500 ease-in-out md:top-24 lg:hidden ${
+          nav ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={closeNav}
+        aria-hidden={!nav}
+      />
+
       {/* Mobile Navigation Menu */}
-              <ul className={
-          nav
-            ? 'fixed lg:hidden font-custom1 text-xl sm:text-2xl left-0 top-0 w-full h-full bg-[#191716] mt-3 z-50'
-            : ' w-[100%] fixed top-0 bottom-0 left-[-100%]'
-          }>
-        {/* Mobile Logo and Close Icon */}
-        <div className='flex justify-between items-center mx-3 sm:mx-4 my-2'>
-          <svg width="120" height="34" className="sm:w-[154] sm:h-[44]" viewBox="0 0 154 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clipPath="url(#clip0_56_327)">
-              <path d="M45.451 25.0759V37.9315L39.583 43.4962H0V34.1198H35.896L45.451 25.0759Z" fill="#DD4726"/>
-              <path d="M42.1363 16.1219L31.2216 26.4363H0V17.0599H27.5312L42.1363 3.25964V16.1219Z" fill="#DD4726"/>
-              <path d="M33.6452 0H0V9.37644H23.7245L33.6452 0Z" fill="#DD4726"/>
-              <path d="M117.941 6.95501V5.27862H104.712V8.77442H119.796L121.472 10.7734V17.6586C120.757 18.3371 120.365 18.693 119.653 19.3716H102.751L101.145 17.4457V14.1262H104.712V15.8026H117.941V12.3068H102.748L101.142 10.4142V3.42263C101.853 2.74409 102.249 2.38819 102.96 1.70966H119.793L121.469 3.70868V6.95501H117.938H117.941Z" fill="white"/>
-              <path d="M95.9022 19.3682L94.1268 16.042H83.4215L81.6495 19.3682L77.517 19.3516L87.2881 1.69965H90.36L99.9582 19.3682H95.9088H95.9022ZM88.8041 6.017L85.1071 12.9188H92.4412L88.8041 6.017Z" fill="white"/>
-              <path d="M150.193 2.22854V4.31736H149.558V2.22854H148.78V1.70966H150.961V2.22854H150.193ZM153.405 4.31736C153.405 4.1444 153.428 2.39152 153.428 2.39152L152.87 4.31736H152.281L151.746 2.36824C151.746 2.36824 151.786 4.10449 151.786 4.31736H151.191V1.70966H152.045L152.604 3.58561L153.146 1.70966H154V4.31736H153.405Z" fill="white"/>
-              <path d="M143.863 1.7063H139.445L133.261 9.08705L127.081 1.7063H122.662L131.496 12.2502V19.3582H135.04V12.2402L143.863 1.7063Z" fill="white"/>
-              <path d="M57.3564 1.7063V1.70962V19.3682H75.1332V15.7926H60.9105V12.3201H75.1332V8.7511H60.9105V5.27859H75.1332V1.70962V1.7063H57.3564Z" fill="white"/>
-              <path d="M108.439 41.7766V24.1479H112.003V38.2275H125.265V41.7766H108.439Z" fill="white"/>
-              <path d="M106.059 24.1479H102.492V41.7732H106.059V24.1479Z" fill="white"/>
-              <path d="M96.5438 24.1479V38.2275H84.0233V24.1479H80.4559V39.8407C81.2605 40.6024 81.7093 41.0315 82.5139 41.7965H98.0532C98.8544 41.0315 100.111 39.8407 100.111 39.8407V24.1479H96.5438Z" fill="white"/>
-              <path d="M78.0755 32.1008H76.2204L77.0848 31.1827V26.0771L75.2562 24.1346L57.3531 24.1479V41.8065L75.2729 41.7965L78.0722 38.8229V32.1008H78.0755ZM73.9231 38.2276H60.9138V34.6586H74.9371V37.1399L73.9231 38.2276ZM60.9138 31.0896V27.7235H73.9463V29.9354L73.9297 29.9554L72.8559 31.0929H60.9138V31.0896Z" fill="white"/>
-              <path d="M145.565 24.1446L127.646 24.1346V41.8131L145.565 41.8032L148.78 38.4138V27.5339L145.565 24.1446ZM145.625 36.7474L144.219 38.2276H131.2V27.7136H144.209L145.622 29.2037V36.7474H145.625Z" fill="white"/>
-            </g>
-            <defs>
-              <clipPath id="clip0_56_327">
-                <rect width="154" height="43.4962" fill="white"/>
-              </clipPath>
-            </defs>
-          </svg>
-          <AiOutlineClose color='#F3F4F4' size={24} className="sm:w-[30] sm:h-[30] cursor-pointer" onClick={handleNav} />
-        </div>
-        
+      <ul
+        className={`fixed inset-x-0 top-20 bottom-0 z-50 flex flex-col font-custom1 text-xl uppercase transition-transform duration-500 ease-in-out sm:text-2xl md:top-24 lg:hidden ${
+          nav ? 'pointer-events-auto translate-x-0' : 'pointer-events-none translate-x-full'
+        }`}
+      >
+        <div className="flex h-full w-full flex-col bg-[#191716]">
         {/* Mobile Navigation Items */}
-        <div className='flex flex-col h-screen justify-center items-center mt-[-65px] text-[#F3F4F4] uppercase'>
-          <Link onClick={handleNav} href="/" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
+        <div
+          className={`flex flex-1 flex-col items-center justify-center pb-10 text-[#F3F4F4] transition-all duration-500 ease-out ${
+            nav ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+          }`}
+        >
+          <Link onClick={closeNav} href="/" className="cursor-pointer p-3 font-zonapro transition-colors duration-300 hover:text-[#DD4626] sm:p-4">
             {t('Home')}
           </Link>
-          <Link onClick={handleNav} href="/about" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
+          <Link onClick={closeNav} href="/about" className="cursor-pointer p-3 font-zonapro transition-colors duration-300 hover:text-[#DD4626] sm:p-4">
             {t('About')}
           </Link>
-          <Link onClick={handleNav} href="/services" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
+          <Link onClick={closeNav} href="/services" className="cursor-pointer p-3 font-zonapro transition-colors duration-300 hover:text-[#DD4626] sm:p-4">
             {t('Services')}
           </Link>
-          <Link onClick={handleNav} href="/projects" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
+          <Link onClick={closeNav} href="/projects" className="cursor-pointer p-3 font-zonapro transition-colors duration-300 hover:text-[#DD4626] sm:p-4">
             {t('Projects')}
           </Link>
-          <Link onClick={handleNav} href="/contact" className='p-3 sm:p-4 text-center hover:text-[#DD4726] cursor-pointer font-zonapro transition-colors duration-300'>
+          <Link onClick={closeNav} href="/contact" className="cursor-pointer p-3 font-zonapro transition-colors duration-300 hover:text-[#DD4726] sm:p-4">
             {t('Contact')}
           </Link>
           <div className='mt-16'>
@@ -314,7 +331,7 @@ const Header = () => {
               <button
                 onClick={() => {
                   changeLanguage('en');
-                  handleNav();
+                  closeNav();
                 }}
                 className={`px-2 sm:px-3 py-2 rounded-md transition-colors font-zonapro text-sm sm:text-base ${
                   i18n.language === 'en' 
@@ -327,7 +344,7 @@ const Header = () => {
               <button
                 onClick={() => {
                   changeLanguage('de');
-                  handleNav();
+                  closeNav();
                 }}
                 className={`px-2 sm:px-3 py-2 rounded-md transition-colors font-zonapro text-sm sm:text-base ${
                   i18n.language === 'de' 
@@ -340,7 +357,7 @@ const Header = () => {
               <button
                 onClick={() => {
                   changeLanguage('al');
-                  handleNav();
+                  closeNav();
                 }}
                 className={`px-2 sm:px-3 py-2 rounded-md transition-colors font-zonapro text-sm sm:text-base ${
                   i18n.language === 'al' 
@@ -365,10 +382,10 @@ const Header = () => {
                      <p className="text-xs sm:text-sm text-[#DD4726] font-zonapro">Welcome, {username}</p>
                    </div>
                    <div className="flex flex-col space-y-1 sm:space-y-2 text-center">
-                     <Link 
-                       href="/dashboard" 
-                       onClick={handleNav}
-                       className="text-xs text-[#F3F4F4] hover:text-[#DD4726] transition-colors font-zonapro"
+                     <Link
+                       href="/dashboard"
+                       onClick={closeNav}
+                       className="font-zonapro text-xs text-[#F3F4F4] transition-colors hover:text-[#DD4726]"
                      >
                        Admin Panel
                      </Link>
@@ -378,9 +395,9 @@ const Header = () => {
                          localStorage.removeItem('username');
                          setIsAuthenticated(false);
                          setUsername('');
-                         handleNav();
+                         closeNav();
                        }}
-                       className="text-xs text-red-400 hover:text-red-300 transition-colors font-zonapro"
+                       className="font-zonapro text-xs text-red-400 transition-colors hover:text-red-300"
                      >
                        Logout
                      </button>
@@ -395,6 +412,7 @@ const Header = () => {
                )}
              </div>
           </div>
+        </div>
         </div>
       </ul>
       

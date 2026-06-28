@@ -6,8 +6,11 @@ export async function GET() {
   try {
     await connectDB();
     
-    const banner = await Banner.findOne({ isActive: true }).sort({ createdAt: -1 });
-    
+    const banner = await Banner.findOne({ isActive: true })
+      .sort({ createdAt: -1 })
+      .select('title subtitle image')
+      .lean();
+
     if (!banner) {
       return NextResponse.json(
         { 
@@ -18,10 +21,14 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      data: banner 
-    });
+    return NextResponse.json(
+      { success: true, data: banner },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error fetching banner:', error);
     return NextResponse.json(
