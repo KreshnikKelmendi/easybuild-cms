@@ -54,6 +54,10 @@ const Banner = () => {
   const animatedRef = useRef(false);
 
   useEffect(() => {
+    animatedRef.current = false;
+  }, [bannerData?.image]);
+
+  useEffect(() => {
     let cancelled = false;
 
     const fetchBannerData = async () => {
@@ -81,11 +85,39 @@ const Banner = () => {
   }, []);
 
   useEffect(() => {
-    if (!isLoading && !bannerData?.image) {
+    if (isLoading) return;
+
+    if (!bannerData?.image) {
       setImageReady(true);
-    } else if (bannerData?.image) {
-      setImageReady(false);
+      return;
     }
+
+    setImageReady(false);
+
+    const src = toDisplayImageUrl(bannerData.image);
+    const img = new window.Image();
+    let cancelled = false;
+
+    const markReady = () => {
+      if (!cancelled) setImageReady(true);
+    };
+
+    img.onload = markReady;
+    img.onerror = markReady;
+    img.src = src;
+
+    if (img.complete) {
+      markReady();
+    }
+
+    const timeout = window.setTimeout(markReady, 4000);
+
+    return () => {
+      cancelled = true;
+      img.onload = null;
+      img.onerror = null;
+      window.clearTimeout(timeout);
+    };
   }, [isLoading, bannerData?.image]);
 
   useEffect(() => {
@@ -135,6 +167,7 @@ const Banner = () => {
           className={`object-cover transition-opacity duration-500 ${imageReady ? 'opacity-100' : 'opacity-0'}`}
           priority
           onLoad={() => setImageReady(true)}
+          onLoadingComplete={() => setImageReady(true)}
           onError={() => setImageReady(true)}
         />
       ) : null}
