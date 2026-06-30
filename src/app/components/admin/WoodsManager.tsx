@@ -37,6 +37,8 @@ const WoodsManager = () => {
   const [woods, setWoods] = useState<Wood[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingWoodId, setEditingWoodId] = useState<string | null>(null);
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'de' | 'al'>('en');
   const [formData, setFormData] = useState<{
     title: { en: string; de: string; al: string };
@@ -52,7 +54,7 @@ const WoodsManager = () => {
 
   const fetchWoods = async () => {
     try {
-      const response = await fetch('/api/woods');
+      const response = await fetch('/api/woods?admin=true');
       const data = await response.json();
       
       if (data.success) {
@@ -212,38 +214,55 @@ const WoodsManager = () => {
     }
 
     try {
-      console.log('Sending data:', formData);
-      
-      const response = await fetch('/api/woods', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const existingWood = isEditing ? woods.find((w) => String(w._id) === editingWoodId) : null;
+
+      const response = isEditing && editingWoodId
+        ? await fetch(`/api/woods?id=${encodeURIComponent(editingWoodId)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: formData.title,
+              imageUrl: formData.imageUrl,
+              isActive: existingWood?.isActive ?? true,
+              order: existingWood?.order ?? 0,
+            }),
+          })
+        : await fetch('/api/woods', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+          });
 
       const data = await response.json();
-      console.log('Response:', data);
 
       if (data.success) {
-        setMessage('Wood created successfully!');
+        setMessage(isEditing ? 'Wood updated successfully!' : 'Wood created successfully!');
         fetchWoods();
-        // Reset form
-        setFormData({
-          title: { en: '', de: '', al: '' },
-          imageUrl: '',
-        });
+        resetForm();
       } else {
-        setMessage(data.message || 'Failed to create wood');
+        setMessage(data.message || (isEditing ? 'Failed to update wood' : 'Failed to create wood'));
         if (data.error) {
           console.error('API Error:', data.error);
-          console.error('Error Details:', data.details);
         }
       }
     } catch (error) {
       console.error('Fetch Error:', error);
-      setMessage('An error occurred while creating the wood');
+      setMessage(`An error occurred while ${isEditing ? 'updating' : 'creating'} the wood`);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleEdit = (wood: Wood) => {
+    setIsEditing(true);
+    setEditingWoodId(String(wood._id));
+    setFormData({
+      title: { ...wood.title },
+      imageUrl: wood.imageUrl,
+    });
+    setCurrentLanguage('en');
+    setMessage('Editing wood material. Update the fields and click "Save Changes".');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id: string) => {
@@ -272,12 +291,14 @@ const WoodsManager = () => {
       const wood = woods.find(w => w._id === id);
       if (!wood) return;
 
-      const response = await fetch(`/api/woods?id=${id}`, {
+      const response = await fetch(`/api/woods?id=${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...wood,
+          title: wood.title,
+          imageUrl: wood.imageUrl,
           isActive: !currentStatus,
+          order: wood.order,
         }),
       });
 
@@ -294,11 +315,18 @@ const WoodsManager = () => {
     }
   };
 
-  const resetForm = () => {
+  const resetForm = (showCancelMessage = false) => {
     setFormData({
       title: { en: '', de: '', al: '' },
       imageUrl: '',
     });
+    if (isEditing) {
+      setIsEditing(false);
+      setEditingWoodId(null);
+      if (showCancelMessage) {
+        setMessage('Edit cancelled.');
+      }
+    }
   };
 
   const languages = [
@@ -320,10 +348,10 @@ const WoodsManager = () => {
         </div>
       )}
 
-      {/* Single Wood Creation Form */}
+      {/* Wood Creation / Edit Form */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100">
         <h2 className="text-xl font-semibold text-black mb-4 text-center font-zonapro">
-          🌳 Create New Wood Material
+          {isEditing ? '✏️ Edit Wood Material' : '🌳 Create New Wood Material'}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -418,14 +446,20 @@ const WoodsManager = () => {
               disabled={isLoading || isUploading}
               className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 font-zonapro"
             >
-              {isLoading ? 'Creating...' : '🌳 Create Wood Material'}
+              {isLoading
+                ? isEditing
+                  ? 'Saving...'
+                  : 'Creating...'
+                : isEditing
+                  ? '💾 Save Changes'
+                  : '🌳 Create Wood Material'}
             </button>
             <button
               type="button"
-              onClick={resetForm}
+              onClick={() => resetForm(true)}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-semibold transition-colors duration-200"
             >
-              Reset
+              {isEditing ? 'Cancel' : 'Reset'}
             </button>
           </div>
         </form>
@@ -459,7 +493,12 @@ const WoodsManager = () => {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {woods.map((wood, index) => (
-              <div key={wood._id} className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-all duration-200">
+              <div
+                key={wood._id}
+                className={`bg-gradient-to-br from-gray-50 to-white rounded-lg p-4 border transition-all duration-200 hover:shadow-md ${
+                  editingWoodId === String(wood._id) ? 'border-blue-400 ring-2 ring-blue-200' : 'border-gray-200'
+                }`}
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-black bg-green-50 px-2 py-1 rounded-full">
@@ -470,6 +509,13 @@ const WoodsManager = () => {
                     </span>
                   </div>
                   <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(wood)}
+                      className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors duration-200"
+                      title="Edit wood"
+                    >
+                      Edit
+                    </button>
                     <button
                       onClick={() => handleToggleActive(wood._id, wood.isActive)}
                       className={`text-xs px-2 py-1 rounded-full transition-colors duration-200 ${

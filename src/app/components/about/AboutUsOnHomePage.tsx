@@ -55,11 +55,11 @@ const AboutUsOnHomePage = () => {
             {t('aboutUsDescription')}
           </h2>
 
-          <p className="mt-6 max-w-2xl font-zonapro text-base leading-relaxed text-[#F3F4F4]/90 lg:text-lg lg:leading-7">
+          <p className="mt-6 max-w-2xl font-zonapro text-sm text-[#F3F4F4]/90 lg:text-sm ">
             {t('firstDescription')}
           </p>
 
-          <p className="mt-4 max-w-2xl font-zonapro text-base leading-relaxed text-[#F3F4F4]/80 lg:text-lg lg:leading-7">
+          <p className="mt-4 max-w-2xl font-zonapro text-sm text-[#F3F4F4]/80 lg:text-sm">
             {t('secondDescription')}
           </p>
 
